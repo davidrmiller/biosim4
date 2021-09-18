@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="biosim4" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/biosim4" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-fopenmp" />
+				</Compiler>
+				<Linker>
+					<Add option="-fopenmp" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/biosim4" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+				</Compiler>
+				<Linker>
+					<Add option="-O3" />
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="/usr/include/opencv4" />
+		</Compiler>
+		<Linker>
+			<Add option="-lX11" />
+			<Add library="/usr/lib/x86_64-linux-gnu/libopencv_core.so" />
+			<Add library="/usr/lib/x86_64-linux-gnu/libopencv_video.so" />
+			<Add library="/usr/lib/x86_64-linux-gnu/libopencv_videoio.so" />
+		</Linker>
+		<Unit filename="biosim4.ini" />
+		<Unit filename="src/analysis.cpp" />
+		<Unit filename="src/basicTypes.cpp" />
+		<Unit filename="src/basicTypes.h" />
+		<Unit filename="src/createBarrier.cpp" />
+		<Unit filename="src/endOfGeneration.cpp" />
+		<Unit filename="src/endOfSimStep.cpp" />
+		<Unit filename="src/executeActions.cpp" />
+		<Unit filename="src/feedForward.cpp" />
+		<Unit filename="src/genome-compare.cpp" />
+		<Unit filename="src/genome-neurons.h" />
+		<Unit filename="src/genome.cpp" />
+		<Unit filename="src/getSensor.cpp" />
+		<Unit filename="src/grid.cpp" />
+		<Unit filename="src/grid.h" />
+		<Unit filename="src/imageWriter.cpp" />
+		<Unit filename="src/imageWriter.h" />
+		<Unit filename="src/indiv.cpp" />
+		<Unit filename="src/indiv.h" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/params.cpp" />
+		<Unit filename="src/params.h" />
+		<Unit filename="src/peeps.cpp" />
+		<Unit filename="src/peeps.h" />
+		<Unit filename="src/random.cpp" />
+		<Unit filename="src/random.h" />
+		<Unit filename="src/sensors-actions.h" />
+		<Unit filename="src/signals.cpp" />
+		<Unit filename="src/signals.h" />
+		<Unit filename="src/simulator.cpp" />
+		<Unit filename="src/simulator.h" />
+		<Unit filename="src/spawnNewGeneration.cpp" />
+		<Unit filename="src/survival-criteria.cpp" />
+		<Unit filename="src/unitTestBasicTypes.cpp" />
+		<Unit filename="src/unitTestConnectNeuralNetWiringFromGenome.cpp" />
+		<Unit filename="src/unitTestGridVisitNeighborhood.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
