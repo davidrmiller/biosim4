@@ -16,7 +16,7 @@ CFLAGS = -Wall -fexceptions
 RESINC = 
 LIBDIR = 
 LIB = /usr/lib/x86_64-linux-gnu/libopencv_core.so /usr/lib/x86_64-linux-gnu/libopencv_video.so /usr/lib/x86_64-linux-gnu/libopencv_videoio.so
-LDFLAGS = -lX11
+LDFLAGS = -lX11 -lpthread
 
 INC_DEBUG = $(INC)
 CFLAGS_DEBUG = $(CFLAGS) -g -fopenmp
