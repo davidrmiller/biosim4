@@ -118,7 +118,7 @@ void Grid::createBarrier(unsigned barrierType)
     case 5:
         {
 	        constexpr float radius = 3.0f;
-	        constexpr unsigned margin = 2 * (int)radius;
+	        constexpr unsigned margin = 2u * (unsigned int)radius;
 
             auto randomLoc = [&]() {
 //                return Coord( (int16_t)randomUint((int)radius + margin, p.sizeX - ((float)radius + margin)),
@@ -165,9 +165,9 @@ void Grid::createBarrier(unsigned barrierType)
                 barrierLocations.push_back(loc);
             };
 
-	        const unsigned verticalSliceSize = p.sizeY / (numberOfLocations + 1);
+	        const unsigned verticalSliceSize = p.sizeY / (numberOfLocations + 1u);
 
-            for (unsigned n = 1; n <= numberOfLocations; ++n) {
+            for (unsigned n = 1u; n <= numberOfLocations; ++n) {
                 Coord loc = { (int16_t)(p.sizeX / 2),
                               (int16_t)(n * verticalSliceSize) };
                 visitNeighborhood(loc, radius, f);

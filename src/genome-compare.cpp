@@ -96,9 +96,9 @@ float hammingDistanceBits(const Genome &genome1, const Genome &genome2)
     const unsigned bytesPerElement = sizeof(genome1[0]);
     const unsigned lengthBytes = numElements * bytesPerElement;
     const unsigned lengthBits = lengthBytes * 8u;
-    unsigned bitCount = 0;
+    unsigned bitCount = 0u;
 
-    for (unsigned index = 0; index < genome1.size(); ++p1, ++p2, ++index) {
+    for (unsigned index = 0u; index < genome1.size(); ++p1, ++p2, ++index) {
         bitCount += __builtin_popcount(*p1 ^ *p2);
     }
 
@@ -120,7 +120,7 @@ float hammingDistanceBytes(const Genome &genome1, const Genome &genome2)
     const unsigned numElements = genome1.size();
     constexpr unsigned bytesPerElement = sizeof(genome1[0]);
     const unsigned lengthBytes = numElements * bytesPerElement;
-    unsigned byteCount = 0;
+    unsigned byteCount = 0u;
 
     for (unsigned index = 0; index < genome1.size(); ++p1, ++p2, ++index) {
         byteCount += (unsigned)(*p1 == *p2);

@@ -125,17 +125,17 @@ void simulator(int argc, char **argv)
     //unitTestConnectNeuralNetWiringFromGenome();
     //unitTestGridVisitNeighborhood();
 
-    unsigned generation = 0;
+    unsigned generation = 0u;
     initializeGeneration0(); // starting population
 
     runMode = RunMode::RUN;
     while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
-        unsigned murderCount = 0; // for reporting purposes
-        for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
+        unsigned murderCount = 0u; // for reporting purposes
+        for (unsigned simStep = 0u; simStep < p.stepsPerGeneration; ++simStep) {
 
             // multithreaded loop: index 0 is reserved, start at 1
 #pragma omp parallel for num_threads(p.numThreads) default(shared) firstprivate(randomUint) lastprivate(randomUint) schedule(auto)
-            for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
+            for (unsigned indivIndex = 1u; indivIndex <= p.population; ++indivIndex) {
                 if (peeps[indivIndex].alive) {
                     simStepOneIndiv(peeps[indivIndex], simStep);
                 }
@@ -149,16 +149,16 @@ void simulator(int argc, char **argv)
         endOfGeneration(generation);
         paramManager.updateFromConfigFile();
         const unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
-        if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
+        if (numberSurvivors > 0u && (generation % p.genomeAnalysisStride == 0u)) {
             displaySampleGenomes(p.displaySampleGenomes);
         }
-        if (numberSurvivors == 0) {
-            generation = 0;  // start over
+        if (numberSurvivors == 0u) {
+            generation = 0u;  // start over
         } else {
             ++generation;
         }
     }
-    displaySampleGenomes(3); // final report, for debugging
+    displaySampleGenomes(3u); // final report, for debugging
 
     std::cout << "Simulator waiting..." << std::endl;
     std::cout << "Simulator exit." << std::endl;

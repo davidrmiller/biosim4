@@ -47,28 +47,28 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
 // are found, the result is sensor mid-range. Ignores agents in the path.
 float getShortProbeBarrierDistance(Coord loc0, Dir dir, unsigned probeDistance)
 {
-    unsigned countFwd = 0;
-    unsigned countRev = 0;
+    unsigned countFwd = 0u;
+    unsigned countRev = 0u;
     Coord loc = loc0 + dir;
     unsigned numLocsToTest = probeDistance;
     // Scan positive direction
-    while (numLocsToTest > 0 && grid.isInBounds(loc) && !grid.isBarrierAt(loc)) {
+    while (numLocsToTest > 0u && grid.isInBounds(loc) && !grid.isBarrierAt(loc)) {
         ++countFwd;
         loc = loc + dir;
         --numLocsToTest;
     }
-    if (numLocsToTest > 0 && !grid.isInBounds(loc)) {
+    if (numLocsToTest > 0u && !grid.isInBounds(loc)) {
         countFwd = probeDistance;
     }
     // Scan negative direction
     numLocsToTest = probeDistance;
     loc = loc0 - dir;
-    while (numLocsToTest > 0 && grid.isInBounds(loc) && !grid.isBarrierAt(loc)) {
+    while (numLocsToTest > 0u && grid.isInBounds(loc) && !grid.isBarrierAt(loc)) {
         ++countRev;
         loc = loc - dir;
         --numLocsToTest;
     }
-    if (numLocsToTest > 0 && !grid.isInBounds(loc)) {
+    if (numLocsToTest > 0u && !grid.isInBounds(loc)) {
         countRev = probeDistance;
     }
 

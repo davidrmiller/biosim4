@@ -68,7 +68,7 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
 // Must be called in single-thread mode between generations.
 unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
 {
-    unsigned sacrificedCount = 0; // for the altruism challenge
+    unsigned sacrificedCount = 0u; // for the altruism challenge
 
     extern void appendEpochLog(unsigned generation, unsigned numberSurvivors, unsigned murderCount);
     extern std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned challenge);
@@ -121,8 +121,8 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             }
         }
 
-        constexpr unsigned generationToApplyKinship = 10;
-        constexpr unsigned altruismFactor = 10; // the saved:sacrificed ratio
+        constexpr unsigned generationToApplyKinship = 10u;
+        constexpr unsigned altruismFactor = 10u; // the saved:sacrificed ratio
 
         if (considerKinship) {
             if (generation > generationToApplyKinship) {
@@ -130,11 +130,11 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
                 constexpr float threshold = 0.7f;
 
                 std::vector<std::pair<uint16_t, float>> survivingKin;
-                for (unsigned passes = 0; passes < altruismFactor; ++passes) {
+                for (unsigned passes = 0u; passes < altruismFactor; ++passes) {
                     for (const uint16_t sacrificedIndex : sacrificesIndexes) {
                         // randomize the next loop so we don't keep using the first one repeatedly
                         const unsigned startIndex = randomUint(0, parents.size() - 1);
-                        for (unsigned count = 0; count < parents.size(); ++count) {
+                        for (unsigned count = 0u; count < parents.size(); ++count) {
                             const std::pair<uint16_t, float> &possibleParent = parents[(startIndex + count) % parents.size()];
                             const Genome &g1 = peeps[sacrificedIndex].genome;
                             const Genome &g2 = peeps[possibleParent.first].genome;

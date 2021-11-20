@@ -100,7 +100,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // If this action neuron is enabled but not driven, will default to
     // mid-level period of 17 simSteps.
     if (isEnabled(Action::SET_LONGPROBE_DIST)) {
-        constexpr unsigned maxLongProbeDistance = 32;
+        constexpr unsigned maxLongProbeDistance = 32u;
         float level = actionLevels[SET_LONGPROBE_DIST];
         level = (std::tanh(level) + 1.0f) / 2.0f; // convert to 0.0..1.0
         level = 1 + level * maxLongProbeDistance;

@@ -145,17 +145,17 @@ void printSensorsActions()
 // Format: 32-bit hex strings, one per gene
 void Indiv::printGenome() const
 {
-    constexpr unsigned genesPerLine = 8;
-    unsigned count = 0;
+    constexpr unsigned genesPerLine = 8u;
+    unsigned count = 0u;
     for (Gene gene : genome) {
         if (count == genesPerLine) {
             std::cout << std::endl;
             count = 0;
-        } else if (count != 0) {
+        } else if (count != 0u) {
             std::cout << " ";
         }
 
-        assert(sizeof(Gene) == 4);
+        assert(sizeof(Gene) == 4u);
         uint32_t n;
         std::memcpy(&n, &gene, sizeof(n));
         std::cout << std::hex << std::setfill('0') << std::setw(8) << n;
@@ -254,9 +254,9 @@ void Indiv::printIGraphEdgeList() const
 
 float averageGenomeLength()
 {
-    unsigned count = 100;
-    unsigned numberSamples = 0;
-    unsigned long sum = 0;
+    unsigned count = 100u;
+    unsigned numberSamples = 0u;
+    unsigned long sum = 0u;
 
     while (count-- > 0) {
         sum += peeps[randomUint(1, p.population)].genome.size();
@@ -296,12 +296,12 @@ void displaySignalUse()
         return;
     }
 
-    unsigned long long sum = 0;
-    unsigned count = 0;
+    unsigned long long sum = 0u;
+    unsigned count = 0u;
 
     for (int16_t x = 0; x < p.sizeX; ++x) {
         for (int16_t y = 0; y < p.sizeY; ++y) {
-	        const unsigned magnitude = signals.getMagnitude(0, { x, y });
+	        const unsigned magnitude = signals.getMagnitude(0u, { x, y });
             if (magnitude != 0) {
                 ++count;
                 sum += magnitude;
@@ -317,10 +317,10 @@ void displaySignalUse()
 // see which sensors and actions are most useful for survival.
 void displaySensorActionReferenceCounts()
 {
-    std::vector<unsigned> sensorCounts(Sensor::NUM_SENSES, 0);
-    std::vector<unsigned> actionCounts(Action::NUM_ACTIONS, 0);
+    std::vector<unsigned> sensorCounts(Sensor::NUM_SENSES, 0u);
+    std::vector<unsigned> actionCounts(Action::NUM_ACTIONS, 0u);
 
-    for (unsigned index = 1; index <= p.population; ++index) {
+    for (unsigned index = 1u; index <= p.population; ++index) {
         if (peeps[index].alive) {
             const Indiv &indiv = peeps[index];
             for (const Gene &gene : indiv.nnet.connections) {
@@ -337,14 +337,14 @@ void displaySensorActionReferenceCounts()
     }
 
     std::cout << "Sensors in use:" << std::endl;
-    for (unsigned i = 0; i < sensorCounts.size(); ++i) {
-        if (sensorCounts[i] > 0) {
+    for (unsigned i = 0u; i < sensorCounts.size(); ++i) {
+        if (sensorCounts[i] > 0u) {
             std::cout << "  " << sensorCounts[i] << " - " << sensorName((Sensor)i) << std::endl;
         }
     }
     std::cout << "Actions in use:" << std::endl;
-    for (unsigned i = 0; i < actionCounts.size(); ++i) {
-        if (actionCounts[i] > 0) {
+    for (unsigned i = 0u; i < actionCounts.size(); ++i) {
+        if (actionCounts[i] > 0u) {
             std::cout << "  " << actionCounts[i] << " - " << actionName((Action)i) << std::endl;
         }
     }
@@ -353,8 +353,8 @@ void displaySensorActionReferenceCounts()
 
 void displaySampleGenomes(unsigned count)
 {
-    unsigned index = 1; // indexes start at 1
-    for (index = 1; count > 0 && index <= p.population; ++index) {
+    unsigned index = 1u; // indexes start at 1
+    for (index = 1; count > 0u && index <= p.population; ++index) {
         if (peeps[index].alive) {
             std::cout << "---------------------------\nIndividual ID " << index << std::endl;
             peeps[index].printGenome();

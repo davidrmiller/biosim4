@@ -51,15 +51,15 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
     // of neighbors defined by neighbors and radius, where neighbors includes self
     case CHALLENGE_STRING:
         {
-	        const unsigned minNeighbors = 22;
-	        const unsigned maxNeighbors = 2;
+	        const unsigned minNeighbors = 22u;
+	        const unsigned maxNeighbors = 2u;
 	        const float radius = 1.5f;
 
             if (grid.isBorder(indiv.loc)) {
                 return { false, 0.0f };
             }
 
-            unsigned count = 0;
+            unsigned count = 0u;
             auto f = [&](Coord loc2){
                 if (grid.isOccupiedAt(loc2)) ++count;
             };
@@ -113,7 +113,7 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
 	        const Coord offset = safeCenter - indiv.loc;
 	        const float distance = offset.length();
             if (distance <= outerRadius) {
-                unsigned count = 0;
+                unsigned count = 0u;
                 auto f = [&](Coord loc2){
                     if (grid.isOccupiedAt(loc2)) ++count;
                 };
@@ -258,7 +258,7 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
                 return { false, 0.0f };
             }
 
-            unsigned count = 0;
+            unsigned count = 0u;
             for (int16_t x = indiv.loc.x - 1; x < indiv.loc.x + 1; ++x) {
                 for (int16_t y = indiv.loc.y - 1; y < indiv.loc.y + 1; ++y) {
                     Coord tloc = { x, y };

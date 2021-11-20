@@ -59,7 +59,7 @@ Genome makeRandomGenome()
     Genome genome;
 
     const unsigned length = randomUint(p.genomeInitialLengthMin, p.genomeInitialLengthMax);
-    for (unsigned n = 0; n < length; ++n) {
+    for (unsigned n = 0u; n < length; ++n) {
         genome.push_back(makeRandomGene());
     }
 
@@ -270,21 +270,21 @@ void randomBitFlip(Genome &genome)
 {
 	constexpr int method = 1;
 
-	const unsigned byteIndex = randomUint(0, genome.size() - 1u) * sizeof(Gene);
-	const unsigned elementIndex = randomUint(0, genome.size() - 1u);
-	const uint8_t bitIndex8 = 1u << randomUint(0, 7u);
+	const unsigned byteIndex = randomUint(0u, genome.size() - 1u) * sizeof(Gene);
+	const unsigned elementIndex = randomUint(0u, genome.size() - 1u);
+	const uint8_t bitIndex8 = 1u << randomUint(0u, 7u);
 
     if (method == 0) {
         ((uint8_t *)&genome[0])[byteIndex] ^= bitIndex8;
     } else if (method == 1) {
 	    const float chance = randomUint() / (float)RANDOM_UINT_MAX; // 0..1
-        if (chance < 0.2) { // sourceType
+        if (chance < 0.2f) { // sourceType
             genome[elementIndex].sourceType ^= 1u;
-        } else if (chance < 0.4) { // sinkType
+        } else if (chance < 0.4f) { // sinkType
             genome[elementIndex].sinkType ^= 1u;
-        } else if (chance < 0.6) { // sourceNum
+        } else if (chance < 0.6f) { // sourceNum
             genome[elementIndex].sourceNum ^= bitIndex8;
-        } else if (chance < 0.8) { // sinkNum
+        } else if (chance < 0.8f) { // sinkNum
             genome[elementIndex].sinkNum ^= bitIndex8;
         } else { // weight
             genome[elementIndex].weight ^= (1 << randomUint(1, 15));

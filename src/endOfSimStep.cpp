@@ -61,9 +61,9 @@ void endOfSimStep(unsigned simStep, unsigned generation)
 	    const float radius = 9.0f;
         for (uint16_t index = 1; index <= p.population; ++index) { // index 0 is reserved
             Indiv &indiv = peeps[index];
-            for (unsigned n = 0; n < grid.getBarrierCenters().size(); ++n) {
-	            const unsigned bit = 1 << n;
-                if ((indiv.challengeBits & bit) == 0) {
+            for (unsigned n = 0u; n < grid.getBarrierCenters().size(); ++n) {
+	            const unsigned bit = 1u << n;
+                if ((indiv.challengeBits & bit) == 0u) {
                     if ((indiv.loc - grid.getBarrierCenters()[n]).length() <= radius) {
                         indiv.challengeBits |= bit;
                     }
@@ -79,7 +79,7 @@ void endOfSimStep(unsigned simStep, unsigned generation)
 
     // saveVideoFrameSync() is the synchronous version of saveVideFrame()
     if (p.saveVideo &&
-                ((generation % p.videoStride) == 0
+                ((generation % p.videoStride) == 0u
                  || generation <= p.videoSaveFirstFrames
                  || (generation >= p.replaceBarrierTypeGenerationNumber
                      && generation <= p.replaceBarrierTypeGenerationNumber + p.videoSaveFirstFrames))) {
