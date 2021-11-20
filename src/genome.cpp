@@ -58,7 +58,7 @@ Genome makeRandomGenome()
 {
     Genome genome;
 
-    unsigned length = randomUint(p.genomeInitialLengthMin, p.genomeInitialLengthMax);
+    const unsigned length = randomUint(p.genomeInitialLengthMin, p.genomeInitialLengthMax);
     for (unsigned n = 0; n < length; ++n) {
         genome.push_back(makeRandomGene());
     }
@@ -214,9 +214,9 @@ void Indiv::createWiringFromGenome()
     // starting at zero.
 
     assert(nodeMap.size() <= p.maxNumberNeurons);
-    uint16_t newNumber = 0;
+    uint16_t newNumber = 0u;
     for (auto & node : nodeMap) {
-        assert(node.second.numOutputs != 0);
+        assert(node.second.numOutputs != 0u);
         node.second.remappedNumber = newNumber++;
     }
 
@@ -254,10 +254,10 @@ void Indiv::createWiringFromGenome()
 
     // Create the indiv's neural node list
     nnet.neurons.clear();
-    for (unsigned neuronNum = 0; neuronNum < nodeMap.size(); ++neuronNum) {
+    for (unsigned neuronNum = 0u; neuronNum < nodeMap.size(); ++neuronNum) {
         nnet.neurons.push_back( {} );
         nnet.neurons.back().output = initialNeuronOutput();
-        nnet.neurons.back().driven = (nodeMap[neuronNum].numInputsFromSensorsOrOtherNeurons != 0);
+        nnet.neurons.back().driven = (nodeMap[neuronNum].numInputsFromSensorsOrOtherNeurons != 0u);
     }
 }
 
@@ -268,20 +268,20 @@ void Indiv::createWiringFromGenome()
 // This applies a point mutation at a random bit in a genome.
 void randomBitFlip(Genome &genome)
 {
-    int method = 1;
+	constexpr int method = 1;
 
-    unsigned byteIndex = randomUint(0, genome.size() - 1) * sizeof(Gene);
-    unsigned elementIndex = randomUint(0, genome.size() - 1);
-    uint8_t bitIndex8 = 1 << randomUint(0, 7);
+	const unsigned byteIndex = randomUint(0, genome.size() - 1u) * sizeof(Gene);
+	const unsigned elementIndex = randomUint(0, genome.size() - 1u);
+	const uint8_t bitIndex8 = 1u << randomUint(0, 7u);
 
     if (method == 0) {
         ((uint8_t *)&genome[0])[byteIndex] ^= bitIndex8;
     } else if (method == 1) {
-        float chance = randomUint() / (float)RANDOM_UINT_MAX; // 0..1
+	    const float chance = randomUint() / (float)RANDOM_UINT_MAX; // 0..1
         if (chance < 0.2) { // sourceType
-            genome[elementIndex].sourceType ^= 1;
+            genome[elementIndex].sourceType ^= 1u;
         } else if (chance < 0.4) { // sinkType
-            genome[elementIndex].sinkType ^= 1;
+            genome[elementIndex].sinkType ^= 1u;
         } else if (chance < 0.6) { // sourceNum
             genome[elementIndex].sourceNum ^= bitIndex8;
         } else if (chance < 0.8) { // sinkNum
@@ -301,10 +301,10 @@ void randomBitFlip(Genome &genome)
 // unequal lengths during a simulation.
 void cropLength(Genome &genome, unsigned length)
 {
-    if (genome.size() > length && length > 0) {
-        if (randomUint() / (float)RANDOM_UINT_MAX < 0.5) {
+    if (genome.size() > length && length > 0u) {
+        if (randomUint() / (float)RANDOM_UINT_MAX < 0.5f) {
             // trim front
-            unsigned numberElementsToTrim = genome.size() - length;
+            const unsigned numberElementsToTrim = genome.size() - length;
             genome.erase(genome.begin(), genome.begin() + numberElementsToTrim);
         } else {
             // trim back
@@ -319,16 +319,16 @@ void cropLength(Genome &genome, unsigned length)
 // unequal lengths during a simulation.
 void randomInsertDeletion(Genome &genome)
 {
-    float probability = p.geneInsertionDeletionRate;
+	const float probability = p.geneInsertionDeletionRate;
     if (randomUint() / (float)RANDOM_UINT_MAX < probability) {
         if (randomUint() / (float)RANDOM_UINT_MAX < p.deletionRatio) {
             // deletion
-            if (genome.size() > 1) {
-                genome.erase(genome.begin() + randomUint(0, genome.size() - 1));
+            if (genome.size() > 1u) {
+                genome.erase(genome.begin() + randomUint(0u, genome.size() - 1u));
             }
         } else if (genome.size() < p.genomeMaxLength) {
             // insertion
-            //genome.insert(genome.begin() + randomUint(0, genome.size() - 1), makeRandomGene());
+            //genome.insert(genome.begin() + randomUint(0u, genome.size() - 1u), makeRandomGene());
             genome.push_back(makeRandomGene());
         }
     }
@@ -340,7 +340,7 @@ void randomInsertDeletion(Genome &genome)
 void applyPointMutations(Genome &genome)
 {
     unsigned numberOfGenes = genome.size();
-    while (numberOfGenes-- > 0) {
+    while (numberOfGenes-- > 0u) {
         if ((randomUint() / (float)RANDOM_UINT_MAX) < p.pointMutationRate) {
             randomBitFlip(genome);
         }
@@ -367,25 +367,25 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
     // true, then we give preference to candidate parents according to their
     // score. Their score was computed by the survival/selection algorithm
     // in survival-criteria.cpp.
-    if (p.chooseParentsByFitness && parentGenomes.size() > 1) {
-        parent1Idx = randomUint(1, parentGenomes.size() - 1);
-        parent2Idx = randomUint(0, parent1Idx - 1);
+    if (p.chooseParentsByFitness && parentGenomes.size() > 1u) {
+        parent1Idx = randomUint(1u, parentGenomes.size() - 1u);
+        parent2Idx = randomUint(0u, parent1Idx - 1);
     } else {
-        parent1Idx = randomUint(0, parentGenomes.size() - 1);
-        parent2Idx = randomUint(0, parentGenomes.size() - 1);
+        parent1Idx = randomUint(0u, parentGenomes.size() - 1u);
+        parent2Idx = randomUint(0u, parentGenomes.size() - 1u);
     }
 
     const Genome &g1 = parentGenomes[parent1Idx];
     const Genome &g2 = parentGenomes[parent2Idx];
 
-    if (g1.size() == 0 || g2.size() == 0) {
+    if (g1.empty() || g2.empty()) {
         std::cout << "invalid genome" << std::endl;
         assert(false);
     }
 
     auto overlayWithSliceOf = [&](const Genome &gShorter) {
-        uint16_t index0 = randomUint(0, gShorter.size() - 1);
-        uint16_t index1 = randomUint(0, gShorter.size());
+        uint16_t index0 = randomUint(0u, gShorter.size() - 1u);
+        uint16_t index1 = randomUint(0u, gShorter.size());
         if (index0 > index1) {
             std::swap(index0, index1);
         }
@@ -396,30 +396,30 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
         if (g1.size() > g2.size()) {
             genome = g1;
             overlayWithSliceOf(g2);
-            assert(genome.size() > 0);
+            assert(!genome.empty());
         } else {
             genome = g2;
             overlayWithSliceOf(g1);
-            assert(genome.size() > 0);
+            assert(!genome.empty());
         }
 
         // Trim to length = average length of parents
         unsigned sum = g1.size() + g2.size();
         // If average length is not an integral number, add one half the time
-        if ((sum & 1) && (randomUint() & 1)) {
+        if ((sum & 1u) && (randomUint() & 1u)) {
             ++sum;
         }
-        cropLength(genome, sum / 2);
-        assert(genome.size() > 0);
+        cropLength(genome, sum / 2u);
+        assert(!genome.empty());
     } else {
         genome = g2;
-        assert(genome.size() > 0);
+        assert(!genome.empty());
     }
 
     randomInsertDeletion(genome);
-    assert(genome.size() > 0);
+    assert(!genome.empty());
     applyPointMutations(genome);
-    assert(genome.size() > 0);
+    assert(!genome.empty());
     assert(genome.size() <= p.genomeMaxLength);
 
     return genome;

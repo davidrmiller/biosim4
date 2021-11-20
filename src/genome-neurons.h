@@ -16,9 +16,9 @@ namespace BS {
 // value. The signed integer weight is scaled to a small range, then cubed
 // to provide fine resolution near zero.
 
-constexpr uint8_t SENSOR = 1;  // always a source
-constexpr uint8_t ACTION = 1;  // always a sink
-constexpr uint8_t NEURON = 0;  // can be either a source or sink
+constexpr uint8_t SENSOR = 1u;  // always a source
+constexpr uint8_t ACTION = 1u;  // always a sink
+constexpr uint8_t NEURON = 0u;  // can be either a source or sink
 
 struct Gene { //__attribute__((packed)) Gene {
     uint16_t sourceType:1; // SENSOR or NEURON
@@ -27,11 +27,11 @@ struct Gene { //__attribute__((packed)) Gene {
     uint16_t sinkNum:7;
     int16_t weight;
 
-    static constexpr float f1 = 8.0;
-    static constexpr float f2 = 64.0;
-    //float weightAsFloat() { return std::pow(weight / f1, 3.0) / f2; }
-    float weightAsFloat() const { return weight / 8192.0; }
-    static int16_t makeRandomWeight() { return randomUint(0, 0xefff) - 0x8000; }
+    static constexpr float f1 = 8.0f;
+    static constexpr float f2 = 64.0f;
+    //float weightAsFloat() { return std::pow(weight / f1, 3.0f) / f2; }
+    float weightAsFloat() const { return weight / 8192.0f; }
+    static int16_t makeRandomWeight() { return randomUint(0u, 0xefffu) - 0x8000u; }
 };
 
 
@@ -80,7 +80,7 @@ struct NeuralNet {
 // When a new population is generated and every individual is given a
 // neural net, the neuron outputs must be initialized to something:
 //constexpr float initialNeuronOutput() { return (NEURON_RANGE / 2.0) + NEURON_MIN; }
-constexpr float initialNeuronOutput() { return 0.5; }
+constexpr float initialNeuronOutput() { return 0.5f; }
 
 extern Gene makeRandomGene();
 extern Genome makeRandomGenome();

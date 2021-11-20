@@ -27,7 +27,7 @@ void unitTestConnectNeuralNetWiringFromGenome()
 
     indiv.createWiringFromGenome();
 
-    for (auto & conn : indiv.nnet.connections) {
+    for (const auto & conn : indiv.nnet.connections) {
         std::cout << (conn.sourceType == SENSOR ? "SENSOR" : "NEURON") << " "
                   << conn.sourceNum << " -> "
                   << (conn.sinkType == ACTION ? "ACTION" : "NEURON") << " "

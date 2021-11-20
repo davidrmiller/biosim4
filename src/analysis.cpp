@@ -301,7 +301,7 @@ void displaySignalUse()
 
     for (int16_t x = 0; x < p.sizeX; ++x) {
         for (int16_t y = 0; y < p.sizeY; ++y) {
-            unsigned magnitude = signals.getMagnitude(0, { x, y });
+	        const unsigned magnitude = signals.getMagnitude(0, { x, y });
             if (magnitude != 0) {
                 ++count;
                 sum += magnitude;

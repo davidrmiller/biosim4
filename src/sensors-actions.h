@@ -14,16 +14,16 @@ namespace BS {
 // These sensor, neuron, and action value ranges are here for documentation
 // purposes. Most functions now assume these ranges. We no longer support changes
 // to these ranges.
-constexpr float SENSOR_MIN = 0.0;
-constexpr float SENSOR_MAX = 1.0;
+constexpr float SENSOR_MIN = 0.0f;
+constexpr float SENSOR_MAX = 1.0f;
 constexpr float SENSOR_RANGE = SENSOR_MAX - SENSOR_MIN;
 
-constexpr float NEURON_MIN = -1.0;
-constexpr float NEURON_MAX = 1.0;
+constexpr float NEURON_MIN = -1.0f;
+constexpr float NEURON_MAX = 1.0f;
 constexpr float NEURON_RANGE = NEURON_MAX - NEURON_MIN;
 
-constexpr float ACTION_MIN = 0.0;
-constexpr float ACTION_MAX = 1.0;
+constexpr float ACTION_MIN = 0.0f;
+constexpr float ACTION_MAX = 1.0f;
 constexpr float ACTION_RANGE = ACTION_MAX - ACTION_MIN;
 
 

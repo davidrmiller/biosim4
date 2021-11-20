@@ -9,7 +9,7 @@ namespace BS {
 // Allocates space for the 2D grid
 void Grid::init(uint16_t sizeX, uint16_t sizeY)
 {
-    auto col = Column(sizeY);
+	const auto col = Column(sizeY);
     data = std::vector<Column>(sizeX, col);
 }
 
@@ -17,7 +17,7 @@ void Grid::init(uint16_t sizeX, uint16_t sizeY)
 // Finds a random unoccupied location in the grid
 Coord Grid::findEmptyLocation() const {
     Coord loc;
-    bool found = false;
+    const bool found = false;
 
     while (!found) {
         loc.x = randomUint(0, p.sizeX - 1);
@@ -36,11 +36,11 @@ Coord Grid::findEmptyLocation() const {
 void visitNeighborhood(Coord loc, float radius, std::function<void(Coord)> f)
 {
     for (int dx = -std::min<int>(radius, loc.x); dx <= std::min<int>(radius, (p.sizeX - loc.x) - 1); ++dx) {
-        int16_t x = loc.x + dx;
+	    const int16_t x = loc.x + dx;
         assert(x >= 0 && x < p.sizeX);
         int extentY = (int)sqrt(radius * radius - dx * dx);
         for (int dy = -std::min<int>(extentY, loc.y); dy <= std::min<int>(extentY, (p.sizeY - loc.y) - 1); ++dy) {
-            int16_t y = loc.y + dy;
+	        const int16_t y = loc.y + dy;
             assert(y >= 0 && y < p.sizeY);
             f( Coord { x, y} );
         }

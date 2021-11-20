@@ -17,19 +17,19 @@ void Signals::init(uint16_t numLayers, uint16_t sizeX, uint16_t sizeY)
 
 // Is it ok that multiple readers are reading this container while
 // this single thread is writing to it?  todo!!!
-void Signals::increment(uint16_t layerNum, Coord loc)
+void Signals::increment(uint16_t layerNum, Coord loc) const
 {
-    constexpr float radius = 1.5;
-    constexpr uint8_t centerIncreaseAmount = 2;
-    constexpr uint8_t neighborIncreaseAmount = 1;
+    constexpr float radius = 1.5f;
+    constexpr uint8_t centerIncreaseAmount = 2u;
+    constexpr uint8_t neighborIncreaseAmount = 1u;
 
 #pragma omp critical
     {
-        visitNeighborhood(loc, radius, [layerNum](Coord loc) {
-            if (signals[layerNum][loc.x][loc.y] < SIGNAL_MAX) {
-                signals[layerNum][loc.x][loc.y] =
+        visitNeighborhood(loc, radius, [layerNum](Coord loc2) {
+            if (signals[layerNum][loc2.x][loc2.y] < SIGNAL_MAX) {
+                signals[layerNum][loc2.x][loc2.y] =
                         std::min<unsigned>(SIGNAL_MAX,
-                                           signals[layerNum][loc.x][loc.y] + neighborIncreaseAmount);
+                                           signals[layerNum][loc2.x][loc2.y] + neighborIncreaseAmount);
             }
         });
 
@@ -43,16 +43,16 @@ void Signals::increment(uint16_t layerNum, Coord loc)
 
 
 // Fades the signals
-void Signals::fade(unsigned layerNum)
+void Signals::fade(uint16_t layerNum)
 {
-    constexpr unsigned fadeAmount = 1;
+    constexpr unsigned fadeAmount = 1u;
 
     for (int16_t x = 0; x < p.sizeX; ++x) {
         for (int16_t y = 0; y < p.sizeY; ++y) {
             if (signals[layerNum][x][y] >= fadeAmount) {
                 signals[layerNum][x][y] -= fadeAmount;  // fade center cell
             } else {
-                signals[layerNum][x][y] = 0;
+                signals[layerNum][x][y] = 0u;
             }
         }
     }

@@ -100,7 +100,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
         // save the genomes of the ones in the spawning area, saving their scores
         // for later sorting. Indexes start at 1.
 
-        bool considerKinship = true;
+        constexpr bool considerKinship = true;
         std::vector<uint16_t> sacrificesIndexes; // those who gave their lives for the greater good
 
         for (uint16_t index = 1; index <= p.population; ++index) {
@@ -121,24 +121,24 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             }
         }
 
-        unsigned generationToApplyKinship = 10;
+        constexpr unsigned generationToApplyKinship = 10;
         constexpr unsigned altruismFactor = 10; // the saved:sacrificed ratio
 
         if (considerKinship) {
             if (generation > generationToApplyKinship) {
                 // Todo: optimize!!!
-                float threshold = 0.7;
+                constexpr float threshold = 0.7f;
 
                 std::vector<std::pair<uint16_t, float>> survivingKin;
                 for (unsigned passes = 0; passes < altruismFactor; ++passes) {
-                    for (uint16_t sacrificedIndex : sacrificesIndexes) {
+                    for (const uint16_t sacrificedIndex : sacrificesIndexes) {
                         // randomize the next loop so we don't keep using the first one repeatedly
-                        unsigned startIndex = randomUint(0, parents.size() - 1);
+                        const unsigned startIndex = randomUint(0, parents.size() - 1);
                         for (unsigned count = 0; count < parents.size(); ++count) {
                             const std::pair<uint16_t, float> &possibleParent = parents[(startIndex + count) % parents.size()];
                             const Genome &g1 = peeps[sacrificedIndex].genome;
                             const Genome &g2 = peeps[possibleParent.first].genome;
-                            float similarity = genomeSimilarity(g1, g2);
+                            const float similarity = genomeSimilarity(g1, g2);
                             if (similarity >= threshold) {
                                 survivingKin.push_back(possibleParent);
                                 // mark this one so we don't use it again?
@@ -154,7 +154,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             }
         } else {
             // Limit the parent list
-            unsigned numberSaved = sacrificedCount * altruismFactor;
+            const unsigned numberSaved = sacrificedCount * altruismFactor;
             std::cout << parents.size() << " passed, " << sacrificedCount << " sacrificed, " << numberSaved << " saved" << std::endl; // !!!
             if (parents.size() > 0 && numberSaved < parents.size()) {
                 parents.erase(parents.begin() + numberSaved, parents.end());

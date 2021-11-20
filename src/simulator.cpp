@@ -148,7 +148,7 @@ void simulator(int argc, char **argv)
 
         endOfGeneration(generation);
         paramManager.updateFromConfigFile();
-        unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
+        const unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
         if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
             displaySampleGenomes(p.displaySampleGenomes);
         }
