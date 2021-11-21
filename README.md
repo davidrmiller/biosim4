@@ -224,7 +224,7 @@ release version.
 
 * A Dockerfile is provided which leverages the aforementioned Makefile.
 
-To compile the program:
+To build the environment in which you can compile the program:
 ```sh
 docker build -t biosim4 .
 ```
