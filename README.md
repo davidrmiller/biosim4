@@ -303,9 +303,8 @@ Note: If using the `docker run ... bash` command, the presumed directory structu
 following syntax:
 
 ```sh
-cd tools;
-gnuplot graphlog.gp
-python3 graph-nnet.py
+gnuplot tools/graphlog.gp
+cd tools && python3 graph-nnet.py
 ```
 
 <a name="BuildLog"></a>
