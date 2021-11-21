@@ -270,7 +270,11 @@ command line argument, e.g.:
 ./bin/Release/biosim4 [biosim4.ini]
 ```
 
-Note: For `docker`, `docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash` will put you into
+Note: For `docker`, 
+```sh
+docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash
+```
+will put you into
 an environment where you can run the above and have all your files persist when you exit (using `Ctrl-D`).
 
 
