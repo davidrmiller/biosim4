@@ -213,13 +213,28 @@ cimg-dev is replaced with version 2.8.4 or later.
 <a name="Compiling"></a>
 ### Compiling
 
-Two ways to compile:
+Two (and a half) ways to compile:
 
 * The file named "biosim4.cbp" is a configuration file for the Code::Blocks IDE version 20.03.
 
 * A Makefile is provided which
 was created from biosim4.cbp with cbp2make, but is not tested. A default "make" will generate a debug and a
 release version.
+
+
+* A Dockerfile is provided which leverages the aforementioned Makefile.
+
+To compile the program:
+```sh
+docker build -t biosim4 .
+```
+
+You can then compile the program with an ephemeral container:
+
+```sh
+docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
+```
+When you exit the container, the files compiled in your container files will persist in `./bin`.
 
 <a name="Bugs"></a>
 ## Bugs
@@ -255,6 +270,10 @@ command line argument, e.g.:
 ./bin/Release/biosim4 [biosim4.ini]
 ```
 
+Note: For `docker`, `docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash` will put you into
+an environment where you can run the above and have all your files persist when you exit (using `Ctrl-D`).
+
+
 <a name="ToolsDirectory"></a>
 ## Tools directory
 --------------------
@@ -274,6 +293,16 @@ src/simulator.cpp. The genome output is printed to stdout automatically
 if the parameter named "displaySampleGenomes" is set to nonzero in the config file. 
 An individual genome can be copied from that output stream and renamed "net.txt" in order to run
 graph-nnet.py.
+
+
+Note: If using the `docker run ... bash` command, the presumed directory structure would necessitate the
+following syntax:
+
+```sh
+cd tools;
+gnuplot graphlog.gp
+python3 graph-nnet.py
+```
 
 <a name="BuildLog"></a>
 ## Build log
