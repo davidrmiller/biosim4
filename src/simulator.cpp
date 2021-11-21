@@ -29,6 +29,7 @@ RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
 Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
+unsigned murderCount;    // This counts the total kills
 ImageWriter imageWriter; // This is for generating the movies
 
 // The paramManger maintains a private copy of the parameter values, and a copy
@@ -130,7 +131,7 @@ void simulator(int argc, char **argv)
 
     runMode = RunMode::RUN;
     while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
-        unsigned murderCount = 0; // for reporting purposes
+        murderCount = 0;
         for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
 
             // multithreaded loop: index 0 is reserved, start at 1

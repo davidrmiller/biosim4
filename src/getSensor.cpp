@@ -326,6 +326,27 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
         // Sense signal0 density along an axis perpendicular to last movement direction
         sensorVal = getSignalDensityAlongAxis(0, loc, lastMoveDir.rotate90DegCW());
         break;
+    case Sensor::KILLS:
+    {
+        // Returns amount of kills by nearby individuals divided by the total kill count
+        unsigned countKills = 0;
+        Coord center = loc;
+
+        auto f = [&](Coord tloc) {
+            if (grid.isOccupiedAt(tloc)) {
+                const Indiv &indiv2 = peeps.getIndiv(tloc);
+                countKills += indiv2.kills;
+            }
+        };
+
+        visitNeighborhood(center, p.populationSensorRadius, f);
+        sensorVal = (float)countKills / murderCount;
+        break;
+    }
+    case Sensor::SELF_KILLS:
+        // Returns self kills divided by the total kill count
+        sensorVal = (float)kills / murderCount;
+        break;
     case Sensor::GENETIC_SIM_FWD:
     {
         // Return minimum sensor value if nobody is alive in the forward adjacent location,

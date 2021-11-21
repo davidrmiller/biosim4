@@ -42,6 +42,7 @@ extern const Params &p; // read-only simulator config params
 extern Grid grid;  // 2D arena where the individuals live
 extern Signals signals;  // pheromone layers
 extern Peeps peeps;   // container of all the individuals
+extern unsigned murderCount;  // This counts the total kills
 extern void simulator(int argc, char **argv);
 
 // Feeds in-bounds Coords to a function: given a center location and a radius, this

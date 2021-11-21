@@ -137,6 +137,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
                 if (indiv2.alive) {
                     assert((indiv.loc - indiv2.loc).length() == 1);
                     peeps.queueForDeath(indiv2);
+                    ++indiv.kills;
                 }
             }
         }
