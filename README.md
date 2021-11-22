@@ -224,7 +224,8 @@ release version.
 
 * A Dockerfile is provided which leverages the aforementioned Makefile.
 
-To build the environment in which you can compile the program:
+To build a Docker environment in which you can compile the program:
+
 ```sh
 docker build -t biosim4 .
 ```
@@ -270,7 +271,7 @@ command line argument, e.g.:
 ./bin/Release/biosim4 [biosim4.ini]
 ```
 
-Note: For `docker`, 
+Note: If using docker, 
 ```sh
 docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash
 ```
