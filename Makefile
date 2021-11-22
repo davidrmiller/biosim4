@@ -15,7 +15,8 @@ INC = -I/usr/include/opencv4
 CFLAGS = -Wall -fexceptions
 RESINC = 
 LIBDIR = 
-LIB = /usr/lib/x86_64-linux-gnu/libopencv_core.so /usr/lib/x86_64-linux-gnu/libopencv_video.so /usr/lib/x86_64-linux-gnu/libopencv_videoio.so
+ARCH = `arch`
+LIB = /usr/lib/$(ARCH)-linux-gnu/libopencv_core.so /usr/lib/$(ARCH)-linux-gnu/libopencv_video.so /usr/lib/$(ARCH)-linux-gnu/libopencv_videoio.so
 LDFLAGS = -lX11 -lpthread
 
 INC_DEBUG = $(INC)
