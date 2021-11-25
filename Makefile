@@ -47,13 +47,16 @@ OBJ_RELEASE = $(OBJDIR_RELEASE)/src/signals.o $(OBJDIR_RELEASE)/src/main.o $(OBJ
 
 all: debug release
 
-clean: clean_debug clean_release
+after_clean:
+	rm -rf obj
+
+clean: clean_debug clean_release after_clean
 
 before_debug: 
-	test -d bin/Debug || mkdir -p bin/Debug
 	test -d $(OBJDIR_DEBUG)/src || mkdir -p $(OBJDIR_DEBUG)/src
 
 after_debug: 
+	ln -s $(OUT_DEBUG) $(WORKDIR)/biosim4-debug
 
 debug: before_debug out_debug after_debug
 
@@ -133,15 +136,15 @@ $(OBJDIR_DEBUG)/src/indiv.o: src/indiv.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/indiv.cpp -o $(OBJDIR_DEBUG)/src/indiv.o
 
 clean_debug: 
+	rm -f $(WORKDIR)/biosim4-debug
 	rm -f $(OBJ_DEBUG) $(OUT_DEBUG)
-	rm -rf bin/Debug
-	rm -rf $(OBJDIR_DEBUG)/src
+	rm -rf $(OBJDIR_DEBUG)
 
 before_release: 
-	test -d bin/Release || mkdir -p bin/Release
 	test -d $(OBJDIR_RELEASE)/src || mkdir -p $(OBJDIR_RELEASE)/src
 
 after_release: 
+	ln -s $(OUT_RELEASE) $(WORKDIR)/biosim4
 
 release: before_release out_release after_release
 
@@ -221,9 +224,10 @@ $(OBJDIR_RELEASE)/src/indiv.o: src/indiv.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/indiv.cpp -o $(OBJDIR_RELEASE)/src/indiv.o
 
 clean_release: 
+	rm -f $(WORKDIR)/biosim4
 	rm -f $(OBJ_RELEASE) $(OUT_RELEASE)
-	rm -rf bin/Release
-	rm -rf $(OBJDIR_RELEASE)/src
+	rm -rf $(OBJDIR_RELEASE)
 
 .PHONY: before_debug after_debug clean_debug before_release after_release clean_release
+
 
