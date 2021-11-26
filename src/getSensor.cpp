@@ -20,12 +20,15 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
     // above midrange if density is greatest in forward direction.
 
     double sum = 0.0;
+    Coord dirVec = dir.asNormalizedCoord();
+    double len = std::sqrt(dirVec.x*dirVec.x + dirVec.y*dirVec.y);
+    double dirVecX = dirVec.x/len;
+    double dirVecY = dirVec.y/len; //Unit vector components along dir
     auto f = [&](Coord tloc) {
         if (tloc != loc && grid.isOccupiedAt(tloc)) {
             Coord offset = tloc - loc;
-            double anglePosCos = offset.raySameness(dir);
-            double dist = std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
-            double contrib = (1.0 / dist) * anglePosCos;
+            double proj = (dirVecX*offset.x + dirVecY*offset.y); //Magnitude of projection along dir
+            double contrib = proj/(offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
     };
@@ -111,12 +114,15 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
     // away from borders.
 
     double sum = 0.0;
+    Coord dirVec = dir.asNormalizedCoord();
+    double len = std::sqrt(dirVec.x*dirVec.x + dirVec.y*dirVec.y);
+    double dirVecX = dirVec.x/len;
+    double dirVecY = dirVec.y/len; //Unit vector components along dir
     auto f = [&](Coord tloc) {
         if (tloc != loc) {
             Coord offset = tloc - loc;
-            double anglePosCos = offset.raySameness(dir);
-            double dist = std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
-            double contrib = (1.0 / dist) * anglePosCos * signals.getMagnitude(layerNum, loc);
+            double proj = (dirVecX*offset.x + dirVecY*offset.y); //Magnitude of projection along dir
+            double contrib = proj/(offset.x * offset.x + offset.y * offset.y) * signals.getMagnitude(layerNum, loc);
             sum += contrib;
         }
     };
