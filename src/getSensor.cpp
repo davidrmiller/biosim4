@@ -336,6 +336,8 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
             if (indiv2.alive) {
                 sensorVal = genomeSimilarity(genome, indiv2.genome); // 0.0..1.0
             }
+        } else {
+            sensorVal = 0.0;
         }
         break;
     }
