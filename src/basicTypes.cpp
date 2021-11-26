@@ -81,7 +81,7 @@ Dir Coord::asDir() const
     }
 
     const float TWO_PI = 3.1415927f * 2.0f;
-    float angle = std::atan2((float)y, (float)x);
+    float angle = std::atan2((float)x, (float)y);
 
     if (angle < 0.0f) {
         angle = 3.1415927f + (3.1415927f + angle);
