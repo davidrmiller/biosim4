@@ -181,7 +181,7 @@ unsigned longProbeBarrierFwd(Coord loc, Dir dir, unsigned longProbeDist)
 // Returned sensor values range SENSOR_MIN..SENSOR_MAX
 float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
 {
-    float sensorVal;
+    float sensorVal = 0.0;
 
     switch (sensorNum) {
     case Sensor::AGE:
@@ -336,8 +336,6 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
             if (indiv2.alive) {
                 sensorVal = genomeSimilarity(genome, indiv2.genome); // 0.0..1.0
             }
-        } else {
-            sensorVal = 0.0;
         }
         break;
     }
