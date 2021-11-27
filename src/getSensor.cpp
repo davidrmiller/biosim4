@@ -189,7 +189,7 @@ unsigned longProbeBarrierFwd(Coord loc, Dir dir, unsigned longProbeDist)
 // Returned sensor values range SENSOR_MIN..SENSOR_MAX
 float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
 {
-    float sensorVal;
+    float sensorVal = 0.0;
 
     switch (sensorNum) {
     case Sensor::AGE:

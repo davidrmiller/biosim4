@@ -198,13 +198,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     }
     if (isEnabled(Action::MOVE_RL)) {
         level = actionLevels[Action::MOVE_RL];
-        if (level < 0.0) {
-            offset = indiv.lastMoveDir.rotate90DegCCW().asNormalizedCoord();
-        } else if (level > 0.0) {
-            offset = indiv.lastMoveDir.rotate90DegCW().asNormalizedCoord();
-        } else {
-            offset = { 0, 0 };
-        }
+        offset = indiv.lastMoveDir.rotate90DegCW().asNormalizedCoord();
         moveX += offset.x * level;
         moveY += offset.y * level;
     }
