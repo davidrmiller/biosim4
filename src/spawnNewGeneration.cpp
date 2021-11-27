@@ -90,7 +90,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             // ToDo: if the parents no longer need their genome record, we could
             // possibly do a move here instead of copy, although it's doubtful that
             // the optimization would be noticeable.
-            if (passed.first && peeps[index].nnet.connections.size() > 0) {
+            if (passed.first && !peeps[index].nnet.connections.empty()) {
                 parents.push_back( { index, passed.second } );
             }
         }
@@ -106,12 +106,12 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
         for (uint16_t index = 1; index <= p.population; ++index) {
             // This the test for the spawning area:
             std::pair<bool, float> passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM);
-            if (passed.first && peeps[index].nnet.connections.size() > 0) {
+            if (passed.first && !peeps[index].nnet.connections.empty()) {
                 parents.push_back( { index, passed.second } );
             } else {
                 // This is the test for the sacrificial area:
                 passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM_SACRIFICE);
-                if (passed.first && peeps[index].nnet.connections.size() > 0) {
+                if (passed.first && !peeps[index].nnet.connections.empty()) {
                     if (considerKinship) {
                         sacrificesIndexes.push_back(index);
                     } else {
@@ -156,7 +156,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             // Limit the parent list
             unsigned numberSaved = sacrificedCount * altruismFactor;
             std::cout << parents.size() << " passed, " << sacrificedCount << " sacrificed, " << numberSaved << " saved" << std::endl; // !!!
-            if (parents.size() > 0 && numberSaved < parents.size()) {
+            if (!parents.empty() && numberSaved < parents.size()) {
                 parents.erase(parents.begin() + numberSaved, parents.end());
             }
         }
@@ -181,7 +181,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
 
     // Now we have a container of zero or more parents' genomes
 
-    if (parentGenomes.size() != 0) {
+    if (!parentGenomes.empty()) {
         // Spawn a new generation
         initializeNewGeneration(parentGenomes, generation + 1);
     } else {
