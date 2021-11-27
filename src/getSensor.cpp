@@ -18,17 +18,20 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
     // An empty neighborhood results in a sensor value exactly midrange; below
     // midrange if the population density is greatest in the reverse direction,
     // above midrange if density is greatest in forward direction.
-    assert(dir != Compass::CENTER);
+
+    assert(dir != Compass::CENTER);  // require a define axis
+
     double sum = 0.0;
     Coord dirVec = dir.asNormalizedCoord();
-    double len = std::sqrt(dirVec.x*dirVec.x + dirVec.y*dirVec.y);
-    double dirVecX = dirVec.x/len;
-    double dirVecY = dirVec.y/len; //Unit vector components along dir
+    double len = std::sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
+    double dirVecX = dirVec.x / len;
+    double dirVecY = dirVec.y / len; // Unit vector components along dir
+
     auto f = [&](Coord tloc) {
         if (tloc != loc && grid.isOccupiedAt(tloc)) {
             Coord offset = tloc - loc;
-            double proj = (dirVecX*offset.x + dirVecY*offset.y); //Magnitude of projection along dir
-            double contrib = proj/(offset.x * offset.x + offset.y * offset.y);
+            double proj = dirVecX * offset.x + dirVecY * offset.y; // Magnitude of projection along dir
+            double contrib = proj / (offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
     };
@@ -113,17 +116,21 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
     // about 2*radius*SIGNAL_MAX (?). We don't adjust for being close to a border,
     // so signal densities along borders and in corners are commonly sparser than
     // away from borders.
-    assert(dir != Compass::CENTER);
+
+    assert(dir != Compass::CENTER); // require a defined axis
+
     double sum = 0.0;
     Coord dirVec = dir.asNormalizedCoord();
-    double len = std::sqrt(dirVec.x*dirVec.x + dirVec.y*dirVec.y);
-    double dirVecX = dirVec.x/len;
-    double dirVecY = dirVec.y/len; //Unit vector components along dir
+    double len = std::sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
+    double dirVecX = dirVec.x / len;
+    double dirVecY = dirVec.y / len; // Unit vector components along dir
+
     auto f = [&](Coord tloc) {
         if (tloc != loc) {
             Coord offset = tloc - loc;
-            double proj = (dirVecX*offset.x + dirVecY*offset.y); //Magnitude of projection along dir
-            double contrib = (proj*signals.getMagnitude(layerNum, loc))/(offset.x * offset.x + offset.y * offset.y);
+            double proj = (dirVecX * offset.x + dirVecY * offset.y); // Magnitude of projection along dir
+            double contrib = (proj * signals.getMagnitude(layerNum, loc)) /
+                    (offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
     };
@@ -352,14 +359,14 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
         break;
     }
 
-if (std::isnan(sensorVal) || sensorVal < -0.01 || sensorVal > 1.01) {
-    //std::cout << "sensorVal=" << (int)sensorVal << " for " << sensorName((Sensor)sensorNum) << std::endl;
-    sensorVal = std::max(0.0f, std::min(sensorVal, 1.0f)); // clip
-}
+    if (std::isnan(sensorVal) || sensorVal < -0.01 || sensorVal > 1.01) {
+        std::cout << "sensorVal=" << (int)sensorVal << " for " << sensorName((Sensor)sensorNum) << std::endl;
+        sensorVal = std::max(0.0f, std::min(sensorVal, 1.0f)); // clip
+    }
 
     assert(!std::isnan(sensorVal) && sensorVal >= -0.01 && sensorVal <= 1.01);
 
     return sensorVal;
 }
 
-} // end namespace BS11
+} // end namespace BS
