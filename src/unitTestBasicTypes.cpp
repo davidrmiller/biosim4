@@ -259,21 +259,21 @@ bool unitTestBasicTypes()
     c1 = Coord { 0, 0 };
     c2 = Coord { 10, 11 };
     d1 = Compass::CENTER;
-    assert(c1.raySameness(c2) == 1.0); // special case - zero vector
-    assert(c2.raySameness(c1) == 1.0); // special case - zero vector
-    assert(c2.raySameness(d1) == 1.0); // special case - zero vector
+    assert(c1.raySameness(c2) == 1.0f); // special case - zero vector
+    assert(c2.raySameness(c1) == 1.0f); // special case - zero vector
+    assert(c2.raySameness(d1) == 1.0f); // special case - zero vector
     c1 = c2;
-    assert(c1.raySameness(c2) == 1.0);
-    assert(areClosef(Coord(-10,-10).raySameness(Coord(10,10)), -1.0));
+    assert(c1.raySameness(c2) == 1.0f);
+    assert(areClosef(Coord(-10,-10).raySameness(Coord(10,10)), -1.0f));
     c1 = Coord{0,11};
     c2 = Coord{20,0};
-    assert(areClosef(c1.raySameness(c2), 0.0));
-    assert(areClosef(c2.raySameness(c1), 0.0));
+    assert(areClosef(c1.raySameness(c2), 0.0f));
+    assert(areClosef(c2.raySameness(c1), 0.0f));
     c1 = Coord{0,444};
     c2 = Coord{113,113};
-    assert(areClosef(c1.raySameness(c2), 0.707106781));
+    assert(areClosef(c1.raySameness(c2), 0.707106781f));
     c2 = Coord{113,-113};
-    assert(areClosef(c1.raySameness(c2), -0.707106781));
+    assert(areClosef(c1.raySameness(c2), -0.707106781f));
 
     // Polar
     // ctor from mag, dir

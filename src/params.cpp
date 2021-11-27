@@ -22,47 +22,47 @@ namespace BS {
 
 void ParamManager::setDefaults()
 {
-    privParams.sizeX = 128;
-    privParams.sizeY = 128;
-    privParams.challenge = 0;
+    privParams.sizeX = 128u;
+    privParams.sizeY = 128u;
+    privParams.challenge = 0u;
 
-    privParams.genomeInitialLengthMin = 16;
-    privParams.genomeInitialLengthMax = 16;
-    privParams.genomeMaxLength = 20;
+    privParams.genomeInitialLengthMin = 16u;
+    privParams.genomeInitialLengthMax = 16u;
+    privParams.genomeMaxLength = 20u;
     privParams.logDir = "./logs/";
     privParams.imageDir = "./images/";
-    privParams.population = 100;
-    privParams.stepsPerGeneration = 100;
-    privParams.maxGenerations = 100;
-    privParams.barrierType = 0;
-    privParams.replaceBarrierType = 0;
+    privParams.population = 100u;
+    privParams.stepsPerGeneration = 100u;
+    privParams.maxGenerations = 100u;
+    privParams.barrierType = 0u;
+    privParams.replaceBarrierType = 0u;
     privParams.replaceBarrierTypeGenerationNumber = (uint32_t)-1;
-    privParams.numThreads = 1;
-    privParams.signalLayers = 1;
-    privParams.maxNumberNeurons = privParams.genomeMaxLength / 2;
+    privParams.numThreads = 1u;
+    privParams.signalLayers = 1u;
+    privParams.maxNumberNeurons = privParams.genomeMaxLength / 2u;
     privParams.pointMutationRate = 0.0001;
     privParams.geneInsertionDeletionRate = 0.0001;
     privParams.deletionRatio = 0.7;
     privParams.killEnable = false;
     privParams.sexualReproduction = true;
     privParams.chooseParentsByFitness = true;
-    privParams.populationSensorRadius = 2.0;
-    privParams.signalSensorRadius = 1;
-    privParams.responsiveness = 0.5;
-    privParams.responsivenessCurveKFactor = 2;
-    privParams.longProbeDistance = 16;
-    privParams.shortProbeBarrierDistance = 3;
-    privParams.valenceSaturationMag = 0.5;
+    privParams.populationSensorRadius = 2.0f;
+    privParams.signalSensorRadius = 1u;
+    privParams.responsiveness = 0.5f;
+    privParams.responsivenessCurveKFactor = 2u;
+    privParams.longProbeDistance = 16u;
+    privParams.shortProbeBarrierDistance = 3u;
+    privParams.valenceSaturationMag = 0.5f;
     privParams.saveVideo = true;
-    privParams.videoStride = 1;
-    privParams.videoSaveFirstFrames = 0;
-    privParams.displayScale = 1;
-    privParams.agentSize = 2;
-    privParams.genomeAnalysisStride = 1;
-    privParams.displaySampleGenomes = 0;
-    privParams.genomeComparisonMethod = 1;
+    privParams.videoStride = 1u;
+    privParams.videoSaveFirstFrames = 0u;
+    privParams.displayScale = 1u;
+    privParams.agentSize = 2u;
+    privParams.genomeAnalysisStride = 1u;
+    privParams.displaySampleGenomes = 0u;
+    privParams.genomeComparisonMethod = 1u;
     privParams.updateGraphLog = false;
-    privParams.updateGraphLogStride = 16;
+    privParams.updateGraphLogStride = 16u;
     privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
 }
 
@@ -123,14 +123,14 @@ void ParamManager::ingestParameter(std::string name, std::string val)
                    [](unsigned char c){ return std::tolower(c); });
     //std::cout << name << " " << val << '\n' << std::endl;
 
-    bool isUint = checkIfUint(val);
-    unsigned uVal = isUint ? (unsigned)std::stol(val.c_str()) : 0;
-    bool isInt = checkIfInt(val);
-    int iVal = isInt ? std::stoi(val.c_str()) : 0;
-    bool isFloat = checkIfFloat(val);
-    double dVal = isFloat ? std::stod(val.c_str()) : 0.0;
-    bool isBool = checkIfBool(val);
-    bool bVal = getBoolVal(val);
+    const bool isUint = checkIfUint(val);
+    const unsigned uVal = isUint ? (unsigned)std::stol(val.c_str()) : 0;
+    const bool isInt = checkIfInt(val);
+    const int iVal = isInt ? std::stoi(val.c_str()) : 0;
+    const bool isFloat = checkIfFloat(val);
+    const double dVal = isFloat ? std::stod(val.c_str()) : 0.0;
+    const bool isBool = checkIfBool(val);
+    const bool bVal = getBoolVal(val);
 
     do {
         if (name == "sizex" && isUint && uVal >= 2 && uVal <= (uint16_t)-1) {
@@ -278,12 +278,12 @@ void ParamManager::updateFromConfigFile()
             if(line[0] == '#' || line.empty()) {
                 continue;
             }
-            auto delimiterPos = line.find("=");
+            const auto delimiterPos = line.find("=");
             auto name = line.substr(0, delimiterPos);
             std::transform(name.begin(), name.end(), name.begin(),
                         [](unsigned char c){ return std::tolower(c); });
             auto value0 = line.substr(delimiterPos + 1);
-            auto delimiterComment = value0.find("#");
+            const auto delimiterComment = value0.find("#");
             auto value = value0.substr(0, delimiterComment);
             auto rawValue = value;
             value.erase(std::remove_if(value.begin(), value.end(), isspace),

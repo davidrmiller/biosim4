@@ -92,7 +92,7 @@ Dir Coord::asDir() const
     if (angle > TWO_PI) {
         angle -= TWO_PI;
     }
-    unsigned slice = (unsigned)(angle / (TWO_PI/8.0f));   // find which division it's in
+    const unsigned slice = (unsigned)(angle / (TWO_PI/8.0f));   // find which division it's in
     /*
         We have to convert slice values:
 
@@ -133,15 +133,15 @@ Coord Polar::asCoord() const
     }
 
     constexpr double S = (3.14159265359 * 2) / 8; // radians per slice
-    double compassToRadians[] { 5*S, 6*S, 7*S, 4*S, 0, 0*S, 3*S, 2*S, 1*S };
+    const double compassToRadians[] { 5*S, 6*S, 7*S, 4*S, 0, 0*S, 3*S, 2*S, 1*S };
 //    uint8_t asint = dir.asInt();
 //    double sliceradians = compassToRadians[asint];
 //    double angle = std::cos(sliceradians);
 //    double angleXmag = mag * angle;
 //    double adj = angleXmag + 0.5;
 //    int16_t trunc = (int16_t)adj;
-    int16_t x = (int16_t)std::round(mag * std::cos(compassToRadians[dir.asInt()]));
-    int16_t y = (int16_t)std::round(mag * std::sin(compassToRadians[dir.asInt()]));
+    const int16_t x = (int16_t)std::round(mag * std::cos(compassToRadians[dir.asInt()]));
+    const int16_t y = (int16_t)std::round(mag * std::sin(compassToRadians[dir.asInt()]));
     return Coord{x, y};
 }
 
@@ -150,15 +150,15 @@ Coord Polar::asCoord() const
 // returns 1.0 if either vector is (0,0)
 float Coord::raySameness(Coord other) const
 {
-    float mag1 = std::sqrt(x * x + y * y);
-    float mag2 = std::sqrt(other.x * other.x + other.y * other.y);
-    if (mag1 == 0.0 || mag2 == 0.0) {
-        return 1.0; // anything is "same" as zero vector
+	const float mag1 = std::sqrt(x * x + y * y);
+	const float mag2 = std::sqrt(other.x * other.x + other.y * other.y);
+    if (mag1 == 0.0f || mag2 == 0.0f) {
+        return 1.0f; // anything is "same" as zero vector
     }
-    float dot = x * other.x + y * other.y;
+	const float dot = x * other.x + y * other.y;
     float cos = dot / (mag1 * mag2);
-    assert(cos >= -1.0001 && cos <= 1.0001);
-    cos = std::min<float>(std::max<float>(cos, -1.0), 1.0); // clip
+    assert(cos >= -1.0001f && cos <= 1.0001f);
+    cos = std::min<float>(std::max<float>(cos, -1.0f), 1.0f); // clip
     return cos;
 }
 

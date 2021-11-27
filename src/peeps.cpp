@@ -54,7 +54,7 @@ void Peeps::queueForMove(const Indiv &indiv, Coord newLoc)
 {
     #pragma omp critical
     {
-        auto record = std::make_pair<uint16_t, Coord>(uint16_t(indiv.index), Coord(newLoc));
+	    const auto record = std::make_pair<uint16_t, Coord>(uint16_t(indiv.index), Coord(newLoc));
         moveQueue.push_back(record);
     }
 }
@@ -65,10 +65,10 @@ void Peeps::queueForMove(const Indiv &indiv, Coord newLoc)
 // but this function can move an individual any arbitrary distance.
 void Peeps::drainMoveQueue()
 {
-    for (auto moveRecord : moveQueue) {
+    for (const auto& moveRecord : moveQueue) {
         auto & indiv = peeps[moveRecord.first];
         Coord newLoc = moveRecord.second;
-        Dir moveDir = (newLoc - indiv.loc).asDir();
+        const Dir moveDir = (newLoc - indiv.loc).asDir();
         if (grid.isEmptyAt(newLoc)) {
             grid.set(indiv.loc, 0);
             grid.set(newLoc, indiv.index);

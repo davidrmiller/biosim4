@@ -45,11 +45,11 @@ std::array<float, Action::NUM_ACTIONS> Indiv::feedForward(unsigned simStep)
     // contains one value per action neuron, which is the sum of all its weighted
     // input connections. The sum has an arbitrary range. Return by value assumes compiler
     // return value optimization.
-    std::array<float, Action::NUM_ACTIONS> actionLevels;
-    actionLevels.fill(0.0); // undriven actions default to value 0.0
+    std::array<float, Action::NUM_ACTIONS> actionLevels{ 0.0f };
+    // actionLevels.fill(0.0f); // undriven actions default to value 0.0
 
     // Weighted inputs to each neuron are summed in neuronAccumulators[]
-    std::vector<float> neuronAccumulators(nnet.neurons.size(), 0.0);
+    std::vector<float> neuronAccumulators(nnet.neurons.size(), 0.0f);
 
     // Connections were ordered at birth so that all connections to neurons get
     // processed here before any connections to actions. As soon as we encounter the
@@ -64,7 +64,7 @@ std::array<float, Action::NUM_ACTIONS> Indiv::feedForward(unsigned simStep)
             // We've handled all the connections from sensors and now we are about to
             // start on the connections to the action outputs, so now it's time to
             // update and latch all the neuron outputs to their proper range (-1.0..1.0)
-            for (unsigned neuronIndex = 0; neuronIndex < nnet.neurons.size(); ++neuronIndex) {
+            for (unsigned neuronIndex = 0u; neuronIndex < nnet.neurons.size(); ++neuronIndex) {
                 if (nnet.neurons[neuronIndex].driven) {
                     nnet.neurons[neuronIndex].output = std::tanh(neuronAccumulators[neuronIndex]);
                 }

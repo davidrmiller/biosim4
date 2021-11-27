@@ -18,16 +18,16 @@ namespace BS {
 // for direct access where the y index is the inner loop.
 // Element values are not otherwise interpreted by class Grid.
 
-const uint16_t EMPTY = 0; // Index value 0 is reserved
-const uint16_t BARRIER = 0xffff;
+constexpr uint16_t EMPTY = 0u; // Index value 0 is reserved
+constexpr uint16_t BARRIER = 0xffffu;
 
 class Grid {
 public:
     // Column order here allows us to access grid elements as data[x][y]
     // while thinking of x as column and y as row
     struct Column {
-        Column(uint16_t numRows) : data { std::vector<uint16_t>(numRows, 0) } { }
-        void zeroFill() { std::fill(data.begin(), data.end(), 0); }
+        Column(uint16_t numRows) : data { std::vector<uint16_t>(numRows, 0u) } { }
+        void zeroFill() { std::fill(data.begin(), data.end(), 0u); }
         uint16_t& operator[](uint16_t rowNum) { return data[rowNum]; }
         uint16_t operator[](uint16_t rowNum) const { return data[rowNum]; }
         size_t size() const { return data.size(); }
@@ -45,7 +45,7 @@ public:
     // Occupied means an agent is living there.
     bool isOccupiedAt(Coord loc) const { return at(loc) != EMPTY && at(loc) != BARRIER; }
     bool isBorder(Coord loc) const { return loc.x == 0 || loc.x == sizeX() - 1 || loc.y == 0 || loc.y == sizeY() - 1; }
-    uint16_t at(Coord loc) const { return data[loc.x][loc.y]; };
+    uint16_t at(Coord loc) const { return data[loc.x][loc.y]; }
     uint16_t at(uint16_t x, uint16_t y) const { return data[x][y]; }
 
     void set(Coord loc, uint16_t val) { data[loc.x][loc.y] = val; }

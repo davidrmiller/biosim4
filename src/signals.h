@@ -13,15 +13,15 @@ namespace BS {
 // or             magnitude = signals.getMagnitude(layer, Coord);
 
 
-constexpr unsigned SIGNAL_MIN = 0;
+constexpr unsigned SIGNAL_MIN = 0u;
 constexpr unsigned SIGNAL_MAX = UINT8_MAX;
 
 struct Signals {
     struct Column {
-        Column(uint16_t numRows) : data { std::vector<uint8_t>(numRows, 0) } { }
+        Column(uint16_t numRows) : data { std::vector<uint8_t>(numRows, 0u) } { }
         uint8_t& operator[](uint16_t rowNum) { return data[rowNum]; }
         uint8_t operator[](uint16_t rowNum) const { return data[rowNum]; }
-        void zeroFill() { std::fill(data.begin(), data.end(), 0); }
+        void zeroFill() { std::fill(data.begin(), data.end(), 0u); }
     private:
         std::vector<uint8_t> data;
     };
@@ -39,9 +39,9 @@ struct Signals {
     Layer& operator[](uint16_t layerNum) { return data[layerNum]; }
     const Layer& operator[](uint16_t layerNum) const { return data[layerNum]; }
     uint8_t getMagnitude(uint16_t layerNum, Coord loc) const { return (*this)[layerNum][loc.x][loc.y]; }
-    void increment(uint16_t layerNum, Coord loc);
+    void increment(uint16_t layerNum, Coord loc) const;
     void zeroFill() { for (Layer &layer : data) { layer.zeroFill(); } }
-    void fade(unsigned layerNum);
+    static void fade(uint16_t layerNum);
 private:
     std::vector<Layer> data;
 };

@@ -28,13 +28,13 @@ void endOfSimStep(unsigned simStep, unsigned generation)
         // where X == 0. In the last half of the generation, the east wall is
         // radioactive, where X = the area width - 1. There's an exponential
         // falloff of the danger, falling off to zero at the arena half line.
-        int16_t radioactiveX = (simStep < p.stepsPerGeneration / 2) ? 0 : p.sizeX - 1;
+        const int16_t radioactiveX = (simStep < p.stepsPerGeneration / 2) ? 0 : p.sizeX - 1;
 
         for (uint16_t index = 1; index <= p.population; ++index) { // index 0 is reserved
             Indiv &indiv = peeps[index];
-            int16_t distanceFromRadioactiveWall = std::abs(indiv.loc.x - radioactiveX);
+            const int16_t distanceFromRadioactiveWall = std::abs(indiv.loc.x - radioactiveX);
             if (distanceFromRadioactiveWall < p.sizeX / 2) {
-                float chanceOfDeath = 1.0 / distanceFromRadioactiveWall;
+	            const float chanceOfDeath = 1.0f / distanceFromRadioactiveWall;
                 if (randomUint() / (float)RANDOM_UINT_MAX < chanceOfDeath) {
                     peeps.queueForDeath(indiv);
                 }
@@ -58,12 +58,12 @@ void endOfSimStep(unsigned simStep, unsigned generation)
     // member if they are within a specified radius of a barrier center. They have to
     // visit the barriers in sequential order.
     if (p.challenge == CHALLENGE_LOCATION_SEQUENCE) {
-        float radius = 9.0;
+	    const float radius = 9.0f;
         for (uint16_t index = 1; index <= p.population; ++index) { // index 0 is reserved
             Indiv &indiv = peeps[index];
-            for (unsigned n = 0; n < grid.getBarrierCenters().size(); ++n) {
-                unsigned bit = 1 << n;
-                if ((indiv.challengeBits & bit) == 0) {
+            for (unsigned n = 0u; n < grid.getBarrierCenters().size(); ++n) {
+	            const unsigned bit = 1u << n;
+                if ((indiv.challengeBits & bit) == 0u) {
                     if ((indiv.loc - grid.getBarrierCenters()[n]).length() <= radius) {
                         indiv.challengeBits |= bit;
                     }
@@ -79,7 +79,7 @@ void endOfSimStep(unsigned simStep, unsigned generation)
 
     // saveVideoFrameSync() is the synchronous version of saveVideFrame()
     if (p.saveVideo &&
-                ((generation % p.videoStride) == 0
+                ((generation % p.videoStride) == 0u
                  || generation <= p.videoSaveFirstFrames
                  || (generation >= p.replaceBarrierTypeGenerationNumber
                      && generation <= p.replaceBarrierTypeGenerationNumber + p.videoSaveFirstFrames))) {

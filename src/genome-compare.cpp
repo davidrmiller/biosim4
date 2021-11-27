@@ -37,16 +37,16 @@ float jaro_winkler_distance(const Genome &genome1, const Genome &genome2) {
     int sl = s.size(); // strlen(s);
     int al = a.size(); // strlen(a);
 
-    constexpr unsigned maxNumGenesToCompare = 20;
+    constexpr unsigned maxNumGenesToCompare = 20u;
     sl = min(maxNumGenesToCompare, sl); // optimization: approximate for long genomes
     al = min(maxNumGenesToCompare, al);
 
     std::vector<int> sflags(sl, 0);
     std::vector<int> aflags(al, 0);
-    int range = max(0, max(sl, al) / 2 - 1);
+    const int range = max(0, max(sl, al) / 2 - 1);
 
     if (!sl || !al)
-        return 0.0;
+        return 0.0f;
 
     /* calculate matching characters */
     for (i = 0; i < al; i++) {
@@ -61,7 +61,7 @@ float jaro_winkler_distance(const Genome &genome1, const Genome &genome2) {
     }
 
     if (!m)
-        return 0.0;
+        return 0.0f;
 
     /* calculate character transpositions */
     l = 0;
@@ -95,10 +95,10 @@ float hammingDistanceBits(const Genome &genome1, const Genome &genome2)
     const unsigned numElements = genome1.size();
     const unsigned bytesPerElement = sizeof(genome1[0]);
     const unsigned lengthBytes = numElements * bytesPerElement;
-    const unsigned lengthBits = lengthBytes * 8;
-    unsigned bitCount = 0;
+    const unsigned lengthBits = lengthBytes * 8u;
+    unsigned bitCount = 0u;
 
-    for (unsigned index = 0; index < genome1.size(); ++p1, ++p2, ++index) {
+    for (unsigned index = 0u; index < genome1.size(); ++p1, ++p2, ++index) {
         bitCount += __builtin_popcount(*p1 ^ *p2);
     }
 
@@ -106,7 +106,7 @@ float hammingDistanceBits(const Genome &genome1, const Genome &genome2)
     // resulting in c. 50% match. We will scale that by 2X to make the range
     // from 0 to 1.0. We clip the value to 1.0 in case the two patterns are
     // negatively correlated for some reason.
-    return 1.0 - std::min(1.0, (2.0 * bitCount) / (float)lengthBits);
+    return 1.0f - std::min(1.0f, (2.0f * bitCount) / (float)lengthBits);
 }
 
 
@@ -118,9 +118,9 @@ float hammingDistanceBytes(const Genome &genome1, const Genome &genome2)
     const unsigned int *p1 = (const unsigned int *)genome1.data();
     const unsigned int *p2 = (const unsigned int *)genome2.data();
     const unsigned numElements = genome1.size();
-    const unsigned bytesPerElement = sizeof(genome1[0]);
+    constexpr unsigned bytesPerElement = sizeof(genome1[0]);
     const unsigned lengthBytes = numElements * bytesPerElement;
-    unsigned byteCount = 0;
+    unsigned byteCount = 0u;
 
     for (unsigned index = 0; index < genome1.size(); ++p1, ++p2, ++index) {
         byteCount += (unsigned)(*p1 == *p2);
@@ -152,8 +152,8 @@ float genomeSimilarity(const Genome &g1, const Genome &g2)
 // Samples random pairs of individuals regardless if they are alive or not
 float geneticDiversity()
 {
-    if (p.population < 2) {
-        return 0.0;
+    if (p.population < 2u) {
+        return 0.0f;
     }
 
     // count limits the number of genomes sampled for performance reasons.
@@ -162,13 +162,13 @@ float geneticDiversity()
     float similaritySum = 0.0f;
 
     while (count > 0) {
-        unsigned index0 = randomUint(1, p.population - 1); // skip first and last elements
-        unsigned index1 = index0 + 1;
+	    const uint16_t index0 = randomUint(1, p.population - 1); // skip first and last elements
+	    const uint16_t index1 = index0 + 1;
         similaritySum += genomeSimilarity(peeps[index0].genome, peeps[index1].genome);
         --count;
         ++numSamples;
     }
-    float diversity = 1.0f - (similaritySum / numSamples);
+    const float diversity = 1.0f - (similaritySum / numSamples);
     return diversity;
 }
 

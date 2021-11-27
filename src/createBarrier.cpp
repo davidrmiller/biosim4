@@ -36,10 +36,10 @@ void Grid::createBarrier(unsigned barrierType)
     // Vertical bar in constant location
     case 1:
         {
-            int16_t minX = p.sizeX / 2;
-            int16_t maxX = minX + 1;
-            int16_t minY = p.sizeY / 4;
-            int16_t maxY = minY + p.sizeY / 2;
+	        const int16_t minX = p.sizeX / 2;
+	        const int16_t maxX = minX + 1;
+	        const int16_t minY = p.sizeY / 4;
+	        const int16_t maxY = minY + p.sizeY / 2;
 
             for (int16_t x = minX; x <= maxX; ++x) {
                 for (int16_t y = minY; y <= maxY; ++y) {
@@ -53,10 +53,10 @@ void Grid::createBarrier(unsigned barrierType)
     // Vertical bar in random location
     case 2:
         {
-            int16_t minX = randomUint(20, p.sizeX - 20);
-            int16_t maxX = minX + 1;
-            int16_t minY = randomUint(20, p.sizeY / 2 - 20);
-            int16_t maxY = minY + p.sizeY / 2;
+	        const int16_t minX = randomUint(20, p.sizeX - 20);
+	        const int16_t maxX = minX + 1;
+	        const int16_t minY = randomUint(20, p.sizeY / 2 - 20);
+	        const int16_t maxY = minY + p.sizeY / 2;
 
             for (int16_t x = minX; x <= maxX; ++x) {
                 for (int16_t y = minY; y <= maxY; ++y) {
@@ -70,8 +70,8 @@ void Grid::createBarrier(unsigned barrierType)
     // five blocks staggered
     case 3:
         {
-            int16_t blockSizeX = 2;
-            int16_t blockSizeY = p.sizeX / 3;
+	        const int16_t blockSizeX = 2;
+	        const int16_t blockSizeY = p.sizeX / 3;
 
             int16_t x0 = p.sizeX / 4 - blockSizeX / 2;
             int16_t y0 = p.sizeY / 4 - blockSizeY / 2;
@@ -100,10 +100,10 @@ void Grid::createBarrier(unsigned barrierType)
     // Horizontal bar in constant location
     case 4:
         {
-            int16_t minX = p.sizeX / 4;
-            int16_t maxX = minX + p.sizeX / 2;
-            int16_t minY = p.sizeY / 2 + p.sizeY / 4;
-            int16_t maxY = minY + 2;
+	        const int16_t minX = p.sizeX / 4;
+	        const int16_t maxX = minX + p.sizeX / 2;
+	        const int16_t minY = p.sizeY / 2 + p.sizeY / 4;
+	        const int16_t maxY = minY + 2;
 
             for (int16_t x = minX; x <= maxX; ++x) {
                 for (int16_t y = minY; y <= maxY; ++y) {
@@ -117,8 +117,8 @@ void Grid::createBarrier(unsigned barrierType)
     // Three floating islands -- different locations every generation
     case 5:
         {
-            float radius = 3.0;
-            unsigned margin = 2 * (int)radius;
+	        constexpr float radius = 3.0f;
+	        constexpr unsigned margin = 2u * (unsigned int)radius;
 
             auto randomLoc = [&]() {
 //                return Coord( (int16_t)randomUint((int)radius + margin, p.sizeX - ((float)radius + margin)),
@@ -127,7 +127,7 @@ void Grid::createBarrier(unsigned barrierType)
                               (int16_t)randomUint(margin, p.sizeY - margin) );
             };
 
-            Coord center0 = randomLoc();
+	        const Coord center0 = randomLoc();
             Coord center1;
             Coord center2;
 
@@ -157,17 +157,17 @@ void Grid::createBarrier(unsigned barrierType)
     // Spots, specified number, radius, locations
     case 6:
         {
-            unsigned numberOfLocations = 5;
-            float radius = 5.0;
+	        constexpr unsigned numberOfLocations = 5u;
+	        constexpr float radius = 5.0f;
 
             auto f = [&](Coord loc) {
                 grid.set(loc, BARRIER);
                 barrierLocations.push_back(loc);
             };
 
-            unsigned verticalSliceSize = p.sizeY / (numberOfLocations + 1);
+	        const unsigned verticalSliceSize = p.sizeY / (numberOfLocations + 1u);
 
-            for (unsigned n = 1; n <= numberOfLocations; ++n) {
+            for (unsigned n = 1u; n <= numberOfLocations; ++n) {
                 Coord loc = { (int16_t)(p.sizeX / 2),
                               (int16_t)(n * verticalSliceSize) };
                 visitNeighborhood(loc, radius, f);

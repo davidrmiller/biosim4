@@ -18,13 +18,13 @@ RandomUintGenerator::RandomUintGenerator(bool deterministic)
 {
     if (deterministic) {
         // for Marsaglia
-        rngx = 123456789;
-        rngy = 362436000;
-        rngz = 521288629;
-        rngc = 7654321;
+        rngx = 123456789u;
+        rngy = 362436000u;
+        rngz = 521288629u;
+        rngc = 7654321u;
 
         // for Jenkins:
-        a = 0xf1ea5eed, b = c = d = 123456789;
+        a = 0xf1ea5eedu; b = c = d = 123456789u;
     } else {
         randomize();
     }
@@ -36,13 +36,13 @@ void RandomUintGenerator::randomize()
     std::mt19937 generator(time(0));  // mt19937 is a standard mersenne_twister_engine
 
     // for Marsaglia
-    do { rngx = generator(); } while (rngx == 0);
-    do { rngy = generator(); } while (rngy == 0);
-    do { rngz = generator(); } while (rngz == 0);
-    do { rngc = generator(); } while (rngc == 0);
+    do { rngx = generator(); } while (rngx == 0u);
+    do { rngy = generator(); } while (rngy == 0u);
+    do { rngz = generator(); } while (rngz == 0u);
+    do { rngc = generator(); } while (rngc == 0u);
 
     // for Jenkins:
-    a = 0xf1ea5eed, b = c = d = generator();
+    a = 0xf1ea5eedu; b = c = d = generator();
 }
 
 
@@ -64,7 +64,7 @@ uint32_t RandomUintGenerator::operator()()
     } else {
         // Jenkins
         #define rot32(x,k) (((x)<<(k))|((x)>>(32-(k))))
-        uint32_t e = a - rot32(b, 27);
+        const uint32_t e = a - rot32(b, 27);
         a = b ^ rot32(c, 17);
         b = c + d;
         c = d + e;
@@ -83,7 +83,7 @@ uint32_t RandomUintGenerator::operator()()
 unsigned RandomUintGenerator::operator()(unsigned min, unsigned max)
 {
     assert(max >= min);
-    return ((*this)() % (max - min + 1)) + min;
+    return ((*this)() % (max - min + 1u)) + min;
 }
 
 

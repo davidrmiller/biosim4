@@ -9,7 +9,7 @@
 namespace BS {
 
 extern int randomInt(int min = 0, int max = INT_MAX);
-extern uint16_t randomU16(uint16_t min = 0, uint16_t max = (uint16_t)-1);
+extern uint16_t randomU16(uint16_t min = 0u, uint16_t max = 0xFFFFu);
 extern float randomFloat01(); // 0.0..1.0
 extern float randomFloat11(); // -1.0..1.0
 
@@ -32,7 +32,7 @@ public:
 
 // The globally accessible random number generator (not thread safe)
 extern RandomUintGenerator randomUint;
-constexpr uint32_t RANDOM_UINT_MAX = 0xffffffff;
+constexpr uint32_t RANDOM_UINT_MAX = 0xffffffffu;
 
 } // end namespace BS
 

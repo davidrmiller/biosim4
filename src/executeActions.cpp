@@ -16,7 +16,7 @@ namespace BS {
 // return true.
 bool prob2bool(float factor)
 {
-    assert(factor >= 0.0 && factor <= 1.0);
+    assert(factor >= 0.0f && factor <= 1.0f);
     return (randomUint() / (float)RANDOM_UINT_MAX) < factor;
 }
 
@@ -28,7 +28,7 @@ bool prob2bool(float factor)
 float responseCurve(float r)
 {
     const float k = p.responsivenessCurveKFactor;
-    return std::pow((r - 2.0), -2.0 * k) - std::pow(2.0, -2.0 * k) * (1.0 - r);
+    return std::pow((r - 2.0f), -2.0f * k) - std::pow(2.0f, -2.0f * k) * (1.0f - r);
 }
 
 
@@ -77,22 +77,22 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // default to mid-level 0.5.
     if (isEnabled(Action::SET_RESPONSIVENESS)) {
         float level = actionLevels[Action::SET_RESPONSIVENESS]; // default 0.0
-        level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
+        level = (std::tanh(level) + 1.0f) / 2.0f; // convert to 0.0..1.0
         indiv.responsiveness = level;
     }
 
     // For the rest of the action outputs, we'll apply an adjusted responsiveness
     // factor (see responseCurve() for more info). Range 0.0..1.0.
-    float responsivenessAdjusted = responseCurve(indiv.responsiveness);
+    const float responsivenessAdjusted = responseCurve(indiv.responsiveness);
 
     // Oscillator period action - convert action level nonlinearly to
     // 2..4*p.stepsPerGeneration. If this action neuron is enabled but not driven,
     // will default to 1.5 + e^(3.5) = a period of 34 simSteps.
     if (isEnabled(Action::SET_OSCILLATOR_PERIOD)) {
-        auto periodf = actionLevels[Action::SET_OSCILLATOR_PERIOD];
-        float newPeriodf01 = (std::tanh(periodf) + 1.0) / 2.0; // convert to 0.0..1.0
-        unsigned newPeriod = 1 + (int)(1.5 + std::exp(7.0 * newPeriodf01));
-        assert(newPeriod >= 2 && newPeriod <= 2048);
+	    const auto periodf = actionLevels[Action::SET_OSCILLATOR_PERIOD];
+	    const float newPeriodf01 = (std::tanh(periodf) + 1.0f) / 2.0f; // convert to 0.0..1.0
+	    const unsigned newPeriod = 1u + (unsigned int)(1.5f + std::exp(7.0f * newPeriodf01));
+        assert(newPeriod >= 2u && newPeriod <= 2048u);
         indiv.oscPeriod = newPeriod;
     }
 
@@ -100,9 +100,9 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // If this action neuron is enabled but not driven, will default to
     // mid-level period of 17 simSteps.
     if (isEnabled(Action::SET_LONGPROBE_DIST)) {
-        constexpr unsigned maxLongProbeDistance = 32;
+        constexpr unsigned maxLongProbeDistance = 32u;
         float level = actionLevels[SET_LONGPROBE_DIST];
-        level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
+        level = (std::tanh(level) + 1.0f) / 2.0f; // convert to 0.0..1.0
         level = 1 + level * maxLongProbeDistance;
         indiv.longProbeDist = (unsigned)level;
     }
@@ -113,9 +113,9 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // Pheromones may be emitted immediately (see signals.cpp). If this action neuron
     // is enabled but not driven, nothing will be emitted.
     if (isEnabled(Action::EMIT_SIGNAL0)) {
-        constexpr float emitThreshold = 0.5;  // 0.0..1.0; 0.5 is midlevel
+        constexpr float emitThreshold = 0.5f;  // 0.0..1.0; 0.5 is midlevel
         float level = actionLevels[Action::EMIT_SIGNAL0];
-        level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
+        level = (std::tanh(level) + 1.0f) / 2.0f; // convert to 0.0..1.0
         level *= responsivenessAdjusted;
         if (level > emitThreshold && prob2bool(level)) {
             signals.increment(0, indiv.loc);
@@ -126,14 +126,14 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // of an attempted murder. Probabilities under the threshold are considered 0.0.
     // If this action neuron is enabled but not driven, the neighbors are safe.
     if (isEnabled(Action::KILL_FORWARD) && p.killEnable) {
-        constexpr float killThreshold = 0.5;  // 0.0..1.0; 0.5 is midlevel
+        constexpr float killThreshold = 0.5f;  // 0.0..1.0; 0.5 is midlevel
         float level = actionLevels[Action::KILL_FORWARD];
-        level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
+        level = (std::tanh(level) + 1.0f) / 2.0f; // convert to 0.0..1.0
         level *= responsivenessAdjusted;
         if (level > killThreshold && prob2bool((level - ACTION_MIN) / ACTION_RANGE)) {
-            Coord otherLoc = indiv.loc + indiv.lastMoveDir;
+	        const Coord otherLoc = indiv.loc + indiv.lastMoveDir;
             if (grid.isInBounds(otherLoc) && grid.isOccupiedAt(otherLoc)) {
-                Indiv &indiv2 = peeps.getIndiv(otherLoc);
+	            const Indiv &indiv2 = peeps.getIndiv(otherLoc);
                 if (indiv2.alive) {
                     assert((indiv.loc - indiv2.loc).length() == 1);
                     peeps.queueForDeath(indiv2);
@@ -162,12 +162,12 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
 
     float level;
     Coord offset;
-    Coord lastMoveOffset = indiv.lastMoveDir.asNormalizedCoord();
+    const Coord lastMoveOffset = indiv.lastMoveDir.asNormalizedCoord();
 
     // moveX,moveY will be the accumulators that will hold the sum of all the
     // urges to move along each axis. (+- floating values of arbitrary range)
-    float moveX = isEnabled(Action::MOVE_X) ? actionLevels[Action::MOVE_X] : 0.0;
-    float moveY = isEnabled(Action::MOVE_Y) ? actionLevels[Action::MOVE_Y] : 0.0;
+    float moveX = isEnabled(Action::MOVE_X) ? actionLevels[Action::MOVE_X] : 0.0f;
+    float moveY = isEnabled(Action::MOVE_Y) ? actionLevels[Action::MOVE_Y] : 0.0f;
 
     if (isEnabled(Action::MOVE_EAST)) moveX += actionLevels[Action::MOVE_EAST];
     if (isEnabled(Action::MOVE_WEST)) moveX -= actionLevels[Action::MOVE_WEST];
@@ -218,18 +218,18 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     moveY *= responsivenessAdjusted;
 
     // The probability of movement along each axis is the absolute value
-    int16_t probX = (int16_t)prob2bool(std::abs(moveX)); // convert abs(level) to 0 or 1
-    int16_t probY = (int16_t)prob2bool(std::abs(moveY)); // convert abs(level) to 0 or 1
+    const int16_t probX = (int16_t)prob2bool(std::abs(moveX)); // convert abs(level) to 0 or 1
+    const int16_t probY = (int16_t)prob2bool(std::abs(moveY)); // convert abs(level) to 0 or 1
 
     // The direction of movement (if any) along each axis is the sign
-    int16_t signumX = moveX < 0.0 ? -1 : 1;
-    int16_t signumY = moveY < 0.0 ? -1 : 1;
+    const int16_t signumX = moveX < 0.0f ? -1 : 1;
+    const int16_t signumY = moveY < 0.0f ? -1 : 1;
 
     // Generate a normalized movement offset, where each component is -1, 0, or 1
-    Coord movementOffset = { (int16_t)(probX * signumX), (int16_t)(probY * signumY) };
+    const Coord movementOffset = { (int16_t)(probX * signumX), (int16_t)(probY * signumY) };
 
     // Move there if it's a valid location
-    Coord newLoc = indiv.loc + movementOffset;
+    const Coord newLoc = indiv.loc + movementOffset;
     if (grid.isInBounds(newLoc) && grid.isEmptyAt(newLoc)) {
         peeps.queueForMove(indiv, newLoc);
     }

@@ -35,8 +35,8 @@ void saveOneFrameImmed(const ImageFrameData &data)
 
     // Draw barrier locations
 
-    color[0] = color[1] = color[2] = 0x88;
-    for (Coord loc : data.barrierLocs) {
+    color[0] = color[1] = color[2] = 0x88u;
+    for (const Coord& loc : data.barrierLocs) {
             image.draw_rectangle(
                 loc.x       * p.displayScale - (p.displayScale / 2), ((p.sizeY - loc.y) - 1)   * p.displayScale - (p.displayScale / 2),
                 (loc.x + 1) * p.displayScale, ((p.sizeY - (loc.y - 0))) * p.displayScale,
@@ -46,13 +46,13 @@ void saveOneFrameImmed(const ImageFrameData &data)
 
     // Draw agents
 
-    constexpr uint8_t maxColorVal = 0xb0;
-    constexpr uint8_t maxLumaVal = 0xb0;
+    constexpr uint8_t maxColorVal = 0xb0u;
+    constexpr uint8_t maxLumaVal = 0xb0u;
 
     auto rgbToLuma = [](uint8_t r, uint8_t g, uint8_t b) { return (r+r+r+b+g+g+g+g) / 8; };
 
-    for (size_t i = 0; i < data.indivLocs.size(); ++i) {
-        int c = data.indivColors[i];
+    for (size_t i = 0u; i < data.indivLocs.size(); ++i) {
+        auto c = data.indivColors[i];
             color[0] = (c);                  // R: 0..255
             color[1] = ((c & 0x1f) << 3);    // G: 0..255
             color[2] = ((c & 7)    << 5);    // B: 0..255
@@ -91,20 +91,20 @@ ImageWriter::ImageWriter()
 void ImageWriter::startNewGeneration()
 {
     imageList.clear();
-    skippedFrames = 0;
+    skippedFrames = 0u;
 }
 
 
 uint8_t makeGeneticColor(const Genome &genome)
 {
-    return ((genome.size() & 1)
-         | ((genome.front().sourceType)    << 1)
-         | ((genome.back().sourceType)     << 2)
-         | ((genome.front().sinkType)      << 3)
-         | ((genome.back().sinkType)       << 4)
-         | ((genome.front().sourceNum & 1) << 5)
-         | ((genome.front().sinkNum & 1)   << 6)
-         | ((genome.back().sourceNum & 1)  << 7));
+    return ((genome.size() & 1u)
+         | ((genome.front().sourceType)     << 1)
+         | ((genome.back().sourceType)      << 2)
+         | ((genome.front().sinkType)       << 3)
+         | ((genome.back().sinkType)        << 4)
+         | ((genome.front().sourceNum & 1u) << 5)
+         | ((genome.front().sinkNum & 1u)   << 6)
+         | ((genome.back().sourceNum & 1u)  << 7));
 }
 
 
