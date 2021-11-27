@@ -24,7 +24,7 @@ RandomUintGenerator::RandomUintGenerator(bool deterministic)
         rngc = 7654321;
 
         // for Jenkins:
-        a = 0xf1ea5eed, b = c = d = 123456789;
+        a = 0xf1ea5eed; b = c = d = 123456789;
     } else {
         randomize();
     }
@@ -42,7 +42,7 @@ void RandomUintGenerator::randomize()
     do { rngc = generator(); } while (rngc == 0);
 
     // for Jenkins:
-    a = 0xf1ea5eed, b = c = d = generator();
+    a = 0xf1ea5eed; b = c = d = generator();
 }
 
 
