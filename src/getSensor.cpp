@@ -33,7 +33,20 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
         }
     };
 
-    visitNeighborhood(loc, p.populationSensorRadius, f);
+    auto g = [&](Coord tloc) { //Special case for dir = 4
+        if (tloc != loc && grid.isOccupiedAt(tloc)) {
+            Coord offset = tloc - loc;
+            double contrib = 1/std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
+            sum += contrib;
+        }
+    };
+
+    if (dir.asInt()!=4){
+        visitNeighborhood(loc, p.populationSensorRadius, f);
+    } else {
+        visitNeighborhood(loc, p.populationSensorRadius, g);
+    }
+
     double maxSumMag = 6.0 * p.populationSensorRadius;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
 
@@ -122,12 +135,25 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
         if (tloc != loc) {
             Coord offset = tloc - loc;
             double proj = (dirVecX*offset.x + dirVecY*offset.y); //Magnitude of projection along dir
-            double contrib = proj/(offset.x * offset.x + offset.y * offset.y) * signals.getMagnitude(layerNum, loc);
+            double contrib = (proj*signals.getMagnitude(layerNum, loc))/(offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
     };
 
-    visitNeighborhood(loc, p.signalSensorRadius, f);
+    auto g = [&](Coord tloc) { //Special case for dir = 4
+        if (tloc != loc && grid.isOccupiedAt(tloc)) {
+            Coord offset = tloc - loc;
+            double contrib = signals.getMagnitude(layerNum, loc)/std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
+            sum += contrib;
+        }
+    };
+
+    if (dir.asInt()!=4){
+        visitNeighborhood(loc, p.populationSensorRadius, f);
+    } else {
+        visitNeighborhood(loc, p.populationSensorRadius, g);
+    }
+
     double maxSumMag = 6.0 * p.signalSensorRadius * SIGNAL_MAX;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
     double sensorVal = sum / maxSumMag; // convert to -1.0..1.0
@@ -351,7 +377,7 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
     }
 
 if (std::isnan(sensorVal) || sensorVal < -0.01 || sensorVal > 1.01) {
-    std::cout << "sensorVal=" << (int)sensorVal << " for " << sensorName((Sensor)sensorNum) << std::endl;
+    //std::cout << "sensorVal=" << (int)sensorVal << " for " << sensorName((Sensor)sensorNum) << std::endl;
     sensorVal = std::max(0.0f, std::min(sensorVal, 1.0f)); // clip
 }
 
@@ -360,4 +386,4 @@ if (std::isnan(sensorVal) || sensorVal < -0.01 || sensorVal > 1.01) {
     return sensorVal;
 }
 
-} // end namespace BS
+} // end namespace BS11
