@@ -170,6 +170,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
 
     // Assemble a list of all the parent genomes. These will be ordered by their
     // scores if the parents[] container was sorted by score
+    parentGenomes.reserve(parents.size());
     for (const std::pair<uint16_t, float> &parent : parents) {
         parentGenomes.push_back(peeps[parent.first].genome);
     }

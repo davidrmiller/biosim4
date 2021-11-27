@@ -235,7 +235,7 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
 
             const std::vector<Coord> barrierCenters = grid.getBarrierCenters();
             float minDistance = 1e8;
-            for (Coord center : barrierCenters) {
+            for (auto& center : barrierCenters) {
                 float distance = (indiv.loc - center).length();
                 if (distance < minDistance) {
                     minDistance = distance;
