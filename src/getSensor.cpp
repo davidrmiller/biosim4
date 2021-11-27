@@ -18,7 +18,7 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
     // An empty neighborhood results in a sensor value exactly midrange; below
     // midrange if the population density is greatest in the reverse direction,
     // above midrange if density is greatest in forward direction.
-
+    assert(dir != Compass::CENTER);
     double sum = 0.0;
     Coord dirVec = dir.asNormalizedCoord();
     double len = std::sqrt(dirVec.x*dirVec.x + dirVec.y*dirVec.y);
@@ -33,19 +33,7 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
         }
     };
 
-    auto g = [&](Coord tloc) { //Special case for dir = 4
-        if (tloc != loc && grid.isOccupiedAt(tloc)) {
-            Coord offset = tloc - loc;
-            double contrib = 1/std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
-            sum += contrib;
-        }
-    };
-
-    if (dir.asInt()!=4){
-        visitNeighborhood(loc, p.populationSensorRadius, f);
-    } else {
-        visitNeighborhood(loc, p.populationSensorRadius, g);
-    }
+    visitNeighborhood(loc, p.populationSensorRadius, f);
 
     double maxSumMag = 6.0 * p.populationSensorRadius;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
@@ -125,7 +113,7 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
     // about 2*radius*SIGNAL_MAX (?). We don't adjust for being close to a border,
     // so signal densities along borders and in corners are commonly sparser than
     // away from borders.
-
+    assert(dir != Compass::CENTER);
     double sum = 0.0;
     Coord dirVec = dir.asNormalizedCoord();
     double len = std::sqrt(dirVec.x*dirVec.x + dirVec.y*dirVec.y);
@@ -140,19 +128,7 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
         }
     };
 
-    auto g = [&](Coord tloc) { //Special case for dir = 4
-        if (tloc != loc && grid.isOccupiedAt(tloc)) {
-            Coord offset = tloc - loc;
-            double contrib = signals.getMagnitude(layerNum, loc)/std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
-            sum += contrib;
-        }
-    };
-
-    if (dir.asInt()!=4){
-        visitNeighborhood(loc, p.populationSensorRadius, f);
-    } else {
-        visitNeighborhood(loc, p.populationSensorRadius, g);
-    }
+    visitNeighborhood(loc, p.populationSensorRadius, f);
 
     double maxSumMag = 6.0 * p.signalSensorRadius * SIGNAL_MAX;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
