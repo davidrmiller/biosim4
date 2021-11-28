@@ -19,4 +19,4 @@ jobs:
           docker build -t biosim4 .
 
       - name: compile
-        run: docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
+        run: docker run --rm -v `pwd`:/app --name biosim biosim4 make
