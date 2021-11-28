@@ -19,7 +19,7 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
     // midrange if the population density is greatest in the reverse direction,
     // above midrange if density is greatest in forward direction.
 
-    assert(dir != Compass::CENTER);  // require a define axis
+    assert(dir != Compass::CENTER);  // require a defined axis
 
     double sum = 0.0;
     Coord dirVec = dir.asNormalizedCoord();
