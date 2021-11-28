@@ -19,18 +19,25 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
     // midrange if the population density is greatest in the reverse direction,
     // above midrange if density is greatest in forward direction.
 
+    assert(dir != Compass::CENTER);  // require a defined axis
+
     double sum = 0.0;
+    Coord dirVec = dir.asNormalizedCoord();
+    double len = std::sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
+    double dirVecX = dirVec.x / len;
+    double dirVecY = dirVec.y / len; // Unit vector components along dir
+
     auto f = [&](Coord tloc) {
         if (tloc != loc && grid.isOccupiedAt(tloc)) {
             Coord offset = tloc - loc;
-            double anglePosCos = offset.raySameness(dir);
-            double dist = std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
-            double contrib = (1.0 / dist) * anglePosCos;
+            double proj = dirVecX * offset.x + dirVecY * offset.y; // Magnitude of projection along dir
+            double contrib = proj / (offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
     };
 
     visitNeighborhood(loc, p.populationSensorRadius, f);
+
     double maxSumMag = 6.0 * p.populationSensorRadius;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
 
@@ -110,18 +117,26 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
     // so signal densities along borders and in corners are commonly sparser than
     // away from borders.
 
+    assert(dir != Compass::CENTER); // require a defined axis
+
     double sum = 0.0;
+    Coord dirVec = dir.asNormalizedCoord();
+    double len = std::sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
+    double dirVecX = dirVec.x / len;
+    double dirVecY = dirVec.y / len; // Unit vector components along dir
+
     auto f = [&](Coord tloc) {
         if (tloc != loc) {
             Coord offset = tloc - loc;
-            double anglePosCos = offset.raySameness(dir);
-            double dist = std::sqrt((double)offset.x * offset.x + (double)offset.y * offset.y);
-            double contrib = (1.0 / dist) * anglePosCos * signals.getMagnitude(layerNum, loc);
+            double proj = (dirVecX * offset.x + dirVecY * offset.y); // Magnitude of projection along dir
+            double contrib = (proj * signals.getMagnitude(layerNum, loc)) /
+                    (offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
     };
 
-    visitNeighborhood(loc, p.signalSensorRadius, f);
+    visitNeighborhood(loc, p.populationSensorRadius, f);
+
     double maxSumMag = 6.0 * p.signalSensorRadius * SIGNAL_MAX;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
     double sensorVal = sum / maxSumMag; // convert to -1.0..1.0
@@ -344,10 +359,10 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
         break;
     }
 
-if (std::isnan(sensorVal) || sensorVal < -0.01 || sensorVal > 1.01) {
-    std::cout << "sensorVal=" << (int)sensorVal << " for " << sensorName((Sensor)sensorNum) << std::endl;
-    sensorVal = std::max(0.0f, std::min(sensorVal, 1.0f)); // clip
-}
+    if (std::isnan(sensorVal) || sensorVal < -0.01 || sensorVal > 1.01) {
+        std::cout << "sensorVal=" << (int)sensorVal << " for " << sensorName((Sensor)sensorNum) << std::endl;
+        sensorVal = std::max(0.0f, std::min(sensorVal, 1.0f)); // clip
+    }
 
     assert(!std::isnan(sensorVal) && sensorVal >= -0.01 && sensorVal <= 1.01);
 
