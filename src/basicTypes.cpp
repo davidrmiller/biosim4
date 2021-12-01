@@ -8,7 +8,15 @@ namespace BS {
 // eight steps per full rotation. Positive values are clockwise; negative
 // values are counterclockwise. E.g., rotate(4) returns a direction 90
 // degrees to the right.
-
+#define SW BS::Compass::SW
+#define W BS::Compass::W
+#define NW BS::Compass::NW
+#define N BS::Compass::N
+#define NE BS::Compass::NE
+#define E BS::Compass::E
+#define SE BS::Compass::SE
+#define S BS::Compass::S
+#define CENTER BS::Compass::CENTER
 const Dir rotations[72] = {SW, W, NW, N, NE, E, SE, S,
                             S, SW, W, NW, N, NE, E, SE,
                             SE, S, SW, W, NW, N, NE, E,
