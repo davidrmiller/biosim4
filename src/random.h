@@ -15,22 +15,25 @@ extern float randomFloat11(); // -1.0..1.0
 
 class RandomUintGenerator{
 private:
-    // for Marsaglia
+    // for the Marsaglia algorithm
     uint32_t rngx;
     uint32_t rngy;
     uint32_t rngz;
     uint32_t rngc;
-    // for Jenkins
+    // for the Jenkins algorithm
     uint32_t a, b, c, d;
+    // for debugging, record whether the RNG got initialized properly
+    bool initialized;
 public:
-    RandomUintGenerator(bool deterministic = false);
+    RandomUintGenerator();
     RandomUintGenerator& operator=(const RandomUintGenerator &rhs) = default;
-    void randomize();
+    void initialize();
     uint32_t operator()();
     unsigned operator()(unsigned min, unsigned max);
 };
 
-// The globally accessible random number generator (not thread safe)
+// The globally accessible random number generator (not thread safe -- for
+// multi-threaded use, each thread must be given a private copy of this object)
 extern RandomUintGenerator randomUint;
 constexpr uint32_t RANDOM_UINT_MAX = 0xffffffff;
 

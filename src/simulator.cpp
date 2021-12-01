@@ -31,7 +31,7 @@ Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
 ImageWriter imageWriter; // This is for generating the movies
 
-// The paramManger maintains a private copy of the parameter values, and a copy
+// The paramManager maintains a private copy of the parameter values, and a copy
 // is available read-only through global variable p. Although this is not
 // foolproof, you should be able to modify the config file during a simulation
 // run and modify many of the parameters. See params.cpp and params.h for more info.
@@ -111,6 +111,9 @@ void simulator(int argc, char **argv)
     paramManager.setDefaults();
     paramManager.registerConfigFile(argc > 1 ? argv[1] : "biosim4.ini");
     paramManager.updateFromConfigFile();
+
+    // Initialize the global random number generator
+    randomUint.initialize();
 
     // Allocate container space. Once allocated, these container elements
     // will be reused in each new generation.
