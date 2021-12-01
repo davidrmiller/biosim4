@@ -138,7 +138,7 @@ Coord Polar::asCoord() const
 
 float Coord::raySameness(Coord other) const
 {
-    int64_t mag = (x * x + y * y) * (other.x * other.x + other.y * other.y);
+    int64_t mag = ((int64_t)x * x + y * y) * (other.x * other.x + other.y * other.y);
     if (mag == 0) {
         return 1.0; // anything is "same" as zero vector
     }
