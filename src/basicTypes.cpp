@@ -8,21 +8,17 @@ namespace BS {
 // eight steps per full rotation. Positive values are clockwise; negative
 // values are counterclockwise. E.g., rotate(4) returns a direction 90
 // degrees to the right.
-#define SW BS::Compass::SW
-#define W BS::Compass::W
-#define NW BS::Compass::NW
-#define N BS::Compass::N
-#define NE BS::Compass::NE
-#define E BS::Compass::E
-#define SE BS::Compass::SE
-#define S BS::Compass::S
-#define CENTER BS::Compass::CENTER
+constexpr Compass NW = BS::Compass::NW; constexpr Compass N = BS::Compass::N;
+constexpr Compass NE = BS::Compass::NE; constexpr Compass E = BS::Compass::E;
+constexpr Compass SE = BS::Compass::SE; constexpr Compass S = BS::Compass::S;
+constexpr Compass SW = BS::Compass::SW; constexpr Compass W = BS::Compass::W;
+constexpr Compass C = BS::Compass::CENTER;
+
 const Dir rotations[72] = {SW, W, NW, N, NE, E, SE, S,
                             S, SW, W, NW, N, NE, E, SE,
                             SE, S, SW, W, NW, N, NE, E,
                             W, NW, N, NE, E, SE, S, SW,
-                            CENTER, CENTER, CENTER, CENTER,
-                            CENTER, CENTER, CENTER, CENTER,
+                            C, C, C, C, C, C, C, C,
                             E, SE, S, SW, W, NW, N, NE,
                             NW, N, NE, E, SE, S, SW, W,
                             N, NE, E, SE, S, SW, W, NW,
@@ -32,7 +28,7 @@ const Coord NormalisedCoords[9] = {Coord(-1,-1), Coord(0,-1), Coord(1,-1),
                                     Coord(-1,0), Coord(0,0), Coord(1,0),
                                     Coord(-1,1), Coord(0,1), Coord(1,1)};
 
-const Dir conversion[16] {S, CENTER, SW, N, SE, E, N,
+const Dir conversion[16] {S, C, SW, N, SE, E, N,
                             N, N, N, W, NW, N, NE, N, N};
 
 Dir Dir::rotate(int n) const
