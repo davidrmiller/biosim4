@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include "basicTypes.h"
-
 namespace BS {
 
 // This rotates a Dir value by the specified number of steps. There are
@@ -10,23 +9,28 @@ namespace BS {
 // values are counterclockwise. E.g., rotate(4) returns a direction 90
 // degrees to the right.
 
+const Dir rotations[72] = {SW, W, NW, N, NE, E, SE, S,
+                            S, SW, W, NW, N, NE, E, SE,
+                            SE, S, SW, W, NW, N, NE, E,
+                            W, NW, N, NE, E, SE, S, SW,
+                            CENTER, CENTER, CENTER, CENTER,
+                            CENTER, CENTER, CENTER, CENTER,
+                            E, SE, S, SW, W, NW, N, NE,
+                            NW, N, NE, E, SE, S, SW, W,
+                            N, NE, E, SE, S, SW, W, NW,
+                            NE, E, SE, S, SW, W, NW, N};
+
+const Coord NormalisedCoords[9] = {Coord(-1,-1), Coord(0,-1), Coord(1,-1),
+                                    Coord(-1,0), Coord(0,0), Coord(1,0),
+                                    Coord(-1,1), Coord(0,1), Coord(1,1)};
+
+const Dir conversion[16] {S, CENTER, SW, N, SE, E, N,
+                            N, N, N, W, NW, N, NE, N, N};
+
 Dir Dir::rotate(int n) const
 {
-    constexpr uint8_t rotateRight[9] { 3, 0, 1, 6, 4, 2, 7, 8, 5 };
-    constexpr uint8_t rotateLeft[9]  { 1, 2, 5, 0, 4, 8, 3, 6, 7 };
-    uint8_t n9 = asInt();
-    if (n < 0) {
-        while (n++ < 0) {
-            n9 = rotateLeft[n9];
-        }
-    } else if (n > 0) {
-        while (n-- > 0) {
-            n9 = rotateRight[n9];
-        }
-    }
-    return Dir{(Compass)n9};
+    return rotations[asInt() * 8 + (n & 7)];
 }
-
 
 /*
     A normalized Coord is a Coord with x and y == -1, 0, or 1.
@@ -47,18 +51,16 @@ Dir Dir::rotate(int n) const
        7 =>  0,  1
        8 =>  1,  1
 */
+
 Coord Dir::asNormalizedCoord() const
 {
-    const int d = asInt();
-    return Coord{(int16_t)((d % 3) - 1), (int16_t)((d / 3) - 1)};
+    return NormalisedCoords[asInt()];
 }
-
 
 Polar Dir::asNormalizedPolar() const
 {
     return Polar{1, dir9};
 }
-
 
 /*
     A normalized Coord has x and y == -1, 0, or 1.
@@ -71,45 +73,24 @@ Coord Coord::normalize() const
     return asDir().asNormalizedCoord();
 }
 
-
-// Calculate the angle, round to the nearest 360/8 degree slice, then
-// convert the slice to a Dir8Compass value.
+// Effectively, we want to check if a coordinate lies in a 45 degree region (22.5 degrees each side)
+// centred on each compass direction. By first rotating the system by 22.5 degrees clockwise
+// the boundaries to these regions become much easier to work with as they just align with the 8 axes.
 Dir Coord::asDir() const
 {
-    if (x == 0 && y == 0) {
-        return Dir{Compass::CENTER};
-    }
+    // tanN/tanD is the best rational approximation to tan(22.5) under the constraint that
+    // tanN + tanD < 2**16 (to avoid overflows). We don't care about the scale of the result,
+    // only the ratio of the terms. The actual rotation is (22.5 - 1.5e-8) degrees, whilst
+    // the closest a pair of int16_t's come to any of these lines is 8e-8 degrees, so the result is exact
+    constexpr uint16_t tanN = 13860;
+    constexpr uint16_t tanD = 33461;
 
-    const float TWO_PI = 3.1415927f * 2.0f;
-    float angle = std::atan2((float)y, (float)x);
-
-    if (angle < 0.0f) {
-        angle = 3.1415927f + (3.1415927f + angle);
-    }
-    //assert(angle >= 0.0 && angle <= TWO_PI);
-
-    angle += (TWO_PI / 16.0f);            // offset by half a slice
-    if (angle > TWO_PI) {
-        angle -= TWO_PI;
-    }
-    unsigned slice = (unsigned)(angle / (TWO_PI/8.0f));   // find which division it's in
-    /*
-        We have to convert slice values:
-
-            3  2  1
-            4     0
-            5  6  7
-
-        into Dir8Compass value:
-
-            6  7  8
-            3  4  5
-            0  1  2
-    */
-    const Compass dirconversion[8] {
-        Compass::E, Compass::NE, Compass::N, Compass::NW,
-        Compass::W, Compass::SW, Compass::S, Compass::SE };
-    return Dir{dirconversion[slice]};
+    const int32_t xp = x * tanD + y * tanN;
+    const int32_t yp = y * tanD - x * tanN;
+    // We can easily check which side of the four boundary lines
+    // the point now falls on, giving 16 cases, though only 9 are
+    // possible.
+    return conversion[(yp > 0)*8 + (xp>0)*4 + (yp>xp)*2 + (yp>=-xp)];
 }
 
 
@@ -117,7 +98,6 @@ Polar Coord::asPolar() const
 {
     return Polar{(int)length(), asDir()};
 }
-
 
 /*
     Compass values:
@@ -127,41 +107,35 @@ Polar Coord::asPolar() const
         0  1  2
 */
 Coord Polar::asCoord() const
-{
-    if (dir == Compass::CENTER) {
-        return Coord{0, 0};
-    }
+{   //3037000500 is 1/sqrt(2) in 32.32 fixed point
+    constexpr int64_t coordMags[9] = {3037000500, 1L << 32, 3037000500, 1L << 32,
+                                    0, 1L << 32, 3037000500, 1L << 32, 3037000500};
 
-    constexpr double S = (3.14159265359 * 2) / 8; // radians per slice
-    double compassToRadians[] { 5*S, 6*S, 7*S, 4*S, 0, 0*S, 3*S, 2*S, 1*S };
-//    uint8_t asint = dir.asInt();
-//    double sliceradians = compassToRadians[asint];
-//    double angle = std::cos(sliceradians);
-//    double angleXmag = mag * angle;
-//    double adj = angleXmag + 0.5;
-//    int16_t trunc = (int16_t)adj;
-    int16_t x = (int16_t)std::round(mag * std::cos(compassToRadians[dir.asInt()]));
-    int16_t y = (int16_t)std::round(mag * std::sin(compassToRadians[dir.asInt()]));
-    return Coord{x, y};
+    int64_t len = (coordMags[dir.asInt()]*mag);
+
+    // We need correct rounding, the idea here is to add/sub 1/2 (in fixed point)
+    // and truncate. We extend the sign of the magnitude with a cast,
+    // then shift those bits into the lower half, giving 0 for mag >= 0 and
+    // -1 for mag<0. An XOR with this copies the sign onto 1/2, to be exact
+    // we'd then also subtract it, but we don't need to be that precise.
+
+    int64_t temp = ((int64_t)mag >> 32) ^ ((1L << 31) - 1);
+    len = (len + temp)/(1L << 32); //Divide to make sure we get an arithmetic shift
+    return NormalisedCoords[dir.asInt()] * len;
 }
 
 
 // returns -1.0 (opposite directions) .. +1.0 (same direction)
 // returns 1.0 if either vector is (0,0)
+
 float Coord::raySameness(Coord other) const
 {
-    float mag1 = std::sqrt(x * x + y * y);
-    float mag2 = std::sqrt(other.x * other.x + other.y * other.y);
-    if (mag1 == 0.0 || mag2 == 0.0) {
+    int64_t mag = (x * x + y * y) * (other.x * other.x + other.y * other.y);
+    if (mag == 0) {
         return 1.0; // anything is "same" as zero vector
     }
-    float dot = x * other.x + y * other.y;
-    float cos = dot / (mag1 * mag2);
-    assert(cos >= -1.0001 && cos <= 1.0001);
-    cos = std::min<float>(std::max<float>(cos, -1.0), 1.0); // clip
-    return cos;
+    return (x * other.x + y * other.y)/std::sqrt(mag);
 }
-
 
 // returns -1.0 (opposite directions) .. +1.0 (same direction)
 // returns 1.0 if self is (0,0) or d is CENTER
