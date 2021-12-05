@@ -112,6 +112,7 @@ void simulator(int argc, char **argv)
     paramManager.setDefaults();
     paramManager.registerConfigFile(argc > 1 ? argv[1] : "biosim4.ini");
     paramManager.updateFromConfigFile();
+    paramManager.checkParameters(); // check and report any problems
 
     randomUint.initialize(); // seed the RNG for main-thread use
 

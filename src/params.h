@@ -75,6 +75,7 @@ public:
     void setDefaults();
     void registerConfigFile(const char *filename);
     void updateFromConfigFile();
+    void checkParameters();
 private:
     Params privParams;
     std::string configFilename;

@@ -305,4 +305,15 @@ void ParamManager::updateFromConfigFile()
     }
 }
 
+
+// Check parameter ranges, reasonableness, coherency, whatever. This is
+// typically called only once after the parameters are first read.
+void ParamManager::checkParameters()
+{
+    if (privParams.deterministic && privParams.numThreads != 1) {
+        std::cerr << "Warning: When deterministic is true, you probably want to set numThreads = 1." << std::endl;
+    }
+}
+
+
 } // end namespace BS
