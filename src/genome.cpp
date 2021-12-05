@@ -385,7 +385,7 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
 
     auto overlayWithSliceOf = [&](const Genome &gShorter) {
         uint16_t index0 = randomUint(0, gShorter.size() - 1);
-        uint16_t index1 = randomUint(0, gShorter.size());
+        uint16_t index1 = randomUint(0, gShorter.size() - 1);
         if (index0 > index1) {
             std::swap(index0, index1);
         }
