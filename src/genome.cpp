@@ -385,11 +385,11 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
 
     auto overlayWithSliceOf = [&](const Genome &gShorter) {
         uint16_t index0 = randomUint(0, gShorter.size() - 1);
-        uint16_t index1 = randomUint(0, gShorter.size() - 1);
+        uint16_t index1 = randomUint(0, gShorter.size());
         if (index0 > index1) {
             std::swap(index0, index1);
         }
-        std::copy(&gShorter[index0], &gShorter[index1], &genome[index0]);
+        std::copy(gShorter.begin() + index0, gShorter.begin() + index1, genome.begin() + index0);
     };
 
     if (p.sexualReproduction) {
