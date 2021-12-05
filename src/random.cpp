@@ -1,13 +1,14 @@
 // random.cpp
 
 // This file provides a random number generator (RNG) for the main thread
-// and child threads. There is a global RNG instance named randomUint which
-// can be duplicated so that each thread gets a private copy. The global
-// RNG must be initialized after program startup by calling its initialize()
-// member function, typically at the top of simulator() in simulator.cpp
-// after the parameters have been read. The parameters named "deterministic"
-// and "RNGSeed" determine whether to initialize the RNG with a
-// user-defined deterministic seed or with a random seed.
+// and child threads. The global-scoped RNG instance named randomUint is declared
+// "threadprivate" for OpenMP, meaning that each thread will instantiate its
+// own private instance. A side effect is that the object cannot have a
+// non-trivial ctor, so it has an initialize() member function that must be
+// called to seed the RNG instance, typically in simulator() in simulator.cpp
+// after the config parameters have been read. The biosim4.ini parameters named
+// "deterministic" and "RNGSeed" determine whether to initialize the RNG with
+// a user-defined deterministic seed or with a random seed.
 
 #include <cassert>
 #include <cmath>
@@ -15,15 +16,10 @@
 #include <chrono>
 #include <climits>
 #include "simulator.h"
+#include "omp.h"
 
 
 namespace BS {
-
-
-RandomUintGenerator::RandomUintGenerator()
-    : initialized(false)
-{
-}
 
 
 // If parameter p.deterministic is true, we'll initialize the RNG with
@@ -35,19 +31,35 @@ void RandomUintGenerator::initialize()
 {
     if (p.deterministic) {
         // Initialize Marsaglia. Overflow wrap-around is ok. We just want
-        // the four parameters to be unrelated:
-        rngx = p.RNGSeed + 123456789;
-        rngy = p.RNGSeed + 362436000;
-        rngz = p.RNGSeed + 521288629;
-        rngc = p.RNGSeed + 7654321;
+        // the four parameters to be unrelated. In the extremely unlikely
+        // event that a coefficient is zero, we'll force it to an arbitrary
+        // non-zero value. Each thread uses a different seed, yet
+        // deterministic per-thread.
+        rngx = p.RNGSeed + 123456789 + omp_get_thread_num();
+        rngy = p.RNGSeed + 362436000 + omp_get_thread_num();
+        rngz = p.RNGSeed + 521288629 + omp_get_thread_num();
+        rngc = p.RNGSeed + 7654321 + omp_get_thread_num();
+        rngx = rngx != 0 ? rngx : 123456789;
+        rngy = rngy != 0 ? rngy : 123456789;
+        rngz = rngz != 0 ? rngz : 123456789;
+        rngc = rngc != 0 ? rngc : 123456789;
 
-        // Initialize Jenkins:
+        // Initialize Jenkins determinstically per-thread:
         a = 0xf1ea5eed;
-        b = c = d = p.RNGSeed;
+        b = c = d = p.RNGSeed + omp_get_thread_num();
+        if (b == 0) {
+            b = c = d + 123456789;
+        }
     } else {
-        // Non-deterministic
-        // Get a random seed from the built-in generator
-        std::mt19937 generator(time(0));  // mt19937 is a standard mersenne_twister_engine
+        // Non-deterministic initialization.
+        // First we will get a random number from the built-in mt19937
+        // (Mersenne twister) generator and use that to derive the
+        // starting coefficients for the Marsaglia and Jenkins RNGs.
+        // We'll seed mt19937 with time(), but that has a coarse
+        // resolution and multiple threads might be initializing their
+        // instances at nearly the same time, so we'll add the thread
+        // number to uniquely seed mt19937 per-thread.
+        std::mt19937 generator(time(0) + omp_get_thread_num());
 
         // Initialize Marsaglia, but don't let any of the values be zero:
         do { rngx = generator(); } while (rngx == 0);
@@ -59,8 +71,6 @@ void RandomUintGenerator::initialize()
         a = 0xf1ea5eed;
         do { b = c = d = generator(); } while (b == 0);
     }
-
-    initialized = true; // for debugging, remember that we initialized the RNG
 }
 
 
@@ -100,7 +110,8 @@ uint32_t RandomUintGenerator::operator()()
 // a power of two, but we don't care if we generate one value a little more
 // often than another. Our randomness does not have to be high quality.
 // We do care about speed, because this will get called inside deeply nested
-// inner loops.
+// inner loops. Alternatively, we could create a standard C++ "distribution"
+// object here, but we would first need to investigate its overhead.
 //
 unsigned RandomUintGenerator::operator()(unsigned min, unsigned max)
 {
@@ -109,9 +120,9 @@ unsigned RandomUintGenerator::operator()(unsigned min, unsigned max)
 }
 
 
-// This is the globally-accessible random number generator. Threads can
-// be given their own private copies of this. This object needs to be
-// initialized once before its first use by calling randomUint.initialize().
+// This is the globally-accessible random number generator. Declaring
+// it threadprivate causes each thread to instantiate a private instance.
 RandomUintGenerator randomUint;
+#pragma omp threadprivate(randomUint)
 
 } // end namespace BS
