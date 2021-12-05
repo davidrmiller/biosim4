@@ -12,12 +12,12 @@ LD = g++
 WINDRES = windres
 
 INC = -I/usr/include/opencv4
-CFLAGS = -Wall -fexceptions
+CFLAGS = -Wall -fexceptions -fopenmp
 RESINC = 
 LIBDIR = 
 ARCH = `arch`
 LIB = /usr/lib/$(ARCH)-linux-gnu/libopencv_core.so /usr/lib/$(ARCH)-linux-gnu/libopencv_video.so /usr/lib/$(ARCH)-linux-gnu/libopencv_videoio.so
-LDFLAGS = -lX11 -lpthread
+LDFLAGS = -lX11 -lpthread  -lgomp
 
 INC_DEBUG = $(INC)
 CFLAGS_DEBUG = $(CFLAGS) -g -fopenmp
