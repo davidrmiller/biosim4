@@ -56,6 +56,8 @@ struct Params {
     unsigned barrierType; // >= 0
     unsigned replaceBarrierType; // >= 0
     unsigned replaceBarrierTypeGenerationNumber; // >= 0
+    bool deterministic;
+    unsigned RNGSeed; // >= 0
 
     // These must not change after initialization
     uint16_t sizeX; // 2..0x10000
@@ -73,6 +75,7 @@ public:
     void setDefaults();
     void registerConfigFile(const char *filename);
     void updateFromConfigFile();
+    void checkParameters();
 private:
     Params privParams;
     std::string configFilename;
