@@ -56,6 +56,12 @@ struct Params {
     unsigned barrierType; // >= 0
     bool deterministic;
     unsigned RNGSeed; // >= 0
+    unsigned startingEnergy;
+    unsigned neuralNetNodeEnergyCost;
+    unsigned neuralNetConnectionEnergyCost;
+    unsigned moveActionEnergyCost;
+    unsigned killActionEnergyCost;
+    unsigned otherActionEnergyCost;
 
     // These must not change after initialization
     uint16_t sizeX; // 2..0x10000

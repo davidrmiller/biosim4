@@ -67,8 +67,13 @@ The other important variables are:
 void simStepOneIndiv(Indiv &indiv, unsigned simStep)
 {
     ++indiv.age; // for this implementation, tracks simStep
-    auto actionLevels = indiv.feedForward(simStep);
-    executeActions(indiv, actionLevels);
+    const int neuralNetEnergyCost = indiv.neuralNetEnergyCost();
+    if (indiv.energy >= neuralNetEnergyCost)
+    {
+        indiv.energy -= neuralNetEnergyCost;
+        auto actionLevels = indiv.feedForward(simStep);
+        executeActions(indiv, actionLevels);
+    }
 }
 
 
