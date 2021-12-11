@@ -35,8 +35,6 @@ void ParamManager::setDefaults()
     privParams.stepsPerGeneration = 300;
     privParams.maxGenerations = 200000;
     privParams.barrierType = 0;
-    privParams.replaceBarrierType = 0;
-    privParams.replaceBarrierTypeGenerationNumber = (uint32_t)-1;
     privParams.numThreads = 4;
     privParams.signalLayers = 1;
     privParams.maxNumberNeurons = 5;
@@ -66,6 +64,7 @@ void ParamManager::setDefaults()
     privParams.deterministic = false;
     privParams.RNGSeed = 12345678;
     privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
+    privParams.parameterChangeGenerationNumber = 0;
 }
 
 
@@ -127,8 +126,6 @@ void ParamManager::ingestParameter(std::string name, std::string val)
 
     bool isUint = checkIfUint(val);
     unsigned uVal = isUint ? (unsigned)std::stol(val.c_str()) : 0;
-    bool isInt = checkIfInt(val);
-    int iVal = isInt ? std::stoi(val.c_str()) : 0;
     bool isFloat = checkIfFloat(val);
     double dVal = isFloat ? std::stod(val.c_str()) : 0.0;
     bool isBool = checkIfBool(val);
@@ -167,12 +164,6 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "barriertype" && isUint && uVal < (uint32_t)-1) {
             privParams.barrierType = uVal; break;
-        }
-        else if (name == "replacebarriertype" && isUint && uVal < (uint32_t)-1) {
-            privParams.replaceBarrierType = uVal; break;
-        }
-        else if (name == "replacebarriertypegenerationnumber" && isInt && iVal >= -1) {
-            privParams.replaceBarrierTypeGenerationNumber = (iVal == -1 ? (uint32_t)-1 : iVal); break;
         }
         else if (name == "numthreads" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
             privParams.numThreads = uVal; break;
@@ -274,7 +265,7 @@ void ParamManager::ingestParameter(std::string name, std::string val)
 }
 
 
-void ParamManager::updateFromConfigFile()
+void ParamManager::updateFromConfigFile(unsigned generationNumber)
 {
     // std::ifstream is RAII, i.e. no need to call close
     std::ifstream cFile(configFilename.c_str());
@@ -288,6 +279,27 @@ void ParamManager::updateFromConfigFile()
             }
             auto delimiterPos = line.find("=");
             auto name = line.substr(0, delimiterPos);
+
+            // Process the generation specifier if present:
+            auto generationDelimiterPos = name.find("@");
+            if (generationDelimiterPos < name.size()) {
+                auto generationSpecifier = name.substr(generationDelimiterPos + 1);
+                bool isUint = checkIfUint(generationSpecifier);
+                if (!isUint) {
+                    std::cerr << "Invalid generation specifier: " << name << ".\n";
+                    continue;
+                }
+                unsigned activeFromGeneration = (unsigned)std::stol(generationSpecifier);
+                if (activeFromGeneration > generationNumber) {
+                    continue; // This parameter value is not active yet
+                }
+                else if (activeFromGeneration == generationNumber) {
+                    // Parameter value became active at exactly this generation number
+                    privParams.parameterChangeGenerationNumber = generationNumber; 
+                }
+                name = name.substr(0, generationDelimiterPos);
+            }
+
             std::transform(name.begin(), name.end(), name.begin(),
                         [](unsigned char c){ return std::tolower(c); });
             auto value0 = line.substr(delimiterPos + 1);
