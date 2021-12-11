@@ -389,7 +389,7 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
         if (index0 > index1) {
             std::swap(index0, index1);
         }
-        std::copy(&gShorter[index0], &gShorter[index1], &genome[index0]);
+        std::copy(gShorter.begin() + index0, gShorter.begin() + index1, genome.begin() + index0);
     };
 
     if (p.sexualReproduction) {
