@@ -237,6 +237,40 @@ docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
 ```
 When you exit the container, the files compiled in your container files will persist in `./bin`.
 
+* A `CMakeList.txt` file is provided to allow development, build, test, installation and packaging with the CMake tool chain and all IDE's that support CMake. 
+
+To build with cmake you need to install cmake. Once installed use the procedure below:
+
+```sh
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+```
+
+To make a test installation and run the program:
+
+```sh
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+mkdir test_install
+cmake --install ./ --prefix ./test_install
+cd test_install
+./bin/biosim4
+```
+
+To make a release package:
+
+```sh
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+cpack ./
+```
+
 <a name="Bugs"></a>
 ## Bugs
 --------------------

@@ -7,7 +7,7 @@ enable_testing()
 add_subdirectory(src)
 
 
-install(FILES ./biosim4.ini DESTINATION bin)
+install(FILES ./biosim4.ini DESTINATION ./)
 install(DIRECTORY ./tools/ DESTINATION tools)
 install (DIRECTORY DESTINATION "logs" DIRECTORY_PERMISSIONS 
     OWNER_WRITE OWNER_READ OWNER_EXECUTE
