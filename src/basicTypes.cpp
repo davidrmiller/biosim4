@@ -104,10 +104,10 @@ Dir Coord::asDir() const
 
     const int32_t xp = x * tanD + y * tanN;
     const int32_t yp = y * tanD - x * tanN;
+
     // We can easily check which side of the four boundary lines
     // the point now falls on, giving 16 cases, though only 9 are
     // possible.
-
     return conversion[(yp > 0) * 8 + (xp > 0) * 4 + (yp > xp) * 2 + (yp >= -xp)];
 }
 
@@ -126,7 +126,10 @@ Polar Coord::asPolar() const
         0  1  2
 */
 Coord Polar::asCoord() const
-{   //3037000500 is 1/sqrt(2) in 32.32 fixed point
+{
+    // (Thanks to @Asa-Hopkins for this optimized function -- drm)
+
+    // 3037000500 is 1/sqrt(2) in 32.32 fixed point
     constexpr int64_t coordMags[9] = {
         3037000500,  // SW
         1L << 32,    // S
@@ -139,7 +142,7 @@ Coord Polar::asCoord() const
         3037000500   // NE
     };
 
-    int64_t len = (coordMags[dir.asInt()]*mag);
+    int64_t len = coordMags[dir.asInt()] * mag;
 
     // We need correct rounding, the idea here is to add/sub 1/2 (in fixed point)
     // and truncate. We extend the sign of the magnitude with a cast,
@@ -148,7 +151,7 @@ Coord Polar::asCoord() const
     // we'd then also subtract it, but we don't need to be that precise.
 
     int64_t temp = ((int64_t)mag >> 32) ^ ((1L << 31) - 1);
-    len = (len + temp)/(1L << 32); //Divide to make sure we get an arithmetic shift
+    len = (len + temp) / (1L << 32); // Divide to make sure we get an arithmetic shift
 
     return NormalizedCoords[dir.asInt()] * len;
 }
