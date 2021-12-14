@@ -45,7 +45,7 @@ public:
     // Occupied means an agent is living there.
     bool isOccupiedAt(Coord loc) const { return at(loc) != EMPTY && at(loc) != BARRIER; }
     bool isBorder(Coord loc) const { return loc.x == 0 || loc.x == sizeX() - 1 || loc.y == 0 || loc.y == sizeY() - 1; }
-    uint16_t at(Coord loc) const { return data[loc.x][loc.y]; };
+    uint16_t at(Coord loc) const { return data[loc.x][loc.y]; }
     uint16_t at(uint16_t x, uint16_t y) const { return data[x][y]; }
 
     void set(Coord loc, uint16_t val) { data[loc.x][loc.y] = val; }

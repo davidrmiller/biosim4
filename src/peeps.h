@@ -10,7 +10,7 @@
 
 namespace BS {
 
-class Indiv;
+struct Indiv;
 extern class Grid grid;
 
 // This class keeps track of alive and dead Indiv's and where they

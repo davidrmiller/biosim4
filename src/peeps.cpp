@@ -65,7 +65,7 @@ void Peeps::queueForMove(const Indiv &indiv, Coord newLoc)
 // but this function can move an individual any arbitrary distance.
 void Peeps::drainMoveQueue()
 {
-    for (auto moveRecord : moveQueue) {
+    for (auto& moveRecord : moveQueue) {
         auto & indiv = peeps[moveRecord.first];
         Coord newLoc = moveRecord.second;
         Dir moveDir = (newLoc - indiv.loc).asDir();
