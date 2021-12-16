@@ -1,6 +1,6 @@
 # Tests
 
-The _tests_ directory contains tools to test _biosim4_. Some tools are scripts, typically written in shell or Python. Other tools (like _rng/random_) need to be compiled.
+The _tests_ directory contains tools to test _biosim4_. There are two tools scripts written in shell and Python.
 
 ## simtest.sh
 
