@@ -66,10 +66,10 @@ cp ../biosim4.ini ./configs/my_new_test.ini
 
 2. Edit the new test's parameters in _./configs/my_new_test.ini_
 
-3. Import the test parameters into the test environment:
+3. Load (import) the test parameters into the test environment:
 
 ```python
-python3 testapp.py --import my_new_test.ini
+python3 testapp.py --load my_new_test.ini
 ```
 
 Simulation parameters (from _.configs/my_new_test.ini_) are converted to test-style format and stored in a new section _my_new_test_ in the configuration file _./configs/testapp.ini_
