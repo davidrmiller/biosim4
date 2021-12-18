@@ -25,9 +25,13 @@ void Peeps::init(unsigned population)
 
 // Safe to call during multithread mode.
 // Indiv will remain alive and in-world until end of sim step when
-// drainDeathQueue() is called.
+// drainDeathQueue() is called. It's ok if the same agent gets
+// queued for death multiple times. It does not make sense to
+// call this function for agents already dead.
 void Peeps::queueForDeath(const Indiv &indiv)
 {
+    assert(indiv.alive);
+
     #pragma omp critical
     {
         deathQueue.push_back(indiv.index);
@@ -49,9 +53,13 @@ void Peeps::drainDeathQueue()
 
 
 // Safe to call during multithread mode. Indiv won't move until end
-// of sim step when drainMoveQueue() is called.
+// of sim step when drainMoveQueue() is called. Should only be called
+// for living agents. It's ok if multiple agents are queued to move
+// to the same location; only the first one will actually get moved.
 void Peeps::queueForMove(const Indiv &indiv, Coord newLoc)
 {
+    assert(indiv.alive);
+
     #pragma omp critical
     {
         auto record = std::make_pair<uint16_t, Coord>(uint16_t(indiv.index), Coord(newLoc));
@@ -62,18 +70,22 @@ void Peeps::queueForMove(const Indiv &indiv, Coord newLoc)
 
 // Called in single-thread mode at end of sim step. This executes all the
 // queued movements. Each movement is typically one 8-neighbor cell distance
-// but this function can move an individual any arbitrary distance.
+// but this function can move an individual any arbitrary distance. It is
+// possible that an agent queued for movement was recently killed when the
+// death queue was drained, so we'll ignore already-dead agents.
 void Peeps::drainMoveQueue()
 {
     for (auto& moveRecord : moveQueue) {
         auto & indiv = peeps[moveRecord.first];
-        Coord newLoc = moveRecord.second;
-        Dir moveDir = (newLoc - indiv.loc).asDir();
-        if (grid.isEmptyAt(newLoc)) {
-            grid.set(indiv.loc, 0);
-            grid.set(newLoc, indiv.index);
-            indiv.loc = newLoc;
-            indiv.lastMoveDir = moveDir;
+        if (indiv.alive) {
+            Coord newLoc = moveRecord.second;
+            Dir moveDir = (newLoc - indiv.loc).asDir();
+            if (grid.isEmptyAt(newLoc)) {
+                grid.set(indiv.loc, 0);
+                grid.set(newLoc, indiv.index);
+                indiv.loc = newLoc;
+                indiv.lastMoveDir = moveDir;
+            }
         }
     }
     moveQueue.clear();
