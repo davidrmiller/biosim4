@@ -18,6 +18,9 @@ import pydoc
 
 # this script must be executed from the ./tests directory
 try:
+    print("Path(__file__)", Path(__file__))
+    print("str(Path(__file__).parent)", str(Path(__file__).parent))
+    print("endswith('tests')", str(Path(__file__).parent).endswith("tests"))
     assert str(Path(__file__).parent).endswith("tests")
 except:
     print("this script must be executed from the ./tests directory")
