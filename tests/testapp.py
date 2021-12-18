@@ -21,12 +21,14 @@ try:
     print("Path(__file__)", Path(__file__))
     print("str(Path(__file__).parent)", str(Path(__file__).parent))
     print("endswith('tests')", str(Path(__file__).parent).endswith("tests"))
-    assert str(Path(__file__).parent).endswith("tests")
+    assert str(Path(__file__).resolve().parent).endswith("tests")
 except:
     print("this script must be executed from the ./tests directory")
     exit(1)
 
-_scriptpath = Path(__file__)    # full path
+# Path(__file__) yields the filename only in Python <= 3.8
+# so, we force .resolve() of the full pathname:
+_scriptpath = Path(__file__).resolve()    # full path
 _scriptname = _scriptpath.name  # filename incl .py
 _appname = _scriptpath.stem     # filename excl .py
 _projname = "biosim4"
