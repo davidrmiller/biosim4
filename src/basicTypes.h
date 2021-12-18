@@ -4,7 +4,13 @@
 /*
 Basic types used throughout the project:
 
-Compass - an enum with enumerants N=0, NE, E, SW, S, SW, W, NW, CENTER
+Compass - an enum with enumerants SW, S, SE, W, CENTER, E, NW, N, NE
+
+    Compass arithmetic values:
+
+        6  7  8
+        3  4  5
+        0  1  2
 
 Dir, Coord, Polar, and their constructors:
 
