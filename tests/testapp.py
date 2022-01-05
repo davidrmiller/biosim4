@@ -232,7 +232,7 @@ TEST_DEFAULTS = [
     ['microtest', 'param-sizey', '64'],
     ['microtest', 'param-stepspergeneration', '30'],
     ['microtest', 'result-diversity-max', '0.75'],
-    ['microtest', 'result-diversity-min', '0.16'],
+    ['microtest', 'result-diversity-min', '0.125'],
     ['microtest', 'result-generations', '10'],
     ['microtest', 'result-genomesize', '20'],
     ['microtest', 'result-kills', '0'],
