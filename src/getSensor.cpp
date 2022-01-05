@@ -135,7 +135,7 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
         }
     };
 
-    visitNeighborhood(loc, p.populationSensorRadius, f);
+    visitNeighborhood(loc, p.signalSensorRadius, f);
 
     double maxSumMag = 6.0 * p.signalSensorRadius * SIGNAL_MAX;
     assert(sum >= -maxSumMag && sum <= maxSumMag);
