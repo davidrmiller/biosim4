@@ -1,16 +1,6 @@
 # Tests
 
-The _tests_ directory contains tools to test _biosim4_. There are two tools scripts written in shell and Python.
-
-## simtest.sh
-
-This shell script starts a short simulation and evaluates _biosim4_ console output for both expected output and errors. The scripts uses _configs/biosim4-test-1.ini_ to configure simulation parameters. From the _tests_ working directory execute the following from a shell:
-
-```sh
-./simtest.sh
-```
-
-If this script reports any errors, search for this error in Issues.
+The _tests_ directory contains tools to test _biosim4_.
 
 ## testapp.py
 
