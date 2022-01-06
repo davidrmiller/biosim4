@@ -8,30 +8,27 @@
 
 namespace BS {
 
-extern int randomInt(int min = 0, int max = INT_MAX);
-extern uint16_t randomU16(uint16_t min = 0, uint16_t max = (uint16_t)-1);
-extern float randomFloat01(); // 0.0..1.0
-extern float randomFloat11(); // -1.0..1.0
 
-class RandomUintGenerator{
+struct RandomUintGenerator{
 private:
-    // for Marsaglia
+    // for the Marsaglia algorithm
     uint32_t rngx;
     uint32_t rngy;
     uint32_t rngz;
     uint32_t rngc;
-    // for Jenkins
+    // for the Jenkins algorithm
     uint32_t a, b, c, d;
 public:
-    RandomUintGenerator(bool deterministic = false);
-    RandomUintGenerator& operator=(const RandomUintGenerator &rhs) = default;
-    void randomize();
+    void initialize(); // must be called to seed the RNG
     uint32_t operator()();
     unsigned operator()(unsigned min, unsigned max);
 };
 
-// The globally accessible random number generator (not thread safe)
+// The globally-scoped random number generator. Declaring it
+// threadprivate causes each thread to instantiate a private instance.
 extern RandomUintGenerator randomUint;
+#pragma omp threadprivate(randomUint)
+
 constexpr uint32_t RANDOM_UINT_MAX = 0xffffffff;
 
 } // end namespace BS

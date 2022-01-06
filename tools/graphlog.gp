@@ -3,7 +3,7 @@
 # Requires a text file named "epoch-log.txt" in the log directory
 
 set term png size 2000, 400
-set output "../images/log.png"
+set output "./images/log.png"
 
 # Left Y axis gets scaled to the max survivors.
 # Right Y axis gets scaled to 0..255.
@@ -25,7 +25,7 @@ ScaleGenomeLength(y)= y*2
 ScaleDiversity(d)= d
 #ScaleMurders(m) = m
 
-plot "../logs/epoch-log.txt" \
+plot "./logs/epoch-log.txt" \
        using 1:(ScaleSurvivors($2)) with lines lw 2 linecolor 2 title "Survivors", \
     "" using 1:(ScaleDiversity($3)) with lines lw 2 linecolor 1 title "Diversity" axes x1y2
 
