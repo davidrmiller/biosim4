@@ -4,7 +4,13 @@
 /*
 Basic types used throughout the project:
 
-Compass - an enum with enumerants N=0, NE, E, SW, S, SW, W, NW, CENTER
+Compass - an enum with enumerants SW, S, SE, W, CENTER, E, NW, N, NE
+
+    Compass arithmetic values:
+
+        6  7  8
+        3  4  5
+        0  1  2
 
 Dir, Coord, Polar, and their constructors:
 
@@ -62,8 +68,8 @@ struct Polar;
 struct __attribute__((packed)) Dir {
     static Dir random8() { return Dir(Compass::N).rotate(randomUint(0, 7)); }
 
-    Dir(Compass dir = Compass::CENTER) : dir9{dir} {};
-    Dir operator=(Compass d) { dir9 = d; return *this; }
+    Dir(Compass dir = Compass::CENTER) : dir9{dir} {}
+    Dir& operator=(const Compass& d) { dir9 = d; return *this; }
     uint8_t asInt() const { return (uint8_t)dir9; }
     Coord asNormalizedCoord() const;  // (-1, -0, 1, -1, 0, 1)
     Polar asNormalizedPolar() const;

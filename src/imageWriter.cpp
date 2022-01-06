@@ -10,6 +10,7 @@
 #include "simulator.h"
 #include "imageWriter.h"
 #define cimg_use_opencv 1
+#define cimg_display 0
 #include "CImg.h"
 
 namespace BS {

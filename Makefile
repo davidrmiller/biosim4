@@ -17,7 +17,7 @@ RESINC =
 LIBDIR = 
 ARCH = `arch`
 LIB = /usr/lib/$(ARCH)-linux-gnu/libopencv_core.so /usr/lib/$(ARCH)-linux-gnu/libopencv_video.so /usr/lib/$(ARCH)-linux-gnu/libopencv_videoio.so
-LDFLAGS = -lX11 -lpthread  -lgomp
+LDFLAGS = -lpthread  -lgomp
 
 INC_DEBUG = $(INC)
 CFLAGS_DEBUG = $(CFLAGS) -g -fopenmp
@@ -134,7 +134,7 @@ $(OBJDIR_DEBUG)/src/indiv.o: src/indiv.cpp
 
 clean_debug: 
 	rm -f $(OBJ_DEBUG) $(OUT_DEBUG)
-	rm -rf bin/Debug
+	rm -rf bin/Debug/biosim4
 	rm -rf $(OBJDIR_DEBUG)/src
 
 before_release: 
@@ -222,7 +222,7 @@ $(OBJDIR_RELEASE)/src/indiv.o: src/indiv.cpp
 
 clean_release: 
 	rm -f $(OBJ_RELEASE) $(OUT_RELEASE)
-	rm -rf bin/Release
+	rm -rf bin/Release/biosim4
 	rm -rf $(OBJDIR_RELEASE)/src
 
 .PHONY: before_debug after_debug clean_debug before_release after_release clean_release
