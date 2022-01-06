@@ -343,7 +343,8 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
         break;
     case Sensor::KILLS:
     {
-        // Returns amount of kills by nearby individuals divided by the total kill count
+        // Returns amount of kills by nearby individuals divided by the total kill count.
+        // Returns 0.0 if the total kill count is zero.
         unsigned countKills = 0;
         Coord center = loc;
 
@@ -355,12 +356,13 @@ float Indiv::getSensor(Sensor sensorNum, unsigned simStep) const
         };
 
         visitNeighborhood(center, p.populationSensorRadius, f);
-        sensorVal = (float)countKills / murderCount;
+        sensorVal = murderCount == 0 ? 0.0 : (float)countKills / murderCount;
         break;
     }
     case Sensor::SELF_KILLS:
-        // Returns self kills divided by the total kill count
-        sensorVal = (float)kills / murderCount;
+        // Returns self kills divided by the total kill count.
+        // Returns 0.0 if the total kill count is zero.
+        sensorVal = murderCount == 0 ? 0.0 : (float)kills / murderCount;
         break;
     case Sensor::GENETIC_SIM_FWD:
     {
