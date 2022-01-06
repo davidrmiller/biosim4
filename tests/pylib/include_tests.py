@@ -25,8 +25,6 @@ incl_list = [
 ['quicktest', 'param-pointmutationrate', '0.001'],
 ['quicktest', 'param-population', '1000'],
 ['quicktest', 'param-populationsensorradius', '2.5'],
-['quicktest', 'param-replacebarriertype', '0'],
-['quicktest', 'param-replacebarriertypegenerationnumber', '-1'],
 ['quicktest', 'param-responsivenesscurvekfactor', '2'],
 ['quicktest', 'param-savevideo', 'true'],
 ['quicktest', 'param-sexualreproduction', 'true'],
