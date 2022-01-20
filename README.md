@@ -263,9 +263,15 @@ to do that.
 ## Execution
 --------------------
 
-Edit the config file (default "biosim4.ini") for the parameters you want for the simulation run, then execute the Debug
-or Release executable in the bin directory. Optionally specify the name of the config file as the first
-command line argument, e.g.:
+Test everything is working by executing the Debug or Release executable in the bin directory with the default config file ("biosim4.ini"). e.g.:
+```
+./bin/Release/biosim4 biosim4.ini
+```
+
+You should have output something like:
+`Gen 1, 2290 survivors`
+
+If this works then edit the config file ("biosim4.ini") for the parameters you want for the simulation run and execute the Debug or Release executable. Optionally specify the name of the config file as the first command line argument, e.g.:
 
 ```
 ./bin/Release/biosim4 [biosim4.ini]
