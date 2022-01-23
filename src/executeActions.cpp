@@ -92,15 +92,14 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     };
 
     // Only a subset of all possible actions might be enabled (i.e., compiled in).
-    // See sensors-actions.h for how to enable sensors and actions during compilation.
-    // This returns true if the specified action is enabled and enough energy is available to
-    // perform it
-    auto isAvailable = [&indiv, &actionEnergyCost](enum Action action){ return (int)action < (int)Action::NUM_ACTIONS && indiv.energy >= actionEnergyCost(action); };
+    // This returns true if the specified action is enabled. See sensors-actions.h
+    // for how to enable sensors and actions during compilation.
+    auto isEnabled = [](enum Action action){ return (int)action < (int)Action::NUM_ACTIONS; };
 
     // Responsiveness action - convert neuron action level from arbitrary float range
     // to the range 0.0..1.0. If this action neuron is enabled but not driven, will
     // default to mid-level 0.5.
-    if (isAvailable(Action::SET_RESPONSIVENESS)) {
+    if (isEnabled(Action::SET_RESPONSIVENESS)) {
         float level = actionLevels[Action::SET_RESPONSIVENESS]; // default 0.0
         level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
         indiv.responsiveness = level;
@@ -114,7 +113,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // Oscillator period action - convert action level nonlinearly to
     // 2..4*p.stepsPerGeneration. If this action neuron is enabled but not driven,
     // will default to 1.5 + e^(3.5) = a period of 34 simSteps.
-    if (isAvailable(Action::SET_OSCILLATOR_PERIOD)) {
+    if (isEnabled(Action::SET_OSCILLATOR_PERIOD)) {
         auto periodf = actionLevels[Action::SET_OSCILLATOR_PERIOD];
         float newPeriodf01 = (std::tanh(periodf) + 1.0) / 2.0; // convert to 0.0..1.0
         unsigned newPeriod = 1 + (int)(1.5 + std::exp(7.0 * newPeriodf01));
@@ -126,7 +125,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // Set longProbeDistance - convert action level to 1..maxLongProbeDistance.
     // If this action neuron is enabled but not driven, will default to
     // mid-level period of 17 simSteps.
-    if (isAvailable(Action::SET_LONGPROBE_DIST)) {
+    if (isEnabled(Action::SET_LONGPROBE_DIST)) {
         constexpr unsigned maxLongProbeDistance = 32;
         float level = actionLevels[SET_LONGPROBE_DIST];
         level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
@@ -140,7 +139,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // signal (pheromone).
     // Pheromones may be emitted immediately (see signals.cpp). If this action neuron
     // is enabled but not driven, nothing will be emitted.
-    if (isAvailable(Action::EMIT_SIGNAL0)) {
+    if (isEnabled(Action::EMIT_SIGNAL0)) {
         constexpr float emitThreshold = 0.5;  // 0.0..1.0; 0.5 is midlevel
         float level = actionLevels[Action::EMIT_SIGNAL0];
         level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
@@ -154,7 +153,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     // Kill forward -- if this action value is > threshold, value is converted to probability
     // of an attempted murder. Probabilities under the threshold are considered 0.0.
     // If this action neuron is enabled but not driven, the neighbors are safe.
-    if (isAvailable(Action::KILL_FORWARD) && p.killEnable) {
+    if (isEnabled(Action::KILL_FORWARD) && p.killEnable) {
         constexpr float killThreshold = 0.5;  // 0.0..1.0; 0.5 is midlevel
         float level = actionLevels[Action::KILL_FORWARD];
         level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
@@ -195,44 +194,44 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
 
     // moveX,moveY will be the accumulators that will hold the sum of all the
     // urges to move along each axis. (+- floating values of arbitrary range)
-    float moveX = isAvailable(Action::MOVE_X) ? actionLevels[Action::MOVE_X] : 0.0;
-    float moveY = isAvailable(Action::MOVE_Y) ? actionLevels[Action::MOVE_Y] : 0.0;
+    float moveX = isEnabled(Action::MOVE_X) ? actionLevels[Action::MOVE_X] : 0.0;
+    float moveY = isEnabled(Action::MOVE_Y) ? actionLevels[Action::MOVE_Y] : 0.0;
 
-    if (isAvailable(Action::MOVE_EAST)) moveX += actionLevels[Action::MOVE_EAST];
-    if (isAvailable(Action::MOVE_WEST)) moveX -= actionLevels[Action::MOVE_WEST];
-    if (isAvailable(Action::MOVE_NORTH)) moveY += actionLevels[Action::MOVE_NORTH];
-    if (isAvailable(Action::MOVE_SOUTH)) moveY -= actionLevels[Action::MOVE_SOUTH];
+    if (isEnabled(Action::MOVE_EAST)) moveX += actionLevels[Action::MOVE_EAST];
+    if (isEnabled(Action::MOVE_WEST)) moveX -= actionLevels[Action::MOVE_WEST];
+    if (isEnabled(Action::MOVE_NORTH)) moveY += actionLevels[Action::MOVE_NORTH];
+    if (isEnabled(Action::MOVE_SOUTH)) moveY -= actionLevels[Action::MOVE_SOUTH];
 
-    if (isAvailable(Action::MOVE_FORWARD)) {
+    if (isEnabled(Action::MOVE_FORWARD)) {
         level = actionLevels[Action::MOVE_FORWARD];
         moveX += lastMoveOffset.x * level;
         moveY += lastMoveOffset.y * level;
     }
-    if (isAvailable(Action::MOVE_REVERSE)) {
+    if (isEnabled(Action::MOVE_REVERSE)) {
         level = actionLevels[Action::MOVE_REVERSE];
         moveX -= lastMoveOffset.x * level;
         moveY -= lastMoveOffset.y * level;
     }
-    if (isAvailable(Action::MOVE_LEFT)) {
+    if (isEnabled(Action::MOVE_LEFT)) {
         level = actionLevels[Action::MOVE_LEFT];
         offset = indiv.lastMoveDir.rotate90DegCCW().asNormalizedCoord();
         moveX += offset.x * level;
         moveY += offset.y * level;
     }
-    if (isAvailable(Action::MOVE_RIGHT)) {
+    if (isEnabled(Action::MOVE_RIGHT)) {
         level = actionLevels[Action::MOVE_RIGHT];
         offset = indiv.lastMoveDir.rotate90DegCW().asNormalizedCoord();
         moveX += offset.x * level;
         moveY += offset.y * level;
     }
-    if (isAvailable(Action::MOVE_RL)) {
+    if (isEnabled(Action::MOVE_RL)) {
         level = actionLevels[Action::MOVE_RL];
         offset = indiv.lastMoveDir.rotate90DegCW().asNormalizedCoord();
         moveX += offset.x * level;
         moveY += offset.y * level;
     }
 
-    if (isAvailable(Action::MOVE_RANDOM)) {
+    if (isEnabled(Action::MOVE_RANDOM)) {
         level = actionLevels[Action::MOVE_RANDOM];
         offset = Dir::random8().asNormalizedCoord();
         moveX += offset.x * level;

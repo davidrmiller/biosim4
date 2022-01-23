@@ -74,6 +74,10 @@ void simStepOneIndiv(Indiv &indiv, unsigned simStep)
         auto actionLevels = indiv.feedForward(simStep);
         executeActions(indiv, actionLevels);
     }
+    else
+    {
+        peeps.queueForDeath(indiv);
+    }
 }
 
 
