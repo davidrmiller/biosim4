@@ -31,6 +31,7 @@ void ParamManager::setDefaults()
     privParams.genomeMaxLength = 300;
     privParams.logDir = "./logs/";
     privParams.imageDir = "./images/";
+    privParams.genomeLoadFrom = "NONE";
     privParams.population = 3000;
     privParams.stepsPerGeneration = 300;
     privParams.maxGenerations = 200000;
@@ -65,6 +66,7 @@ void ParamManager::setDefaults()
     privParams.genomeComparisonMethod = 1;
     privParams.updateGraphLog = true;
     privParams.updateGraphLogStride = privParams.videoStride;
+    privParams.genomeSaveStride = privParams.videoStride;
     privParams.deterministic = false;
     privParams.RNGSeed = 12345678;
     privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
@@ -157,6 +159,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "imagedir") {
             privParams.imageDir = val; break;
+        }
+        else if (name == "genomeloadfrom") {
+            privParams.genomeLoadFrom = val; break;
         }
         else if (name == "population" && isUint && uVal > 0 && uVal < (uint32_t)-1) {
             privParams.population = uVal; break;
@@ -268,6 +273,12 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "updategraphlogstride" && val == "videoStride") {
             privParams.updateGraphLogStride = privParams.videoStride; break;
+        }
+        else if (name == "genomesavestride" && isUint && uVal > 0) {
+            privParams.genomeSaveStride = uVal; break;
+        }
+        else if (name == "genomesavestride" && val == "videoStride") {
+            privParams.genomeSaveStride = privParams.videoStride; break;
         }
         else if (name == "deterministic" && isBool) {
             privParams.deterministic = bVal; break;

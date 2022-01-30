@@ -54,6 +54,7 @@ struct Params {
     unsigned genomeComparisonMethod; // 0 = Jaro-Winkler; 1 = Hamming
     bool updateGraphLog;
     unsigned updateGraphLogStride; // > 0
+    unsigned genomeSaveStride; // > 0
     unsigned challenge;
     unsigned barrierType; // >= 0
     unsigned replaceBarrierType; // >= 0
@@ -69,6 +70,7 @@ struct Params {
     std::string logDir;
     std::string imageDir;
     std::string graphLogUpdateCommand;
+    std::string genomeLoadFrom;
 };
 
 class ParamManager {

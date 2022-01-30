@@ -1,5 +1,30 @@
-@  changeset:   12:b07d23b8c451
+@  changeset:   17:2e264ec1e814
 |  tag:         tip
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 16:30:06 2022 +0100
+|  summary:     More git config stuff
+|
+o  changeset:   16:f3ef68eebbb6
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 16:25:17 2022 +0100
+|  summary:     Write genome data to log files
+|
+o  changeset:   15:539e169dac14
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 15:23:46 2022 +0100
+|  summary:     Make sure we recompile *everything* if a header file has been modified to prevent random crashes due to struct misalignment
+|
+o  changeset:   14:cb2860e4e2b6
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 14:12:47 2022 +0100
+|  summary:     More github files, apparently?
+|
+o  changeset:   13:46cdc2bb7a39
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 14:02:43 2022 +0100
+|  summary:     Updated github stuff
+|
+o  changeset:   12:b07d23b8c451
 |  user:        Rene Schickbauer <cavac@rosetta>
 |  date:        Sun Jan 30 04:23:57 2022 +0100
 |  summary:     Another barrier type, added "killingIsRisky"

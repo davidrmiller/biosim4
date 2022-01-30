@@ -1,7 +1,8 @@
 obj/
-bin/
+bin/Release/biosim4
+bin/Debug/biosim4
 images/gen\-\d+.avi
 images/log.png
 logs/epoch-log.txt
 logs/simulation.log
-
+logs/gen-.*\.txt

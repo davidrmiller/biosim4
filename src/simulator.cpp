@@ -22,6 +22,7 @@ namespace BS {
 extern void initializeGeneration0();
 extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount);
 extern void displaySampleGenomes(unsigned count);
+extern void saveGenomes(unsigned generation);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
 extern void endOfSimStep(unsigned simStep, unsigned generation);
 extern void endOfGeneration(unsigned generation);
@@ -143,6 +144,10 @@ void simulator(int argc, char **argv)
 
         while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
             #pragma omp single
+            if (generation % p.genomeSaveStride == 0) {
+                saveGenomes(generation);
+            }
+
             murderCount = 0; // for reporting purposes
 
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {

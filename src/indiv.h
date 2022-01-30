@@ -33,6 +33,7 @@ struct Indiv {
     void printNeuralNet() const;
     void printIGraphEdgeList() const;
     void printGenome() const;
+    std::ofstream& saveGenome(std::ofstream& ofh) const;
 };
 
 } // end namespace BS

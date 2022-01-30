@@ -60,76 +60,76 @@ debug: before_debug out_debug after_debug
 out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 	$(LD) $(LIBDIR_DEBUG) -o $(OUT_DEBUG) $(OBJ_DEBUG)  $(LDFLAGS_DEBUG) $(LIB_DEBUG)
 
-$(OBJDIR_DEBUG)/src/signals.o: src/signals.cpp
+$(OBJDIR_DEBUG)/src/signals.o: src/signals.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/signals.cpp -o $(OBJDIR_DEBUG)/src/signals.o
 
-$(OBJDIR_DEBUG)/src/main.o: src/main.cpp
+$(OBJDIR_DEBUG)/src/main.o: src/main.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/main.cpp -o $(OBJDIR_DEBUG)/src/main.o
 
-$(OBJDIR_DEBUG)/src/params.o: src/params.cpp
+$(OBJDIR_DEBUG)/src/params.o: src/params.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/params.cpp -o $(OBJDIR_DEBUG)/src/params.o
 
-$(OBJDIR_DEBUG)/src/peeps.o: src/peeps.cpp
+$(OBJDIR_DEBUG)/src/peeps.o: src/peeps.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/peeps.cpp -o $(OBJDIR_DEBUG)/src/peeps.o
 
-$(OBJDIR_DEBUG)/src/random.o: src/random.cpp
+$(OBJDIR_DEBUG)/src/random.o: src/random.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/random.cpp -o $(OBJDIR_DEBUG)/src/random.o
 
-$(OBJDIR_DEBUG)/src/simulator.o: src/simulator.cpp
+$(OBJDIR_DEBUG)/src/simulator.o: src/simulator.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/simulator.cpp -o $(OBJDIR_DEBUG)/src/simulator.o
 
-$(OBJDIR_DEBUG)/src/spawnNewGeneration.o: src/spawnNewGeneration.cpp
+$(OBJDIR_DEBUG)/src/spawnNewGeneration.o: src/spawnNewGeneration.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/spawnNewGeneration.cpp -o $(OBJDIR_DEBUG)/src/spawnNewGeneration.o
 
-$(OBJDIR_DEBUG)/src/survival-criteria.o: src/survival-criteria.cpp
+$(OBJDIR_DEBUG)/src/survival-criteria.o: src/survival-criteria.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/survival-criteria.cpp -o $(OBJDIR_DEBUG)/src/survival-criteria.o
 
-$(OBJDIR_DEBUG)/src/unitTestBasicTypes.o: src/unitTestBasicTypes.cpp
+$(OBJDIR_DEBUG)/src/unitTestBasicTypes.o: src/unitTestBasicTypes.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/unitTestBasicTypes.cpp -o $(OBJDIR_DEBUG)/src/unitTestBasicTypes.o
 
-$(OBJDIR_DEBUG)/src/unitTestConnectNeuralNetWiringFromGenome.o: src/unitTestConnectNeuralNetWiringFromGenome.cpp
+$(OBJDIR_DEBUG)/src/unitTestConnectNeuralNetWiringFromGenome.o: src/unitTestConnectNeuralNetWiringFromGenome.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/unitTestConnectNeuralNetWiringFromGenome.cpp -o $(OBJDIR_DEBUG)/src/unitTestConnectNeuralNetWiringFromGenome.o
 
-$(OBJDIR_DEBUG)/src/unitTestGridVisitNeighborhood.o: src/unitTestGridVisitNeighborhood.cpp
+$(OBJDIR_DEBUG)/src/unitTestGridVisitNeighborhood.o: src/unitTestGridVisitNeighborhood.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/unitTestGridVisitNeighborhood.cpp -o $(OBJDIR_DEBUG)/src/unitTestGridVisitNeighborhood.o
 
-$(OBJDIR_DEBUG)/src/genome-compare.o: src/genome-compare.cpp
+$(OBJDIR_DEBUG)/src/genome-compare.o: src/genome-compare.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/genome-compare.cpp -o $(OBJDIR_DEBUG)/src/genome-compare.o
 
-$(OBJDIR_DEBUG)/src/analysis.o: src/analysis.cpp
+$(OBJDIR_DEBUG)/src/analysis.o: src/analysis.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/analysis.cpp -o $(OBJDIR_DEBUG)/src/analysis.o
 
-$(OBJDIR_DEBUG)/src/basicTypes.o: src/basicTypes.cpp
+$(OBJDIR_DEBUG)/src/basicTypes.o: src/basicTypes.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/basicTypes.cpp -o $(OBJDIR_DEBUG)/src/basicTypes.o
 
-$(OBJDIR_DEBUG)/src/createBarrier.o: src/createBarrier.cpp
+$(OBJDIR_DEBUG)/src/createBarrier.o: src/createBarrier.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/createBarrier.cpp -o $(OBJDIR_DEBUG)/src/createBarrier.o
 
-$(OBJDIR_DEBUG)/src/endOfGeneration.o: src/endOfGeneration.cpp
+$(OBJDIR_DEBUG)/src/endOfGeneration.o: src/endOfGeneration.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/endOfGeneration.cpp -o $(OBJDIR_DEBUG)/src/endOfGeneration.o
 
-$(OBJDIR_DEBUG)/src/endOfSimStep.o: src/endOfSimStep.cpp
+$(OBJDIR_DEBUG)/src/endOfSimStep.o: src/endOfSimStep.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/endOfSimStep.cpp -o $(OBJDIR_DEBUG)/src/endOfSimStep.o
 
-$(OBJDIR_DEBUG)/src/executeActions.o: src/executeActions.cpp
+$(OBJDIR_DEBUG)/src/executeActions.o: src/executeActions.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/executeActions.cpp -o $(OBJDIR_DEBUG)/src/executeActions.o
 
-$(OBJDIR_DEBUG)/src/feedForward.o: src/feedForward.cpp
+$(OBJDIR_DEBUG)/src/feedForward.o: src/feedForward.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/feedForward.cpp -o $(OBJDIR_DEBUG)/src/feedForward.o
 
-$(OBJDIR_DEBUG)/src/genome.o: src/genome.cpp
+$(OBJDIR_DEBUG)/src/genome.o: src/genome.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/genome.cpp -o $(OBJDIR_DEBUG)/src/genome.o
 
-$(OBJDIR_DEBUG)/src/getSensor.o: src/getSensor.cpp
+$(OBJDIR_DEBUG)/src/getSensor.o: src/getSensor.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/getSensor.cpp -o $(OBJDIR_DEBUG)/src/getSensor.o
 
-$(OBJDIR_DEBUG)/src/grid.o: src/grid.cpp
+$(OBJDIR_DEBUG)/src/grid.o: src/grid.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/grid.cpp -o $(OBJDIR_DEBUG)/src/grid.o
 
-$(OBJDIR_DEBUG)/src/imageWriter.o: src/imageWriter.cpp
+$(OBJDIR_DEBUG)/src/imageWriter.o: src/imageWriter.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/imageWriter.cpp -o $(OBJDIR_DEBUG)/src/imageWriter.o
 
-$(OBJDIR_DEBUG)/src/indiv.o: src/indiv.cpp
+$(OBJDIR_DEBUG)/src/indiv.o: src/indiv.cpp src/*.h
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/indiv.cpp -o $(OBJDIR_DEBUG)/src/indiv.o
 
 clean_debug: 
@@ -148,76 +148,76 @@ release: before_release out_release after_release
 out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 	$(LD) $(LIBDIR_RELEASE) -o $(OUT_RELEASE) $(OBJ_RELEASE)  $(LDFLAGS_RELEASE) $(LIB_RELEASE)
 
-$(OBJDIR_RELEASE)/src/signals.o: src/signals.cpp
+$(OBJDIR_RELEASE)/src/signals.o: src/signals.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/signals.cpp -o $(OBJDIR_RELEASE)/src/signals.o
 
-$(OBJDIR_RELEASE)/src/main.o: src/main.cpp
+$(OBJDIR_RELEASE)/src/main.o: src/main.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/main.cpp -o $(OBJDIR_RELEASE)/src/main.o
 
-$(OBJDIR_RELEASE)/src/params.o: src/params.cpp
+$(OBJDIR_RELEASE)/src/params.o: src/params.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/params.cpp -o $(OBJDIR_RELEASE)/src/params.o
 
-$(OBJDIR_RELEASE)/src/peeps.o: src/peeps.cpp
+$(OBJDIR_RELEASE)/src/peeps.o: src/peeps.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/peeps.cpp -o $(OBJDIR_RELEASE)/src/peeps.o
 
-$(OBJDIR_RELEASE)/src/random.o: src/random.cpp
+$(OBJDIR_RELEASE)/src/random.o: src/random.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/random.cpp -o $(OBJDIR_RELEASE)/src/random.o
 
-$(OBJDIR_RELEASE)/src/simulator.o: src/simulator.cpp
+$(OBJDIR_RELEASE)/src/simulator.o: src/simulator.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/simulator.cpp -o $(OBJDIR_RELEASE)/src/simulator.o
 
-$(OBJDIR_RELEASE)/src/spawnNewGeneration.o: src/spawnNewGeneration.cpp
+$(OBJDIR_RELEASE)/src/spawnNewGeneration.o: src/spawnNewGeneration.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/spawnNewGeneration.cpp -o $(OBJDIR_RELEASE)/src/spawnNewGeneration.o
 
-$(OBJDIR_RELEASE)/src/survival-criteria.o: src/survival-criteria.cpp
+$(OBJDIR_RELEASE)/src/survival-criteria.o: src/survival-criteria.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/survival-criteria.cpp -o $(OBJDIR_RELEASE)/src/survival-criteria.o
 
-$(OBJDIR_RELEASE)/src/unitTestBasicTypes.o: src/unitTestBasicTypes.cpp
+$(OBJDIR_RELEASE)/src/unitTestBasicTypes.o: src/unitTestBasicTypes.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/unitTestBasicTypes.cpp -o $(OBJDIR_RELEASE)/src/unitTestBasicTypes.o
 
-$(OBJDIR_RELEASE)/src/unitTestConnectNeuralNetWiringFromGenome.o: src/unitTestConnectNeuralNetWiringFromGenome.cpp
+$(OBJDIR_RELEASE)/src/unitTestConnectNeuralNetWiringFromGenome.o: src/unitTestConnectNeuralNetWiringFromGenome.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/unitTestConnectNeuralNetWiringFromGenome.cpp -o $(OBJDIR_RELEASE)/src/unitTestConnectNeuralNetWiringFromGenome.o
 
-$(OBJDIR_RELEASE)/src/unitTestGridVisitNeighborhood.o: src/unitTestGridVisitNeighborhood.cpp
+$(OBJDIR_RELEASE)/src/unitTestGridVisitNeighborhood.o: src/unitTestGridVisitNeighborhood.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/unitTestGridVisitNeighborhood.cpp -o $(OBJDIR_RELEASE)/src/unitTestGridVisitNeighborhood.o
 
-$(OBJDIR_RELEASE)/src/genome-compare.o: src/genome-compare.cpp
+$(OBJDIR_RELEASE)/src/genome-compare.o: src/genome-compare.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/genome-compare.cpp -o $(OBJDIR_RELEASE)/src/genome-compare.o
 
-$(OBJDIR_RELEASE)/src/analysis.o: src/analysis.cpp
+$(OBJDIR_RELEASE)/src/analysis.o: src/analysis.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/analysis.cpp -o $(OBJDIR_RELEASE)/src/analysis.o
 
-$(OBJDIR_RELEASE)/src/basicTypes.o: src/basicTypes.cpp
+$(OBJDIR_RELEASE)/src/basicTypes.o: src/basicTypes.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/basicTypes.cpp -o $(OBJDIR_RELEASE)/src/basicTypes.o
 
-$(OBJDIR_RELEASE)/src/createBarrier.o: src/createBarrier.cpp
+$(OBJDIR_RELEASE)/src/createBarrier.o: src/createBarrier.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/createBarrier.cpp -o $(OBJDIR_RELEASE)/src/createBarrier.o
 
-$(OBJDIR_RELEASE)/src/endOfGeneration.o: src/endOfGeneration.cpp
+$(OBJDIR_RELEASE)/src/endOfGeneration.o: src/endOfGeneration.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/endOfGeneration.cpp -o $(OBJDIR_RELEASE)/src/endOfGeneration.o
 
-$(OBJDIR_RELEASE)/src/endOfSimStep.o: src/endOfSimStep.cpp
+$(OBJDIR_RELEASE)/src/endOfSimStep.o: src/endOfSimStep.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/endOfSimStep.cpp -o $(OBJDIR_RELEASE)/src/endOfSimStep.o
 
-$(OBJDIR_RELEASE)/src/executeActions.o: src/executeActions.cpp
+$(OBJDIR_RELEASE)/src/executeActions.o: src/executeActions.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/executeActions.cpp -o $(OBJDIR_RELEASE)/src/executeActions.o
 
-$(OBJDIR_RELEASE)/src/feedForward.o: src/feedForward.cpp
+$(OBJDIR_RELEASE)/src/feedForward.o: src/feedForward.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/feedForward.cpp -o $(OBJDIR_RELEASE)/src/feedForward.o
 
-$(OBJDIR_RELEASE)/src/genome.o: src/genome.cpp
+$(OBJDIR_RELEASE)/src/genome.o: src/genome.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/genome.cpp -o $(OBJDIR_RELEASE)/src/genome.o
 
-$(OBJDIR_RELEASE)/src/getSensor.o: src/getSensor.cpp
+$(OBJDIR_RELEASE)/src/getSensor.o: src/getSensor.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/getSensor.cpp -o $(OBJDIR_RELEASE)/src/getSensor.o
 
-$(OBJDIR_RELEASE)/src/grid.o: src/grid.cpp
+$(OBJDIR_RELEASE)/src/grid.o: src/grid.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/grid.cpp -o $(OBJDIR_RELEASE)/src/grid.o
 
-$(OBJDIR_RELEASE)/src/imageWriter.o: src/imageWriter.cpp
+$(OBJDIR_RELEASE)/src/imageWriter.o: src/imageWriter.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/imageWriter.cpp -o $(OBJDIR_RELEASE)/src/imageWriter.o
 
-$(OBJDIR_RELEASE)/src/indiv.o: src/indiv.cpp
+$(OBJDIR_RELEASE)/src/indiv.o: src/indiv.cpp src/*.h
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/indiv.cpp -o $(OBJDIR_RELEASE)/src/indiv.o
 
 clean_release: 
