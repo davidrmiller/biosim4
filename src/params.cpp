@@ -193,7 +193,7 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "maxnumberneurons" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
             privParams.maxNumberNeurons = uVal; break;
         }
-        else if (name == "memoryneurons" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
+        else if (name == "memoryneurons" && isUint && uVal >= 0 && uVal < (uint16_t)-1) {
             privParams.memoryNeurons = uVal; break;
         }
         else if (name == "pointmutationrate" && isFloat && dVal >= 0.0 && dVal <= 1.0) {

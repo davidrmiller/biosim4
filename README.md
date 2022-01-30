@@ -26,6 +26,9 @@ David is the brains of this project. I'm just adding a few features here
 and there, improving graphics output, working through some of the stuff marked "Todo".
 You know, just tinkering with the code...
 
+Note: This fork is using Mercurial for sourcecode version control. I prefer it over git. 
+There are with occasional pushes into github whenever i feel like.
+
 
 Document Contents
 -----------------

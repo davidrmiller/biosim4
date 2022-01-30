@@ -285,7 +285,7 @@ void Grid::createBarrier(unsigned barrierType)
         {
             int16_t minX = p.sizeX / 4;
             int16_t maxX = minX + p.sizeX / 2;
-            int16_t minY = p.sizeY / 2 + p.sizeY / 3;
+            int16_t minY = p.sizeY / 2 + p.sizeY / 2.4;
             int16_t maxY = minY + 2;
 
             for (int16_t x = minX; x <= maxX; ++x) {
@@ -298,7 +298,7 @@ void Grid::createBarrier(unsigned barrierType)
         {
             int16_t minX = p.sizeX / 4;
             int16_t maxX = minX + p.sizeX / 2;
-            int16_t minY = p.sizeY / 2 - p.sizeY / 3;
+            int16_t minY = p.sizeY / 2 - p.sizeY / 2.4;
             int16_t maxY = minY + 2;
 
             for (int16_t x = minX; x <= maxX; ++x) {

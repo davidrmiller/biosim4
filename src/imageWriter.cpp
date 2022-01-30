@@ -51,6 +51,18 @@ void saveOneFrameImmed(const ImageFrameData &data)
                     1.0);  // alpha
 
             break;
+        case CHALLENGE_CENTER_UNWEIGHTED:
+            color[0] = 0xa0;
+            color[1] = 0xff;
+            color[2] = 0xa0;
+            image.draw_circle(
+                    (p.sizeX * p.displayScale) / 2,
+                    (p.sizeY * p.displayScale) / 2,
+                    (p.sizeY / 3.0 * p.displayScale),
+                    color,  // rgb
+                    1.0);  // alpha
+
+            break;
         case CHALLENGE_RADIOACTIVE_WALLS:
             color[0] = 0xff;
             color[1] = 0xff;

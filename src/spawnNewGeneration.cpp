@@ -27,8 +27,21 @@ void initializeGeneration0()
 
     // Spawn the population. The peeps container has already been allocated,
     // just clear and reuse it
-    for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(index, grid.findEmptyLocation(), makeRandomGenome());
+    if(p.genomeLoadFrom == "NONE") {
+        std::cout << "****** GENERATING RANDOM GENOME ******" << std::endl;
+        for (uint16_t index = 1; index <= p.population; ++index) {
+            peeps[index].initialize(index, grid.findEmptyLocation(), makeRandomGenome());
+        }
+    } else {
+        std::cout << "****** LOADING GENOME FROM " << p.genomeLoadFrom << " ******" << std::endl;
+        std::ifstream ifh;
+        std::string line;
+        ifh.open(p.genomeLoadFrom);
+        for (uint16_t index = 1; index <= p.population; ++index) {
+            std::getline(ifh, line);
+            peeps[index].initialize(index, grid.findEmptyLocation(), parseGenomeString(line));
+        }
+        ifh.close();
     }
 }
 
