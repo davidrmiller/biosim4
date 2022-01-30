@@ -23,6 +23,7 @@ struct Node {
     uint16_t numOutputs;
     uint16_t numSelfInputs;
     uint16_t numInputsFromSensorsOrOtherNeurons;
+    bool hasMemory;
 };
 
 
@@ -112,6 +113,12 @@ void makeNodeList(NodeMap &nodeMap, const ConnectionList &connectionList)
                 it->second.numOutputs = 0;
                 it->second.numSelfInputs = 0;
                 it->second.numInputsFromSensorsOrOtherNeurons = 0;
+                if(conn.sinkNum < p.memoryNeurons) {
+                    it->second.hasMemory = true;
+                } else {
+                    it->second.hasMemory = false;
+                }
+
             }
 
             if (conn.sourceType == NEURON && (conn.sourceNum == conn.sinkNum)) {
@@ -131,6 +138,11 @@ void makeNodeList(NodeMap &nodeMap, const ConnectionList &connectionList)
                 it->second.numOutputs = 0;
                 it->second.numSelfInputs = 0;
                 it->second.numInputsFromSensorsOrOtherNeurons = 0;
+                if(conn.sourceNum < p.memoryNeurons) {
+                    it->second.hasMemory = true;
+                } else {
+                    it->second.hasMemory = false;
+                }
             }
             ++(it->second.numOutputs);
             assert(nodeMap.count(conn.sourceNum) == 1);
@@ -258,6 +270,10 @@ void Indiv::createWiringFromGenome()
         nnet.neurons.push_back( {} );
         nnet.neurons.back().output = initialNeuronOutput();
         nnet.neurons.back().driven = (nodeMap[neuronNum].numInputsFromSensorsOrOtherNeurons != 0);
+
+        // Remember is this is a "memory" neuron and set the initial memory output
+        nnet.neurons.back().hasMemory = nodeMap[neuronNum].hasMemory;
+        nnet.neurons.back().memory = initialNeuronOutput();
     }
 }
 

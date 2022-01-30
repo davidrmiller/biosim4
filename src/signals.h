@@ -40,6 +40,7 @@ struct Signals {
     const Layer& operator[](uint16_t layerNum) const { return data[layerNum]; }
     uint8_t getMagnitude(uint16_t layerNum, Coord loc) const { return (*this)[layerNum][loc.x][loc.y]; }
     void increment(uint16_t layerNum, Coord loc);
+    void alertOthers(uint16_t layerNum, Coord loc);
     void zeroFill() { for (Layer &layer : data) { layer.zeroFill(); } }
     void fade(unsigned layerNum);
 private:

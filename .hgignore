@@ -1,0 +1,7 @@
+obj/
+bin/
+images/gen\-\d+.avi
+images/log.png
+logs/epoch-log.txt
+logs/simulation.log
+

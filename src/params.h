@@ -29,10 +29,12 @@ struct Params {
     unsigned signalLayers; // >= 0
     unsigned genomeMaxLength; // > 0
     unsigned maxNumberNeurons; // > 0
+    unsigned memoryNeurons; // >= 0 && <= maxNumberNeurons
     double pointMutationRate; // 0.0..1.0
     double geneInsertionDeletionRate; // 0.0..1.0
     double deletionRatio; // 0.0..1.0
     bool killEnable;
+    bool killingIsRisky;
     bool sexualReproduction;
     bool chooseParentsByFitness;
     float populationSensorRadius; // > 0.0

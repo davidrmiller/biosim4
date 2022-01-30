@@ -66,7 +66,16 @@ std::array<float, Action::NUM_ACTIONS> Indiv::feedForward(unsigned simStep)
             // update and latch all the neuron outputs to their proper range (-1.0..1.0)
             for (unsigned neuronIndex = 0; neuronIndex < nnet.neurons.size(); ++neuronIndex) {
                 if (nnet.neurons[neuronIndex].driven) {
-                    nnet.neurons[neuronIndex].output = std::tanh(neuronAccumulators[neuronIndex]);
+                    if(!nnet.neurons[neuronIndex].hasMemory) {
+                        // Standard neuron
+                        nnet.neurons[neuronIndex].output = std::tanh(neuronAccumulators[neuronIndex]);
+                    } else {
+                        // This is a memory neuron (quite a luxury to have for our little creatures),
+                        // so this is a slightly more advanced process ;-)
+                        // First, move the memory into the output, then calculate value for new memory
+                        nnet.neurons[neuronIndex].output = nnet.neurons[neuronIndex].memory;
+                        nnet.neurons[neuronIndex].memory = std::tanh(neuronAccumulators[neuronIndex]);
+                    }
                 }
             }
             neuronOutputsComputed = true;

@@ -1,0 +1,66 @@
+@  changeset:   12:b07d23b8c451
+|  tag:         tip
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 04:23:57 2022 +0100
+|  summary:     Another barrier type, added "killingIsRisky"
+|
+o  changeset:   11:23847d0e2847
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 00:34:15 2022 +0100
+|  summary:     Changed the signals to a more "natural" gradient-by-distance thing
+|
+o  changeset:   10:6fd6d2c11826
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sun Jan 30 00:33:21 2022 +0100
+|  summary:     Adapted config to desired scenario
+|
+o  changeset:   9:29ee7d884005
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 23:36:35 2022 +0100
+|  summary:     BF + add "memory neurons" option
+|
+o  changeset:   8:04ec07aa3f91
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 23:34:25 2022 +0100
+|  summary:     Enable the "kill" action
+|
+o  changeset:   7:11c3ca821295
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 22:09:58 2022 +0100
+|  summary:     Add input neurons to react to the "recent death pheromone"
+|
+o  changeset:   6:d065c1964556
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 21:46:21 2022 +0100
+|  summary:     Run the simulation in "screen" and also "tee" the output into a log file
+|
+o  changeset:   5:47558668fe83
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 21:26:21 2022 +0100
+|  summary:     Show recent deaths on visualization
+|
+o  changeset:   4:4a978b581033
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 20:37:54 2022 +0100
+|  summary:     Show pheromones in visualization
+|
+o  changeset:   3:ed2f3d484dce
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 17:57:00 2022 +0100
+|  summary:     More compley playfield, show survival area in video (incomplete)
+|
+o  changeset:   2:9b25fc2080ec
+|  user:        Rene Schickbauer <cavac@rosetta>
+|  date:        Sat Jan 29 16:02:45 2022 +0100
+|  summary:     Make sure we have an up-to-date installation for docker
+|
+o  changeset:   1:1bc05e67957e
+|  user:        Rene Schickbauer <cavac@venera>
+|  date:        Sat Jan 29 15:55:58 2022 +0100
+|  summary:     Add some scripts
+|
+o  changeset:   0:a4329daeeef9
+   user:        Rene Schickbauer <cavac@venera>
+   date:        Sat Jan 29 15:42:47 2022 +0100
+   summary:     Initial checkin
+

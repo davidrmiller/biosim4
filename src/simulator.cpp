@@ -120,6 +120,7 @@ void simulator(int argc, char **argv)
     // will be reused in each new generation.
     grid.init(p.sizeX, p.sizeY); // the land on which the peeps live
     signals.init(p.signalLayers, p.sizeX, p.sizeY);  // where the pheromones waft
+    imageWriter.init(p.signalLayers, p.sizeX, p.sizeY); // Holds a copy oh the signals for display, needs the same init
     peeps.init(p.population); // the peeps themselves
 
     // If imageWriter is to be run in its own thread, start it here:

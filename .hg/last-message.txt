@@ -1,0 +1,2 @@
+Another barrier type, added "killingIsRisky"
+

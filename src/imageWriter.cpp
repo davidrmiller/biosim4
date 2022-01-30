@@ -28,14 +28,107 @@ void saveOneFrameImmed(const ImageFrameData &data)
                         3,   // color channels
                         255);  // initial value
     uint8_t color[3];
+    uint8_t temp;
+    float alpha = 1.0;
+    uint16_t offset;
     std::stringstream imageFilename;
     imageFilename << p.imageDir << "frame-"
                   << std::setfill('0') << std::setw(6) << data.generation
                   << '-' << std::setfill('0') << std::setw(6) << data.simStep
                   << ".png";
+    
+    // Draw save and/or unsafe area(s)
+    switch (data.challenge) {
+        case CHALLENGE_CENTER_WEIGHTED:
+            color[0] = 0xa0;
+            color[1] = 0xff;
+            color[2] = 0xa0;
+            image.draw_circle(
+                    (p.sizeX * p.displayScale) / 2,
+                    (p.sizeY * p.displayScale) / 2,
+                    (p.sizeY / 3.0 * p.displayScale),
+                    color,  // rgb
+                    1.0);  // alpha
+
+            break;
+        case CHALLENGE_RADIOACTIVE_WALLS:
+            color[0] = 0xff;
+            color[1] = 0xff;
+            color[2] = 0xa0;
+            offset = 0;
+            if(data.simStep >= p.stepsPerGeneration / 2) {
+                offset = p.sizeX - 5;
+            }
+            image.draw_rectangle(
+                offset * p.displayScale,
+                0,
+                (offset + 5) * p.displayScale,
+                p.sizeY * p.displayScale,
+                color,  // rgb
+                1.0);  // alpha
+
+            break;
+
+        default:
+            break;
+    }
+
+    // Draw standard pheromone trails (signal layer 0)
+    color[0] = 0x00;
+    color[1] = 0x00;
+    color[2] = 0xff;
+    for (int16_t x = 0; x < p.sizeX; ++x) {
+        for (int16_t y = 0; y < p.sizeY; ++y) {
+            temp = data.signalLayers[0][x][y];
+            if(temp > 0) {
+                alpha = ((float)temp / 255.0) / 3.0;
+                // max alpha 0.33
+                if(alpha > 0.33) {
+                    alpha = 0.33;
+                }
+
+                image.draw_rectangle(
+                    ((x - 1)    * p.displayScale) + 1, 
+                    (((p.sizeY - y) - 2))   * p.displayScale + 1,
+                    //x       * p.displayScale - (p.displayScale / 2), ((p.sizeY - y) - 1)   * p.displayScale - (p.displayScale / 2),
+                    (x + 1) * p.displayScale, 
+                    ((p.sizeY - (y - 0))) * p.displayScale,
+                    color,  // rgb
+                    alpha);  // alpha
+                
+            }
+        }
+    }
+
+    // Draw "recent death" alarm pheromone (signal layer 1)
+    // We need to scale it up a bit, otherwise it often displays much to faint
+    color[0] = 0xff;
+    color[1] = 0x00;
+    color[2] = 0x00;
+    for (int16_t x = 0; x < p.sizeX; ++x) {
+        for (int16_t y = 0; y < p.sizeY; ++y) {
+            temp = data.signalLayers[1][x][y];
+            if(temp > 0) {
+                alpha = ((float)temp / 255.0) * 5;
+                // max alpha 0.5
+                if(alpha > 0.5) {
+                    alpha = 0.5;
+                }
+
+                image.draw_rectangle(
+                    ((x - 1)    * p.displayScale) + 1, 
+                    (((p.sizeY - y) - 2))   * p.displayScale + 1,
+                    //x       * p.displayScale - (p.displayScale / 2), ((p.sizeY - y) - 1)   * p.displayScale - (p.displayScale / 2),
+                    (x + 1) * p.displayScale, 
+                    ((p.sizeY - (y - 0))) * p.displayScale,
+                    color,  // rgb
+                    alpha);  // alpha
+                
+            }
+        }
+    }
 
     // Draw barrier locations
-
     color[0] = color[1] = color[2] = 0x88;
     for (Coord loc : data.barrierLocs) {
             image.draw_rectangle(
@@ -85,9 +178,16 @@ ImageWriter::ImageWriter()
     : droppedFrameCount{0}, busy{true}, dataReady{false},
       abortRequested{false}
 {
-    startNewGeneration();
+
 }
 
+void ImageWriter::init(uint16_t layers, uint16_t sizeX, uint16_t sizeY)
+{
+
+    data.signalLayers.init(layers, sizeX, sizeY);
+    startNewGeneration();
+
+}
 
 void ImageWriter::startNewGeneration()
 {
@@ -122,7 +222,7 @@ uint8_t makeGeneticColor(const Genome &genome)
 // function: there's no consequence other than a harmless frame-drop.
 // The condition variable allows the saveFrameThread() to wait until
 // there's a job to do.
-bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
+bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation, unsigned challenge, unsigned barrierType)
 {
     if (!busy) {
         busy = true;
@@ -132,10 +232,12 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
         // saveFrameThread() is using it to output a video frame.
         data.simStep = simStep;
         data.generation = generation;
+        data.challenge = challenge;
+        data.barrierType = barrierType;
         data.indivLocs.clear();
         data.indivColors.clear();
         data.barrierLocs.clear();
-        data.signalLayers.clear();
+        
         //todo!!!
         for (uint16_t index = 1; index <= p.population; ++index) {
             const Indiv &indiv = peeps[index];
@@ -144,6 +246,16 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
                 data.indivColors.push_back(makeGeneticColor(indiv.genome));
             }
         }
+
+        // Copy signal layers
+        for (unsigned layerNum = 0; layerNum < p.signalLayers; ++layerNum) {
+            for (int16_t x = 0; x < p.sizeX; ++x) {
+                for (int16_t y = 0; y < p.sizeY; ++y) {
+                    data.signalLayers[layerNum][x][y] = signals[layerNum][x][y];
+                }
+            }
+        }
+
 
         auto const &barrierLocs = grid.getBarrierLocations();
         for (Coord loc : barrierLocs) {
@@ -166,23 +278,34 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
 
 
 // Synchronous version, always returns true
-bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
+bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation, unsigned challenge, unsigned barrierType)
 {
     // We cache a local copy of data from params, grid, and peeps because
     // those objects will change by the main thread at the same time our
     // saveFrameThread() is using it to output a video frame.
     data.simStep = simStep;
     data.generation = generation;
+    data.challenge = challenge;
+    data.barrierType = barrierType;
     data.indivLocs.clear();
     data.indivColors.clear();
     data.barrierLocs.clear();
-    data.signalLayers.clear();
+    
     //todo!!!
     for (uint16_t index = 1; index <= p.population; ++index) {
         const Indiv &indiv = peeps[index];
         if (indiv.alive) {
             data.indivLocs.push_back(indiv.loc);
             data.indivColors.push_back(makeGeneticColor(indiv.genome));
+        }
+    }
+   
+    // Copy signal layers
+    for (unsigned layerNum = 0; layerNum < p.signalLayers; ++layerNum) {
+        for (int16_t x = 0; x < p.sizeX; ++x) {
+            for (int16_t y = 0; y < p.sizeY; ++y) {
+                data.signalLayers[layerNum][x][y] = signals[layerNum][x][y];
+            }
         }
     }
 

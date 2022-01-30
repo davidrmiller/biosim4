@@ -20,19 +20,23 @@ namespace BS {
 struct ImageFrameData {
     unsigned simStep;
     unsigned generation;
+    unsigned challenge;
+    unsigned barrierType;
     std::vector<Coord> indivLocs;
     std::vector<uint8_t> indivColors;
     std::vector<Coord> barrierLocs;
-    typedef std::vector<std::vector<uint8_t>> SignalLayer;  // [x][y]
-    std::vector<SignalLayer> signalLayers; // [layer][x][y]
+    //typedef std::vector<std::vector<uint8_t>> SignalLayer;  // [x][y]
+    //std::vector<SignalLayer> signalLayers; // [layer][x][y]
+    Signals signalLayers;
 };
 
 
 struct ImageWriter {
     ImageWriter();
+    void init(uint16_t layers, uint16_t sizeX, uint16_t sizeY);
     void startNewGeneration();
-    bool saveVideoFrame(unsigned simStep, unsigned generation);
-    bool saveVideoFrameSync(unsigned simStep, unsigned generation);
+    bool saveVideoFrame(unsigned simStep, unsigned generation, unsigned challenge, unsigned barrierType);
+    bool saveVideoFrameSync(unsigned simStep, unsigned generation, unsigned challenge, unsigned barrierType);
     void saveGenerationVideo(unsigned generation);
     void abort();
     void saveFrameThread(); // runs in a thread

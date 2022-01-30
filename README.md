@@ -13,6 +13,20 @@ This code lacks a friendly interface, so compiling and executing the program may
 require attention to details. If you ask questions in the Issues,
 I'll try to help if I can.
 
+## Important note about this fork
+
+This is a local fork of the project for my (Rene Schickbauer) personal enjoyment.
+
+The original is at:
+https://github.com/davidrmiller/biosim4
+
+Make sure to watch David's video! And don't forget to like and subscribe!
+
+David is the brains of this project. I'm just adding a few features here
+and there, improving graphics output, working through some of the stuff marked "Todo".
+You know, just tinkering with the code...
+
+
 Document Contents
 -----------------
 

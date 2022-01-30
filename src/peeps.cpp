@@ -45,6 +45,7 @@ void Peeps::drainDeathQueue()
 {
     for (uint16_t index : deathQueue) {
         auto & indiv = peeps[index];
+        signals.alertOthers(1, indiv.loc); // Send an alarm to others of recent death
         grid.set(indiv.loc, 0);
         indiv.alive = false;
     }

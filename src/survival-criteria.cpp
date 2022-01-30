@@ -77,7 +77,7 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
     case CHALLENGE_CENTER_WEIGHTED:
         {
             Coord safeCenter { (int16_t)(p.sizeX / 2.0), (int16_t)(p.sizeY / 2.0) };
-            float radius = p.sizeX / 3.0;
+            float radius = p.sizeY / 3.0;
 
             Coord offset = safeCenter - indiv.loc;
             float distance = offset.length();

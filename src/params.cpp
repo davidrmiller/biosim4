@@ -38,12 +38,14 @@ void ParamManager::setDefaults()
     privParams.replaceBarrierType = 0;
     privParams.replaceBarrierTypeGenerationNumber = (uint32_t)-1;
     privParams.numThreads = 4;
-    privParams.signalLayers = 1;
+    privParams.signalLayers = 2;
     privParams.maxNumberNeurons = 5;
+    privParams.memoryNeurons = 0;
     privParams.pointMutationRate = 0.001;
     privParams.geneInsertionDeletionRate = 0.0;
     privParams.deletionRatio = 0.5;
     privParams.killEnable = false;
+    privParams.killingIsRisky = true;
     privParams.sexualReproduction = true;
     privParams.chooseParentsByFitness = true;
     privParams.populationSensorRadius = 2.5;
@@ -186,6 +188,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "maxnumberneurons" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
             privParams.maxNumberNeurons = uVal; break;
         }
+        else if (name == "memoryneurons" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
+            privParams.memoryNeurons = uVal; break;
+        }
         else if (name == "pointmutationrate" && isFloat && dVal >= 0.0 && dVal <= 1.0) {
             privParams.pointMutationRate = dVal; break;
         }
@@ -197,6 +202,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "killenable" && isBool) {
             privParams.killEnable = bVal; break;
+        }
+        else if (name == "killingisrisky" && isBool) {
+            privParams.killingIsRisky = bVal; break;
         }
         else if (name == "sexualreproduction" && isBool) {
             privParams.sexualReproduction = bVal; break;

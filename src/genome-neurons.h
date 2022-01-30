@@ -73,6 +73,10 @@ struct NeuralNet {
     struct Neuron {
         float output;
         bool driven;        // undriven neurons have fixed output values
+
+        // some neurons have a one step memory
+        bool hasMemory;
+        float memory;
     };
     std::vector<Neuron> neurons;
 };

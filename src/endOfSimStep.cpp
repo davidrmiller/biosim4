@@ -16,7 +16,7 @@ mode to take care of several things:
    a scenario is in progress.
 3. We then drain the deferred death queue.
 4. We then drain the deferred movement queue.
-5. We fade the signal layer(s) (pheromones).
+5. We fade the signal layer(s) (pheromones, recent deaths).
 6. We save the resulting world condition as a single image frame (if
    p.saveVideo is true).
 */
@@ -77,7 +77,9 @@ void endOfSimStep(unsigned simStep, unsigned generation)
 
     peeps.drainDeathQueue();
     peeps.drainMoveQueue();
-    signals.fade(0); // takes layerNum  todo!!!
+    for(uint8_t i = 0; i < p.signalLayers; i++) {
+        signals.fade(i);
+    };
 
     // saveVideoFrameSync() is the synchronous version of saveVideFrame()
     if (p.saveVideo &&
@@ -85,7 +87,7 @@ void endOfSimStep(unsigned simStep, unsigned generation)
                  || generation <= p.videoSaveFirstFrames
                  || (generation >= p.replaceBarrierTypeGenerationNumber
                      && generation <= p.replaceBarrierTypeGenerationNumber + p.videoSaveFirstFrames))) {
-        if (!imageWriter.saveVideoFrameSync(simStep, generation)) {
+        if (!imageWriter.saveVideoFrameSync(simStep, generation, p.challenge, p.barrierType)) {
             std::cout << "imageWriter busy" << std::endl;
         }
     }
