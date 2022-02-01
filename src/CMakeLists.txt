@@ -12,7 +12,7 @@ find_package(OpenCV REQUIRED)
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-O3 -Wall -fexceptions -fopenmp")
-SET(GCC_COVERAGE_LINK_FLAGS    "-lpthread -O3 -s -lz -lgomp")
+SET(GCC_COVERAGE_LINK_FLAGS    "-lpthread -O3 -lz -lgomp")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
