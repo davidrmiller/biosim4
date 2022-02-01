@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cassert>
 #include <string>
+#include <sstream>
+#include <cstring>
 #include "simulator.h"
 #include "random.h"
 
@@ -23,6 +25,7 @@ struct Node {
     uint16_t numOutputs;
     uint16_t numSelfInputs;
     uint16_t numInputsFromSensorsOrOtherNeurons;
+    bool hasMemory;
 };
 
 
@@ -66,6 +69,41 @@ Genome makeRandomGenome()
     return genome;
 }
 
+// Parses a single hex string into a gene
+Gene parseGeneString(std::string& geneString) {
+    Gene gene;
+
+    uint32_t n;
+    std::stringstream ss;
+    ss << std::hex << geneString;
+    ss >> n;
+    std::memcpy(&gene, &n, sizeof(n));
+
+    return gene;
+}
+
+
+// Parses a genome string (all genes for a single creature)
+Genome parseGenomeString(std::string& genomeString) {
+    std::cout << "! " << genomeString << " !\n";
+
+    Genome genome;
+
+    // Tokenize the genome string into single genes
+    std::vector <std::string> genetokens;
+    std::stringstream raw(genomeString);
+    std::string intermediate;
+    while(std::getline(raw, intermediate, ' ')) {
+        genetokens.push_back(intermediate);
+    }
+
+    unsigned length = randomUint(p.genomeInitialLengthMin, p.genomeInitialLengthMax);
+    for (unsigned n = 0; n < length; ++n) {
+        genome.push_back(parseGeneString(genetokens[n]));
+    }
+
+    return genome;
+}
 
 // Convert the indiv's genome to a renumbered connection list.
 // This renumbers the neurons from their uint16_t values in the genome
@@ -112,6 +150,12 @@ void makeNodeList(NodeMap &nodeMap, const ConnectionList &connectionList)
                 it->second.numOutputs = 0;
                 it->second.numSelfInputs = 0;
                 it->second.numInputsFromSensorsOrOtherNeurons = 0;
+                if(conn.sinkNum < p.memoryNeurons) {
+                    it->second.hasMemory = true;
+                } else {
+                    it->second.hasMemory = false;
+                }
+
             }
 
             if (conn.sourceType == NEURON && (conn.sourceNum == conn.sinkNum)) {
@@ -131,6 +175,11 @@ void makeNodeList(NodeMap &nodeMap, const ConnectionList &connectionList)
                 it->second.numOutputs = 0;
                 it->second.numSelfInputs = 0;
                 it->second.numInputsFromSensorsOrOtherNeurons = 0;
+                if(conn.sourceNum < p.memoryNeurons) {
+                    it->second.hasMemory = true;
+                } else {
+                    it->second.hasMemory = false;
+                }
             }
             ++(it->second.numOutputs);
             assert(nodeMap.count(conn.sourceNum) == 1);
@@ -258,6 +307,10 @@ void Indiv::createWiringFromGenome()
         nnet.neurons.push_back( {} );
         nnet.neurons.back().output = initialNeuronOutput();
         nnet.neurons.back().driven = (nodeMap[neuronNum].numInputsFromSensorsOrOtherNeurons != 0);
+
+        // Remember is this is a "memory" neuron and set the initial memory output
+        nnet.neurons.back().hasMemory = nodeMap[neuronNum].hasMemory;
+        nnet.neurons.back().memory = initialNeuronOutput();
     }
 }
 

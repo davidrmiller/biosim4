@@ -31,6 +31,7 @@ void ParamManager::setDefaults()
     privParams.genomeMaxLength = 300;
     privParams.logDir = "./logs/";
     privParams.imageDir = "./images/";
+    privParams.genomeLoadFrom = "NONE";
     privParams.population = 3000;
     privParams.stepsPerGeneration = 300;
     privParams.maxGenerations = 200000;
@@ -38,12 +39,14 @@ void ParamManager::setDefaults()
     privParams.replaceBarrierType = 0;
     privParams.replaceBarrierTypeGenerationNumber = (uint32_t)-1;
     privParams.numThreads = 4;
-    privParams.signalLayers = 1;
+    privParams.signalLayers = 2;
     privParams.maxNumberNeurons = 5;
+    privParams.memoryNeurons = 0;
     privParams.pointMutationRate = 0.001;
     privParams.geneInsertionDeletionRate = 0.0;
     privParams.deletionRatio = 0.5;
     privParams.killEnable = false;
+    privParams.killingIsRisky = true;
     privParams.sexualReproduction = true;
     privParams.chooseParentsByFitness = true;
     privParams.populationSensorRadius = 2.5;
@@ -63,6 +66,7 @@ void ParamManager::setDefaults()
     privParams.genomeComparisonMethod = 1;
     privParams.updateGraphLog = true;
     privParams.updateGraphLogStride = privParams.videoStride;
+    privParams.genomeSaveStride = privParams.videoStride;
     privParams.deterministic = false;
     privParams.RNGSeed = 12345678;
     privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
@@ -156,6 +160,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "imagedir") {
             privParams.imageDir = val; break;
         }
+        else if (name == "genomeloadfrom") {
+            privParams.genomeLoadFrom = val; break;
+        }
         else if (name == "population" && isUint && uVal > 0 && uVal < (uint32_t)-1) {
             privParams.population = uVal; break;
         }
@@ -186,6 +193,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "maxnumberneurons" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
             privParams.maxNumberNeurons = uVal; break;
         }
+        else if (name == "memoryneurons" && isUint && uVal >= 0 && uVal < (uint16_t)-1) {
+            privParams.memoryNeurons = uVal; break;
+        }
         else if (name == "pointmutationrate" && isFloat && dVal >= 0.0 && dVal <= 1.0) {
             privParams.pointMutationRate = dVal; break;
         }
@@ -197,6 +207,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "killenable" && isBool) {
             privParams.killEnable = bVal; break;
+        }
+        else if (name == "killingisrisky" && isBool) {
+            privParams.killingIsRisky = bVal; break;
         }
         else if (name == "sexualreproduction" && isBool) {
             privParams.sexualReproduction = bVal; break;
@@ -260,6 +273,12 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "updategraphlogstride" && val == "videoStride") {
             privParams.updateGraphLogStride = privParams.videoStride; break;
+        }
+        else if (name == "genomesavestride" && isUint && uVal > 0) {
+            privParams.genomeSaveStride = uVal; break;
+        }
+        else if (name == "genomesavestride" && val == "videoStride") {
+            privParams.genomeSaveStride = privParams.videoStride; break;
         }
         else if (name == "deterministic" && isBool) {
             privParams.deterministic = bVal; break;

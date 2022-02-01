@@ -34,6 +34,9 @@ std::string sensorName(Sensor sensor)
     case SIGNAL0: return "signal 0"; break;
     case SIGNAL0_FWD: return "signal 0 fwd"; break;
     case SIGNAL0_LR: return "signal 0 LR"; break;
+    case SIGNAL1: return "signal 1"; break;
+    case SIGNAL1_FWD: return "signal 1 fwd"; break;
+    case SIGNAL1_LR: return "signal 1 LR"; break;
     case GENETIC_SIM_FWD: return "genetic similarity fwd"; break;
     default: assert(false); break;
     }
@@ -91,6 +94,9 @@ std::string sensorShortName(Sensor sensor)
     case SIGNAL0: return "Sg"; break;
     case SIGNAL0_FWD: return "Sfd"; break;
     case SIGNAL0_LR: return "Slr"; break;
+    case SIGNAL1: return "Dg"; break;
+    case SIGNAL1_FWD: return "Dfd"; break;
+    case SIGNAL1_LR: return "Dlr"; break;
     case GENETIC_SIM_FWD: return "Gen"; break;
     default: assert(false); break;
     }
@@ -162,6 +168,26 @@ void Indiv::printGenome() const
         ++count;
     }
     std::cout << std::dec << std::endl;
+}
+
+// Write genome to file handle (single line per genome)
+std::ofstream& Indiv::saveGenome(std::ofstream& ofh) const
+{
+    unsigned count = 0;
+    for (Gene gene : genome) {
+        if (count != 0) {
+            ofh << " ";
+        }
+
+        assert(sizeof(Gene) == 4);
+        uint32_t n;
+        std::memcpy(&n, &gene, sizeof(n));
+        ofh << std::hex << std::setfill('0') << std::setw(8) << n;
+        ++count;
+    }
+    ofh << std::dec << std::endl;
+
+    return ofh;
 }
 
 
@@ -350,6 +376,24 @@ void displaySensorActionReferenceCounts()
     }
 }
 
+
+void saveGenomes(unsigned generation)
+{
+    unsigned index = 1; // indexes start at 1
+    std::stringstream genomeFilename;
+    genomeFilename << p.logDir.c_str() << "/gen-"
+                  << std::setfill('0') << std::setw(6) << generation
+                  << ".txt";
+    std::cout << "Saving genomes to file " << genomeFilename.str().c_str() << std::endl;
+    std::ofstream ofh;
+    ofh.open(genomeFilename.str().c_str());
+    for (index = 1; index <= p.population; ++index) {
+        if (peeps[index].alive) {
+            peeps[index].saveGenome(ofh);
+        }
+    }
+    ofh.close();
+}
 
 void displaySampleGenomes(unsigned count)
 {

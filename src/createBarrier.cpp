@@ -71,7 +71,7 @@ void Grid::createBarrier(unsigned barrierType)
     case 3:
         {
             int16_t blockSizeX = 2;
-            int16_t blockSizeY = p.sizeX / 3;
+            int16_t blockSizeY = p.sizeY / 3;
 
             int16_t x0 = p.sizeX / 4 - blockSizeX / 2;
             int16_t y0 = p.sizeY / 4 - blockSizeY / 2;
@@ -174,6 +174,141 @@ void Grid::createBarrier(unsigned barrierType)
                 barrierCenters.push_back(loc);
             }
         }
+        break;
+        
+    // floating islands, vertical walls, horizontal walls.
+    // All in different locations
+    case 20:
+        {
+            // random short vertical bars
+            {
+                int i;
+                int16_t minX, maxX, minY, maxY;
+
+                for(i = 0; i < 10; i++) {
+                    minX = randomUint(20, p.sizeX - 20);
+                    maxX = minX + 1;
+                    minY = randomUint(20, p.sizeY / 2 - 20);
+                    maxY = minY + 20;
+
+                    for (int16_t x = minX; x <= maxX; ++x) {
+                        for (int16_t y = minY; y <= maxY; ++y) {
+                            grid.set(x, y, BARRIER);
+                            barrierLocations.push_back( {x, y} );
+                        }
+                    }
+                }
+            }
+            // random short horizontal bars
+            {
+                int i;
+
+                int16_t minX, maxX, minY, maxY;
+
+                for(i = 0; i < 5; i++) {
+                    minX = randomUint(20, p.sizeX / 2 - 20);
+                    maxX = minX + 20;
+                    minY = randomUint(20, p.sizeY - 20);
+                    maxY = minY + 1;
+
+                    for (int16_t x = minX; x <= maxX; ++x) {
+                        for (int16_t y = minY; y <= maxY; ++y) {
+                            grid.set(x, y, BARRIER);
+                            barrierLocations.push_back( {x, y} );
+                        }
+                    }
+                }
+            }
+            // random islands
+            {
+                float radius = 5.0;
+                unsigned margin = 2 * (int)radius;
+
+                auto randomLoc = [&]() {
+                    return Coord( (int16_t)randomUint(margin, p.sizeX - margin),
+                                  (int16_t)randomUint(margin, p.sizeY - margin) );
+                };
+
+                int i;
+
+                for(i = 0; i < 10; i++) {
+                    Coord center = randomLoc();
+
+                    barrierCenters.push_back(center);
+
+                    auto f = [&](Coord loc) {
+                        grid.set(loc, BARRIER);
+                        barrierLocations.push_back(loc);
+                    };
+
+                    visitNeighborhood(center, radius, f);
+                }
+            }
+        }
+        break;
+        
+    // floating islands, vertical walls, horizontal walls.
+    // All in different locations
+    case 21:
+
+        // Staggered vertical blocks
+        {
+            int16_t blockSizeX = 2;
+            int16_t blockSizeY = p.sizeY / 3;
+
+            int16_t x0 = p.sizeX / 4 - blockSizeX / 2;
+            int16_t y0 = p.sizeY / 4 - blockSizeY / 2;
+            int16_t x1 = x0 + blockSizeX;
+            int16_t y1 = y0 + blockSizeY;
+
+            drawBox(x0, y0, x1, y1);
+            x0 += p.sizeX / 2;
+            x1 = x0 + blockSizeX;
+            drawBox(x0, y0, x1, y1);
+            y0 += p.sizeY / 2;
+            y1 = y0 + blockSizeY;
+            drawBox(x0, y0, x1, y1);
+            x0 -= p.sizeX / 2;
+            x1 = x0 + blockSizeX;
+            drawBox(x0, y0, x1, y1);
+            x0 = p.sizeX / 7;
+            x1 = x0 + blockSizeX;
+            y0 = p.sizeY / 2 - blockSizeY / 2;
+            y1 = y0 + blockSizeY;
+            drawBox(x0, y0, x1, y1);
+            x0 = p.sizeX - (p.sizeX / 7);
+            x1 = x0 + blockSizeX;
+            drawBox(x0, y0, x1, y1);
+        }
+
+        // horizontal lines
+        {
+            int16_t minX = p.sizeX / 4;
+            int16_t maxX = minX + p.sizeX / 2;
+            int16_t minY = p.sizeY / 2 + p.sizeY / 2.4;
+            int16_t maxY = minY + 2;
+
+            for (int16_t x = minX; x <= maxX; ++x) {
+                for (int16_t y = minY; y <= maxY; ++y) {
+                    grid.set(x, y, BARRIER);
+                    barrierLocations.push_back( {x, y} );
+                }
+            }
+        }
+        {
+            int16_t minX = p.sizeX / 4;
+            int16_t maxX = minX + p.sizeX / 2;
+            int16_t minY = p.sizeY / 2 - p.sizeY / 2.4;
+            int16_t maxY = minY + 2;
+
+            for (int16_t x = minX; x <= maxX; ++x) {
+                for (int16_t y = minY; y <= maxY; ++y) {
+                    grid.set(x, y, BARRIER);
+                    barrierLocations.push_back( {x, y} );
+                }
+            }
+        }
+
         break;
 
     default:

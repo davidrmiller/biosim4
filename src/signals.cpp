@@ -19,24 +19,42 @@ void Signals::init(uint16_t numLayers, uint16_t sizeX, uint16_t sizeY)
 // this single thread is writing to it?  todo!!!
 void Signals::increment(uint16_t layerNum, Coord loc)
 {
-    constexpr float radius = 1.5;
-    constexpr uint8_t centerIncreaseAmount = 2;
-    constexpr uint8_t neighborIncreaseAmount = 1;
+    // increaseAmount gets applied in increasing concentric circles, so
+    // the center gets more pheromones than the outer edge
+    constexpr uint8_t increaseAmount = 1;
+    constexpr uint8_t pheromoneradius = 4.0;
 
 #pragma omp critical
     {
-        visitNeighborhood(loc, radius, [layerNum](Coord loc) {
-            if (signals[layerNum][loc.x][loc.y] < SIGNAL_MAX) {
-                signals[layerNum][loc.x][loc.y] =
-                        std::min<unsigned>(SIGNAL_MAX,
-                                           signals[layerNum][loc.x][loc.y] + neighborIncreaseAmount);
-            }
-        });
+        for(float radius = 1.0; radius < pheromoneradius; radius += 1.0) {
+            visitNeighborhood(loc, radius, [layerNum](Coord loc) {
+                if (signals[layerNum][loc.x][loc.y] < SIGNAL_MAX) {
+                    signals[layerNum][loc.x][loc.y] =
+                            std::min<unsigned>(SIGNAL_MAX,
+                                               signals[layerNum][loc.x][loc.y] + increaseAmount);
+                }
+            });
+        }
+    }
+}
 
-        if (signals[layerNum][loc.x][loc.y] < SIGNAL_MAX) {
-            signals[layerNum][loc.x][loc.y] =
-                        std::min<unsigned>(SIGNAL_MAX,
-                                           signals[layerNum][loc.x][loc.y] + centerIncreaseAmount);
+void Signals::alertOthers(uint16_t layerNum, Coord loc)
+{
+    // increaseAmount gets applied in increasing concentric circles, so
+    // the center gets more pheromones than the outer edge
+    constexpr uint8_t increaseAmount = 1;
+    constexpr uint8_t pheromoneradius = 10.0;
+
+#pragma omp critical
+    {
+        for(float radius = 1.0; radius < pheromoneradius; radius += 1.0) {
+            visitNeighborhood(loc, radius, [layerNum](Coord loc) {
+                if (signals[layerNum][loc.x][loc.y] < SIGNAL_MAX) {
+                    signals[layerNum][loc.x][loc.y] =
+                            std::min<unsigned>(SIGNAL_MAX,
+                                               signals[layerNum][loc.x][loc.y] + increaseAmount);
+                }
+            });
         }
     }
 }

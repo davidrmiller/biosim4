@@ -73,6 +73,10 @@ struct NeuralNet {
     struct Neuron {
         float output;
         bool driven;        // undriven neurons have fixed output values
+
+        // some neurons have a one step memory
+        bool hasMemory;
+        float memory;
     };
     std::vector<Neuron> neurons;
 };
@@ -84,6 +88,8 @@ constexpr float initialNeuronOutput() { return 0.5; }
 
 extern Gene makeRandomGene();
 extern Genome makeRandomGenome();
+extern Genome parseGenomeString(std::string& genomeString);
+extern Gene parseGeneString(std::string& geneString);
 extern void unitTestConnectNeuralNetWiringFromGenome();
 extern float genomeSimilarity(const Genome &g1, const Genome &g2); // 0.0..1.0
 extern float geneticDiversity();  // 0.0..1.0

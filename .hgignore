@@ -1,5 +1,4 @@
 obj/
-.hg/
 bin/Release/biosim4
 bin/Debug/biosim4
 images/gen\-\d+.avi

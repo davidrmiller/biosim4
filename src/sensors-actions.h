@@ -52,9 +52,12 @@ enum Sensor {
     BARRIER_FWD,       // W neighborhood barrier distance forward-reverse axis
     BARRIER_LR,        // W neighborhood barrier distance left-right axis
     RANDOM,            //   random sensor value, uniform distribution
-    SIGNAL0,           // W strength of signal0 in neighborhood
+    SIGNAL0,           // W strength of signal0 in neighborhood <-- "pheromone"
     SIGNAL0_FWD,       // W strength of signal0 in the forward-reverse axis
     SIGNAL0_LR,        // W strength of signal0 in the left-right axis
+    SIGNAL1,           // W strength of signal1 in neighborhood <-- "recent death pheromone"
+    SIGNAL1_FWD,       // W strength of signal1 in the forward-reverse axis
+    SIGNAL1_LR,        // W strength of signal1 in the left-right axis
     NUM_SENSES,        // <<------------------ END OF ACTIVE SENSES MARKER
 };
 
@@ -82,8 +85,8 @@ enum Action {
     MOVE_LEFT,                // W
     MOVE_RIGHT,               // W
     MOVE_REVERSE,             // W
-    NUM_ACTIONS,       // <<----------------- END OF ACTIVE ACTIONS MARKER
     KILL_FORWARD,             // W
+    NUM_ACTIONS,       // <<----------------- END OF ACTIVE ACTIONS MARKER
 };
 
 extern std::string sensorName(Sensor sensor);

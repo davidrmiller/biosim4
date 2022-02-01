@@ -22,6 +22,7 @@ namespace BS {
 extern void initializeGeneration0();
 extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount);
 extern void displaySampleGenomes(unsigned count);
+extern void saveGenomes(unsigned generation);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
 extern void endOfSimStep(unsigned simStep, unsigned generation);
 extern void endOfGeneration(unsigned generation);
@@ -120,6 +121,7 @@ void simulator(int argc, char **argv)
     // will be reused in each new generation.
     grid.init(p.sizeX, p.sizeY); // the land on which the peeps live
     signals.init(p.signalLayers, p.sizeX, p.sizeY);  // where the pheromones waft
+    imageWriter.init(p.signalLayers, p.sizeX, p.sizeY); // Holds a copy oh the signals for display, needs the same init
     peeps.init(p.population); // the peeps themselves
 
     // If imageWriter is to be run in its own thread, start it here:
@@ -142,6 +144,10 @@ void simulator(int argc, char **argv)
 
         while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
             #pragma omp single
+            if (generation % p.genomeSaveStride == 0) {
+                saveGenomes(generation);
+            }
+
             murderCount = 0; // for reporting purposes
 
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {

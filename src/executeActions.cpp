@@ -135,7 +135,13 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
             if (grid.isInBounds(otherLoc) && grid.isOccupiedAt(otherLoc)) {
                 Indiv &indiv2 = peeps.getIndiv(otherLoc);
                 assert((indiv.loc - indiv2.loc).length() == 1);
-                peeps.queueForDeath(indiv2);
+                if(p.killingIsRisky && prob2bool(0.25)) {
+                    // risky kill action went wrong, kill the killer instead
+                    peeps.queueForDeath(indiv);
+                } else {
+                    peeps.queueForDeath(indiv2);
+                }
+
             }
         }
     }
