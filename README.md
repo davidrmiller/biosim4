@@ -213,16 +213,24 @@ cimg-dev is replaced with version 2.8.4 or later.
 <a name="Compiling"></a>
 ### Compiling
 
-Two (and a half) ways to compile:
+You have several options:
 
-* The file named "biosim4.cbp" is a configuration file for the Code::Blocks IDE version 20.03.
+#### Code::Blocks project file
 
-* A Makefile is provided which
-was created from biosim4.cbp with cbp2make, but is not tested. A default "make" will generate a debug and a
-release version.
+The file named "biosim4.cbp" is a configuration file for the Code::Blocks IDE version 20.03.
 
+#### Makefile
 
-* A Dockerfile is provided which leverages the aforementioned Makefile.
+A Makefile is provided which was created from biosim4.cbp with cbp2make. Possible make commands include:
+
+* "make" with no arguments makes release and debug versions in ./bin/Release and ./bin/Debug
+* "make release" makes a release version in ./bin/Release
+* "make debug" makes a debug version in ./bin/Debug
+* "make clean" removes the intermediate build files
+
+#### Docker
+
+A Dockerfile is provided which leverages the aforementioned Makefile.
 
 To build a Docker environment in which you can compile the program:
 
@@ -236,6 +244,42 @@ You can then compile the program with an ephemeral container:
 docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
 ```
 When you exit the container, the files compiled in your container files will persist in `./bin`.
+
+#### CMake
+
+A `CMakeList.txt` file is provided to allow development, build, test, installation and packaging with the CMake tool chain and all IDE's that support CMake. 
+
+To build with cmake you need to install cmake. Once installed use the procedure below:
+
+```sh
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+```
+
+To make a test installation and run the program:
+
+```sh
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+mkdir test_install
+cmake --install ./ --prefix ./test_install
+cd test_install
+./bin/biosim4
+```
+
+To make a release package:
+
+```sh
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+cpack ./
+```
 
 <a name="Bugs"></a>
 ## Bugs
