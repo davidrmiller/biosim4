@@ -17,9 +17,8 @@ void Grid::init(uint16_t sizeX, uint16_t sizeY)
 // Finds a random unoccupied location in the grid
 Coord Grid::findEmptyLocation() const {
     Coord loc;
-    bool found = false;
 
-    while (!found) {
+    while (true) {
         loc.x = randomUint(0, p.sizeX - 1);
         loc.y = randomUint(0, p.sizeY - 1);
         if (grid.isEmptyAt(loc)) {
