@@ -83,8 +83,8 @@ void endOfSimStep(unsigned simStep, unsigned generation)
     if (p.saveVideo &&
                 ((generation % p.videoStride) == 0
                  || generation <= p.videoSaveFirstFrames
-                 || (generation >= p.replaceBarrierTypeGenerationNumber
-                     && generation <= p.replaceBarrierTypeGenerationNumber + p.videoSaveFirstFrames))) {
+                 || (generation >= p.parameterChangeGenerationNumber
+                     && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
         if (!imageWriter.saveVideoFrameSync(simStep, generation)) {
             std::cout << "imageWriter busy" << std::endl;
         }

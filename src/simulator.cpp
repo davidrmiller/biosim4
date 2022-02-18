@@ -111,7 +111,7 @@ void simulator(int argc, char **argv)
     // Todo: remove the hardcoded parameter filename.
     paramManager.setDefaults();
     paramManager.registerConfigFile(argc > 1 ? argv[1] : "biosim4.ini");
-    paramManager.updateFromConfigFile();
+    paramManager.updateFromConfigFile(0);
     paramManager.checkParameters(); // check and report any problems
 
     randomUint.initialize(); // seed the RNG for main-thread use
@@ -166,7 +166,7 @@ void simulator(int argc, char **argv)
             #pragma omp single
             {
                 endOfGeneration(generation);
-                paramManager.updateFromConfigFile();
+                paramManager.updateFromConfigFile(generation + 1);
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
                 if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
                     displaySampleGenomes(p.displaySampleGenomes);

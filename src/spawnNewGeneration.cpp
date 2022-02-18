@@ -19,8 +19,7 @@ void initializeGeneration0()
 {
     // The grid has already been allocated, just clear and reuse it
     grid.zeroFill();
-    grid.createBarrier(p.replaceBarrierTypeGenerationNumber == 0
-                       ? p.replaceBarrierType : p.barrierType);
+    grid.createBarrier(p.barrierType);
 
     // The signal layers have already been allocated, so just reuse them
     signals.zeroFill();
@@ -45,8 +44,7 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
     // The grid, signals, and peeps containers have already been allocated, just
     // clear them if needed and reuse the elements
     grid.zeroFill();
-    grid.createBarrier(generation >= p.replaceBarrierTypeGenerationNumber
-                       ? p.replaceBarrierType : p.barrierType);
+    grid.createBarrier(p.barrierType);
     signals.zeroFill();
 
     // Spawn the population. This overwrites all the elements of peeps[]
