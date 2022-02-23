@@ -32,11 +32,13 @@ void endOfSimStep(unsigned simStep, unsigned generation)
 
         for (uint16_t index = 1; index <= p.population; ++index) { // index 0 is reserved
             Indiv &indiv = peeps[index];
-            int16_t distanceFromRadioactiveWall = std::abs(indiv.loc.x - radioactiveX);
-            if (distanceFromRadioactiveWall < p.sizeX / 2) {
-                float chanceOfDeath = 1.0 / distanceFromRadioactiveWall;
-                if (randomUint() / (float)RANDOM_UINT_MAX < chanceOfDeath) {
-                    peeps.queueForDeath(indiv);
+            if (indiv.alive) {
+                int16_t distanceFromRadioactiveWall = std::abs(indiv.loc.x - radioactiveX);
+                if (distanceFromRadioactiveWall < p.sizeX / 2) {
+                    float chanceOfDeath = 1.0 / distanceFromRadioactiveWall;
+                    if (randomUint() / (float)RANDOM_UINT_MAX < chanceOfDeath) {
+                        peeps.queueForDeath(indiv);
+                    }
                 }
             }
         }
@@ -81,8 +83,8 @@ void endOfSimStep(unsigned simStep, unsigned generation)
     if (p.saveVideo &&
                 ((generation % p.videoStride) == 0
                  || generation <= p.videoSaveFirstFrames
-                 || (generation >= p.replaceBarrierTypeGenerationNumber
-                     && generation <= p.replaceBarrierTypeGenerationNumber + p.videoSaveFirstFrames))) {
+                 || (generation >= p.parameterChangeGenerationNumber
+                     && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
         if (!imageWriter.saveVideoFrameSync(simStep, generation)) {
             std::cout << "imageWriter busy" << std::endl;
         }

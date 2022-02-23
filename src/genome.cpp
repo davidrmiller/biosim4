@@ -378,7 +378,7 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
     const Genome &g1 = parentGenomes[parent1Idx];
     const Genome &g2 = parentGenomes[parent2Idx];
 
-    if (g1.size() == 0 || g2.size() == 0) {
+    if (g1.empty() || g2.empty()) {
         std::cout << "invalid genome" << std::endl;
         assert(false);
     }
@@ -389,18 +389,18 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
         if (index0 > index1) {
             std::swap(index0, index1);
         }
-        std::copy(&gShorter[index0], &gShorter[index1], &genome[index0]);
+        std::copy(gShorter.begin() + index0, gShorter.begin() + index1, genome.begin() + index0);
     };
 
     if (p.sexualReproduction) {
         if (g1.size() > g2.size()) {
             genome = g1;
             overlayWithSliceOf(g2);
-            assert(genome.size() > 0);
+            assert(!genome.empty());
         } else {
             genome = g2;
             overlayWithSliceOf(g1);
-            assert(genome.size() > 0);
+            assert(!genome.empty());
         }
 
         // Trim to length = average length of parents
@@ -410,16 +410,16 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
             ++sum;
         }
         cropLength(genome, sum / 2);
-        assert(genome.size() > 0);
+        assert(!genome.empty());
     } else {
         genome = g2;
-        assert(genome.size() > 0);
+        assert(!genome.empty());
     }
 
     randomInsertDeletion(genome);
-    assert(genome.size() > 0);
+    assert(!genome.empty());
     applyPointMutations(genome);
-    assert(genome.size() > 0);
+    assert(!genome.empty());
     assert(genome.size() <= p.genomeMaxLength);
 
     return genome;

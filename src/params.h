@@ -54,8 +54,8 @@ struct Params {
     unsigned updateGraphLogStride; // > 0
     unsigned challenge;
     unsigned barrierType; // >= 0
-    unsigned replaceBarrierType; // >= 0
-    unsigned replaceBarrierTypeGenerationNumber; // >= 0
+    bool deterministic;
+    unsigned RNGSeed; // >= 0
 
     // These must not change after initialization
     uint16_t sizeX; // 2..0x10000
@@ -65,6 +65,9 @@ struct Params {
     std::string logDir;
     std::string imageDir;
     std::string graphLogUpdateCommand;
+
+    // These are updated automatically and not set via the parameter file
+    unsigned parameterChangeGenerationNumber; // the most recent generation number that an automatic parameter change occured at
 };
 
 class ParamManager {
@@ -72,7 +75,8 @@ public:
     const Params &getParamRef() const { return privParams; } // for public read-only access
     void setDefaults();
     void registerConfigFile(const char *filename);
-    void updateFromConfigFile();
+    void updateFromConfigFile(unsigned generationNumber);
+    void checkParameters();
 private:
     Params privParams;
     std::string configFilename;

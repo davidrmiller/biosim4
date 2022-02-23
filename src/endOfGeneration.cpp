@@ -19,8 +19,8 @@ void endOfGeneration(unsigned generation)
         if (p.saveVideo &&
                 ((generation % p.videoStride) == 0
                  || generation <= p.videoSaveFirstFrames
-                 || (generation >= p.replaceBarrierTypeGenerationNumber
-                     && generation <= p.replaceBarrierTypeGenerationNumber + p.videoSaveFirstFrames))) {
+                 || (generation >= p.parameterChangeGenerationNumber
+                     && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
             imageWriter.saveGenerationVideo(generation);
         }
     }

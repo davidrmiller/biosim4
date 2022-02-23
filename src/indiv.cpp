@@ -10,7 +10,7 @@ namespace BS {
 // The responsiveness parameter will be initialized here to maximum value
 // of 1.0, then depending on which action activation function is used,
 // the default undriven value may be changed to 1.0 or action midrange.
-void Indiv::initialize(uint16_t index_, Coord loc_, const Genome &&genome_)
+void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
 {
     index = index_;
     loc = loc_;

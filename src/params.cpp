@@ -13,7 +13,7 @@
 
 // To add a new parameter:
 //    1. Add a member to struct Params in params.h.
-//    2. Add a member and its default value to privParams in ParamManager::setDefault()
+//    2. Add a member and its default value to privParams in ParamManager::setDefaults()
 //          in params.cpp.
 //    3. Add an else clause to ParamManager::ingestParameter() in params.cpp.
 //    4. Add a line to the user's parameter file (default name biosim4.ini)
@@ -24,46 +24,47 @@ void ParamManager::setDefaults()
 {
     privParams.sizeX = 128;
     privParams.sizeY = 128;
-    privParams.challenge = 0;
+    privParams.challenge = 6;
 
-    privParams.genomeInitialLengthMin = 16;
-    privParams.genomeInitialLengthMax = 16;
-    privParams.genomeMaxLength = 20;
+    privParams.genomeInitialLengthMin = 24;
+    privParams.genomeInitialLengthMax = 24;
+    privParams.genomeMaxLength = 300;
     privParams.logDir = "./logs/";
     privParams.imageDir = "./images/";
-    privParams.population = 100;
-    privParams.stepsPerGeneration = 100;
-    privParams.maxGenerations = 100;
+    privParams.population = 3000;
+    privParams.stepsPerGeneration = 300;
+    privParams.maxGenerations = 200000;
     privParams.barrierType = 0;
-    privParams.replaceBarrierType = 0;
-    privParams.replaceBarrierTypeGenerationNumber = (uint32_t)-1;
-    privParams.numThreads = 1;
+    privParams.numThreads = 4;
     privParams.signalLayers = 1;
-    privParams.maxNumberNeurons = privParams.genomeMaxLength / 2;
-    privParams.pointMutationRate = 0.0001;
-    privParams.geneInsertionDeletionRate = 0.0001;
-    privParams.deletionRatio = 0.7;
+    privParams.maxNumberNeurons = 5;
+    privParams.pointMutationRate = 0.001;
+    privParams.geneInsertionDeletionRate = 0.0;
+    privParams.deletionRatio = 0.5;
     privParams.killEnable = false;
     privParams.sexualReproduction = true;
     privParams.chooseParentsByFitness = true;
-    privParams.populationSensorRadius = 2.0;
-    privParams.signalSensorRadius = 1;
+    privParams.populationSensorRadius = 2.5;
+    privParams.signalSensorRadius = 2.0;
     privParams.responsiveness = 0.5;
     privParams.responsivenessCurveKFactor = 2;
     privParams.longProbeDistance = 16;
-    privParams.shortProbeBarrierDistance = 3;
+    privParams.shortProbeBarrierDistance = 4;
     privParams.valenceSaturationMag = 0.5;
     privParams.saveVideo = true;
-    privParams.videoStride = 1;
-    privParams.videoSaveFirstFrames = 0;
-    privParams.displayScale = 1;
-    privParams.agentSize = 2;
-    privParams.genomeAnalysisStride = 1;
-    privParams.displaySampleGenomes = 0;
+    privParams.videoStride = 25;
+    privParams.videoSaveFirstFrames = 2;
+    privParams.displayScale = 8;
+    privParams.agentSize = 4;
+    privParams.genomeAnalysisStride = privParams.videoStride;
+    privParams.displaySampleGenomes = 5;
     privParams.genomeComparisonMethod = 1;
-    privParams.updateGraphLog = false;
-    privParams.updateGraphLogStride = 16;
+    privParams.updateGraphLog = true;
+    privParams.updateGraphLogStride = privParams.videoStride;
+    privParams.deterministic = false;
+    privParams.RNGSeed = 12345678;
     privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
+    privParams.parameterChangeGenerationNumber = 0;
 }
 
 
@@ -125,8 +126,6 @@ void ParamManager::ingestParameter(std::string name, std::string val)
 
     bool isUint = checkIfUint(val);
     unsigned uVal = isUint ? (unsigned)std::stol(val.c_str()) : 0;
-    bool isInt = checkIfInt(val);
-    int iVal = isInt ? std::stoi(val.c_str()) : 0;
     bool isFloat = checkIfFloat(val);
     double dVal = isFloat ? std::stod(val.c_str()) : 0.0;
     bool isBool = checkIfBool(val);
@@ -165,12 +164,6 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "barriertype" && isUint && uVal < (uint32_t)-1) {
             privParams.barrierType = uVal; break;
-        }
-        else if (name == "replacebarriertype" && isUint && uVal < (uint32_t)-1) {
-            privParams.replaceBarrierType = uVal; break;
-        }
-        else if (name == "replacebarriertypegenerationnumber" && isInt && iVal >= -1) {
-            privParams.replaceBarrierTypeGenerationNumber = (iVal == -1 ? (uint32_t)-1 : iVal); break;
         }
         else if (name == "numthreads" && isUint && uVal > 0 && uVal < (uint16_t)-1) {
             privParams.numThreads = uVal; break;
@@ -259,6 +252,12 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "updategraphlogstride" && val == "videoStride") {
             privParams.updateGraphLogStride = privParams.videoStride; break;
         }
+        else if (name == "deterministic" && isBool) {
+            privParams.deterministic = bVal; break;
+        }
+        else if (name == "rngseed" && isUint) {
+            privParams.RNGSeed = uVal; break;
+        }
         else {
             std::cout << "Invalid param: " << name << " = " << val << std::endl;
         }
@@ -266,7 +265,7 @@ void ParamManager::ingestParameter(std::string name, std::string val)
 }
 
 
-void ParamManager::updateFromConfigFile()
+void ParamManager::updateFromConfigFile(unsigned generationNumber)
 {
     // std::ifstream is RAII, i.e. no need to call close
     std::ifstream cFile(configFilename.c_str());
@@ -280,6 +279,27 @@ void ParamManager::updateFromConfigFile()
             }
             auto delimiterPos = line.find("=");
             auto name = line.substr(0, delimiterPos);
+
+            // Process the generation specifier if present:
+            auto generationDelimiterPos = name.find("@");
+            if (generationDelimiterPos < name.size()) {
+                auto generationSpecifier = name.substr(generationDelimiterPos + 1);
+                bool isUint = checkIfUint(generationSpecifier);
+                if (!isUint) {
+                    std::cerr << "Invalid generation specifier: " << name << ".\n";
+                    continue;
+                }
+                unsigned activeFromGeneration = (unsigned)std::stol(generationSpecifier);
+                if (activeFromGeneration > generationNumber) {
+                    continue; // This parameter value is not active yet
+                }
+                else if (activeFromGeneration == generationNumber) {
+                    // Parameter value became active at exactly this generation number
+                    privParams.parameterChangeGenerationNumber = generationNumber; 
+                }
+                name = name.substr(0, generationDelimiterPos);
+            }
+
             std::transform(name.begin(), name.end(), name.begin(),
                         [](unsigned char c){ return std::tolower(c); });
             auto value0 = line.substr(delimiterPos + 1);
@@ -296,5 +316,16 @@ void ParamManager::updateFromConfigFile()
         std::cerr << "Couldn't open config file " << configFilename << ".\n" << std::endl;
     }
 }
+
+
+// Check parameter ranges, reasonableness, coherency, whatever. This is
+// typically called only once after the parameters are first read.
+void ParamManager::checkParameters()
+{
+    if (privParams.deterministic && privParams.numThreads != 1) {
+        std::cerr << "Warning: When deterministic is true, you probably want to set numThreads = 1." << std::endl;
+    }
+}
+
 
 } // end namespace BS

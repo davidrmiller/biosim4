@@ -134,11 +134,9 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
             Coord otherLoc = indiv.loc + indiv.lastMoveDir;
             if (grid.isInBounds(otherLoc) && grid.isOccupiedAt(otherLoc)) {
                 Indiv &indiv2 = peeps.getIndiv(otherLoc);
-                if (indiv2.alive) {
-                    assert((indiv.loc - indiv2.loc).length() == 1);
-                    peeps.queueForDeath(indiv2);
-                    ++indiv.kills;
-                }
+                assert((indiv.loc - indiv2.loc).length() == 1);
+                peeps.queueForDeath(indiv2);
+                ++indiv.kills;
             }
         }
     }
@@ -199,13 +197,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     }
     if (isEnabled(Action::MOVE_RL)) {
         level = actionLevels[Action::MOVE_RL];
-        if (level < 0.0) {
-            offset = indiv.lastMoveDir.rotate90DegCCW().asNormalizedCoord();
-        } else if (level > 0.0) {
-            offset = indiv.lastMoveDir.rotate90DegCW().asNormalizedCoord();
-        } else {
-            offset = { 0, 0 };
-        }
+        offset = indiv.lastMoveDir.rotate90DegCW().asNormalizedCoord();
         moveX += offset.x * level;
         moveY += offset.y * level;
     }

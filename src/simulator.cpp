@@ -1,4 +1,5 @@
 // simulator.cpp - Main thread
+
 // This file contains simulator(), the top-level entry point of the simulator.
 // simulator() is called from main.cpp with a copy of argc and argv.
 // If there is no command line argument, the simulator will read the default
@@ -32,7 +33,7 @@ Peeps peeps;      // The container of all the individuals in the population
 unsigned murderCount;    // This counts the total kills
 ImageWriter imageWriter; // This is for generating the movies
 
-// The paramManger maintains a private copy of the parameter values, and a copy
+// The paramManager maintains a private copy of the parameter values, and a copy
 // is available read-only through global variable p. Although this is not
 // foolproof, you should be able to modify the config file during a simulation
 // run and modify many of the parameters. See params.cpp and params.h for more info.
@@ -111,7 +112,10 @@ void simulator(int argc, char **argv)
     // Todo: remove the hardcoded parameter filename.
     paramManager.setDefaults();
     paramManager.registerConfigFile(argc > 1 ? argv[1] : "biosim4.ini");
-    paramManager.updateFromConfigFile();
+    paramManager.updateFromConfigFile(0);
+    paramManager.checkParameters(); // check and report any problems
+
+    randomUint.initialize(); // seed the RNG for main-thread use
 
     // Allocate container space. Once allocated, these container elements
     // will be reused in each new generation.
@@ -128,40 +132,56 @@ void simulator(int argc, char **argv)
 
     unsigned generation = 0;
     initializeGeneration0(); // starting population
-
     runMode = RunMode::RUN;
-    while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
-        murderCount = 0;
-        for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
+    unsigned murderCount;
 
-            // multithreaded loop: index 0 is reserved, start at 1
-#pragma omp parallel for num_threads(p.numThreads) default(shared) firstprivate(randomUint) lastprivate(randomUint) schedule(auto)
-            for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
-                if (peeps[indivIndex].alive) {
-                    simStepOneIndiv(peeps[indivIndex], simStep);
+    // Inside the parallel region, be sure that shared data is not modified. Do the
+    // modifications in the single-thread regions.
+    #pragma omp parallel num_threads(p.numThreads) default(shared)
+    {
+        randomUint.initialize(); // seed the RNG, each thread has a private instance
+
+        while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
+            #pragma omp single
+            murderCount = 0; // for reporting purposes
+
+            for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
+
+                // multithreaded loop: index 0 is reserved, start at 1
+                #pragma omp for schedule(auto)
+                for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
+                    if (peeps[indivIndex].alive) {
+                        simStepOneIndiv(peeps[indivIndex], simStep);
+                    }
+                }
+
+                // In single-thread mode: this executes deferred, queued deaths and movements,
+                // updates signal layers (pheromone), etc.
+                #pragma omp single
+                {
+                    murderCount += peeps.deathQueueSize();
+                    endOfSimStep(simStep, generation);
                 }
             }
-            // In single-thread mode: this executes deferred, queued deaths and movements,
-            // updates signal layers (pheromone), etc.
-            murderCount += peeps.deathQueueSize();
-            endOfSimStep(simStep, generation);
-        }
 
-        endOfGeneration(generation);
-        paramManager.updateFromConfigFile();
-        unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
-        if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
-            displaySampleGenomes(p.displaySampleGenomes);
-        }
-        if (numberSurvivors == 0) {
-            generation = 0;  // start over
-        } else {
-            ++generation;
+            #pragma omp single
+            {
+                endOfGeneration(generation);
+                paramManager.updateFromConfigFile(generation + 1);
+                unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
+                if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
+                    displaySampleGenomes(p.displaySampleGenomes);
+                }
+                if (numberSurvivors == 0) {
+                    generation = 0;  // start over
+                } else {
+                    ++generation;
+                }
+            }
         }
     }
     displaySampleGenomes(3); // final report, for debugging
 
-    std::cout << "Simulator waiting..." << std::endl;
     std::cout << "Simulator exit." << std::endl;
 
     // If imageWriter is in its own thread, stop it and wait for it here:

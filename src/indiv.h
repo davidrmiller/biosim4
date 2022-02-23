@@ -29,7 +29,7 @@ struct Indiv {
     unsigned challengeBits; // modified when the indiv accomplishes some task
     std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep); // reads sensors, returns actions
     float getSensor(Sensor, unsigned simStep) const;
-    void initialize(uint16_t index, Coord loc, const Genome &&genome);
+    void initialize(uint16_t index, Coord loc, Genome &&genome);
     void createWiringFromGenome(); // creates .nnet member from .genome member
     void printNeuralNet() const;
     void printIGraphEdgeList() const;
