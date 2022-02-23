@@ -49,6 +49,9 @@ all: debug release
 
 clean: clean_debug clean_release
 
+distclean: clean
+	$(RM) logs/* images/*
+
 before_debug: 
 	test -d bin/Debug || mkdir -p bin/Debug
 	test -d $(OBJDIR_DEBUG)/src || mkdir -p $(OBJDIR_DEBUG)/src
