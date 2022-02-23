@@ -200,10 +200,10 @@ Copy the directory structure to a location of your choice.
 
 This code is known to run in the following environment:
 
-* Ubuntu 21.04
-* cimg-dev 2.8.4 or later
-* libopencv-dev 4.2 or later
-* gcc 9.3 or 10.3
+* Ubuntu 21.04 or Debian 10 (Buster)
+* cimg-dev 2.4.5 or later
+* libopencv-dev 3.2 or later
+* gcc 8.3, 9.3 or 10.3
 * python-igraph 0.8.3 (used only by tools/graph-nnet.py)
 * gnuplot 5.2.8 (used only by tools/graphlog.gp)
 
