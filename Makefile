@@ -7,6 +7,8 @@ LD = c++
 
 CXXFLAGS += \
   -Wall \
+  -pedantic \
+  -std=c++17 \
   -fexceptions \
   -fopenmp \
   $(shell pkg-config --cflags opencv4)
@@ -21,11 +23,11 @@ LDFLAGS += \
 
 ifeq ($(BUILD),debug)
   OUT_DIR = bin/Debug/
-  OBJ_DIR = obj/Debug/
+  OBJ_DIR = obj/Debug
   CXXFLAGS += -g
 else
   OUT_DIR = bin/Release/
-  OBJ_DIR = obj/Release/
+  OBJ_DIR = obj/Release
   CXXCLAGS += -O3
   LDFLAGS += -O3 -s
 endif
