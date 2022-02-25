@@ -28,7 +28,7 @@ ifeq ($(BUILD),debug)
 else
   OUT_DIR = bin/Release/
   OBJ_DIR = obj/Release
-  CXXCLAGS += -O3
+  CXXFLAGS += -O3
   LDFLAGS += -O3 -s
 endif
 
@@ -40,11 +40,20 @@ OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
 
 all: debug release
 
+
+before_debug:
+	test -d bin/Debug || mkdir -p bin/Debug
+	test -d obj/Debug || mkdir -p obj/Debug
+
+before_release:
+	test -d bin/Release || mkdir -p bin/Release
+	test -d obj/Release || mkdir -p obj/Release
+
 .PHONY : release debug    
-debug:
+debug: before_debug
 	@$(MAKE) --no-print-directory bin/Debug/biosim4 BUILD=$@
 
-release:
+release: before_release
 	@$(MAKE) --no-print-directory bin/Release/biosim4 BUILD=$@
 
 
