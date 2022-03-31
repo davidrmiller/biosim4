@@ -132,13 +132,13 @@ Coord Polar::asCoord() const
     // 3037000500 is 1/sqrt(2) in 32.32 fixed point
     constexpr int64_t coordMags[9] = {
         3037000500,  // SW
-        1L << 32,    // S
+        1LL << 32,   // S
         3037000500,  // SE
-        1L << 32,    // W
+        1LL << 32,   // W
         0,           // CENTER
-        1L << 32,    // E
+        1LL << 32,   // E
         3037000500,  // NW
-        1L << 32,    // N
+        1LL << 32,   // N
         3037000500   // NE
     };
 
