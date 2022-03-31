@@ -23,11 +23,11 @@ LDFLAGS += \
 
 ifeq ($(BUILD),debug)
   OUT_DIR = bin/Debug/
-  OBJ_DIR = obj/Debug
+  OBJ_DIR = obj/Debug/src
   CXXFLAGS += -g
 else
   OUT_DIR = bin/Release/
-  OBJ_DIR = obj/Release
+  OBJ_DIR = obj/Release/src
   CXXFLAGS += -O3
   LDFLAGS += -O3 -s
 endif
@@ -43,11 +43,11 @@ all: debug release
 
 before_debug:
 	test -d bin/Debug || mkdir -p bin/Debug
-	test -d obj/Debug || mkdir -p obj/Debug
+	test -d obj/Debug/src || mkdir -p obj/Debug/src
 
 before_release:
 	test -d bin/Release || mkdir -p bin/Release
-	test -d obj/Release || mkdir -p obj/Release
+	test -d obj/Release/src || mkdir -p obj/Release/src
 
 .PHONY : release debug    
 debug: before_debug
@@ -69,15 +69,15 @@ $(OBJ_DIR)%.o : src%.cpp
 clean: clean_debug clean_release
 
 clean_debug:
-	$(RM) obj/Debug/*
-	$(RM) bin/Debug/biosim4
+	$(RM) -f obj/Debug/src/*
+	$(RM) -f bin/Debug/biosim4
 
 clean_release:
-	$(RM) obj/Release/*
-	$(RM) bin/Release/biosim4
+	$(RM) -f obj/Release/src/*
+	$(RM) -f bin/Release/biosim4
 
 distclean: clean
-	$(RM) logs/* images/*
+	$(RM) -f logs/* images/*
 
 .PHONY: all clean distclean
 
