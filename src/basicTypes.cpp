@@ -150,8 +150,8 @@ Coord Polar::asCoord() const
     // -1 for mag<0. An XOR with this copies the sign onto 1/2, to be exact
     // we'd then also subtract it, but we don't need to be that precise.
 
-    int64_t temp = ((int64_t)mag >> 32) ^ ((1L << 31) - 1);
-    len = (len + temp) / (1L << 32); // Divide to make sure we get an arithmetic shift
+    int64_t temp = ((int64_t)mag >> 32) ^ ((1LL << 31) - 1);
+    len = (len + temp) / (1LL << 32); // Divide to make sure we get an arithmetic shift
 
     return NormalizedCoords[dir.asInt()] * len;
 }
