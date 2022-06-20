@@ -297,8 +297,13 @@ choices if you want to proceed with Ubuntu 20.04:
 * You can strip out the code that generates the movies and just run the simulator without the movies. Most of
 that graphics code is in imageWriter.cpp and imageWriter.h.
 
-* You can upgrade your CImg.h to version 2.8.4 or later by getting it from the appropriate Debian repository.
-Sorry I don't have the instructions at hand to do this.
+* You can upgrade your CImg.h to version 2.8.4 or later by installing the [Ubuntu 22.04 cimg-dev package](https://packages.ubuntu.com/jammy/cimg-dev), For example:
+```
+cd /tmp && \
+wget http://mirrors.kernel.org/ubuntu/pool/universe/c/cimg/cimg-dev_2.9.4+dfsg-3_all.deb -O cimg-dev_2.9.4+dfsg-3_all.deb && \
+sudo apt install ./cimg-dev_2.9.4+dfsg-3_all.deb && \
+rm cimg-dev_2.9.4+dfsg-3_all.deb;
+```
 
 * You could convert the CImg.h function calls to use OpenCV directly. Sorry I don't have a guide for how
 to do that.
