@@ -200,7 +200,7 @@ Copy the directory structure to a location of your choice.
 
 This code is known to run in the following environment:
 
-* Ubuntu 21.04 or Debian 10 (Buster)
+* Ubuntu 21.04, 22.04, or Debian 10 (Buster)
 * cimg-dev 2.4.5 or later
 * libopencv-dev 3.2 or later
 * gcc 8.3, 9.3 or 10.3
