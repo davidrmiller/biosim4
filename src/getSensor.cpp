@@ -129,7 +129,7 @@ float getSignalDensityAlongAxis(unsigned layerNum, Coord loc, Dir dir)
         if (tloc != loc) {
             Coord offset = tloc - loc;
             double proj = (dirVecX * offset.x + dirVecY * offset.y); // Magnitude of projection along dir
-            double contrib = (proj * signals.getMagnitude(layerNum, loc)) /
+            double contrib = (proj * signals.getMagnitude(layerNum, tloc)) /
                     (offset.x * offset.x + offset.y * offset.y);
             sum += contrib;
         }
