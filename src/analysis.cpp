@@ -164,6 +164,14 @@ void Indiv::printGenome() const
     std::cout << std::dec << std::endl;
 }
 
+// Prints neural net size statistics to stdout
+void Indiv::printNeuralNetStats() const
+{
+    std::cout << "Neural net node count: " << nnetNodesCount << std::endl;
+    std::cout << "Neural net connection count: " << nnet.connections.size() << std::endl;
+    std::cout << "Neural net energy cost: " << neuralNetEnergyCost() << std::endl;
+}
+
 
 ///*
 //Example format:
@@ -265,6 +273,25 @@ float averageGenomeLength()
     return sum / numberSamples;
 }
 
+std::pair<float, float> averageNeuralNetSize()
+{
+    unsigned totalNnetNodes = 0;
+    unsigned totalConnections = 0;
+    unsigned aliveIndividuals = 0;
+    for (size_t index = 1; index <= p.population; ++index) {
+        if (peeps[index].alive) {
+            totalNnetNodes += peeps[index].nnetNodesCount;
+            totalConnections += peeps[index].nnet.connections.size();
+            ++aliveIndividuals;
+        }
+    }
+
+    if (aliveIndividuals == 0) {
+        return { 0.0f, 0.0f };
+    }
+
+    return { float(totalNnetNodes) / aliveIndividuals, float(totalConnections) / aliveIndividuals };
+}
 
 // The epoch log contains one line per generation in a format that can be
 // fed to graphlog.gp to produce a chart of the simulation progress.
@@ -281,8 +308,17 @@ void appendEpochLog(unsigned generation, unsigned numberSurvivors, unsigned murd
     foutput.open(p.logDir + "/epoch-log.txt", std::ios::app);
 
     if (foutput.is_open()) {
-        foutput << generation << " " << numberSurvivors << " " << geneticDiversity()
-                << " " << averageGenomeLength() << " " << murderCount << std::endl;
+
+        const auto& [averageNnetNodeCount, averageConnectionCount] = averageNeuralNetSize();
+
+        foutput << generation << " " 
+                << numberSurvivors << " " 
+                << geneticDiversity() << " " 
+                << averageGenomeLength() << " " 
+                << murderCount << " " 
+                << averageNnetNodeCount << " "
+                << averageConnectionCount << " "
+                << std::endl;
     } else {
         assert(false);
     }
@@ -362,6 +398,7 @@ void displaySampleGenomes(unsigned count)
 
             //peeps[index].printNeuralNet();
             peeps[index].printIGraphEdgeList();
+            peeps[index].printNeuralNetStats();
 
 
             std::cout << "---------------------------" << std::endl;
