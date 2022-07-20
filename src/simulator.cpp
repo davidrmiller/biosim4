@@ -30,6 +30,7 @@ RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
 Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
+unsigned murderCount;    // This counts the total kills
 ImageWriter imageWriter; // This is for generating the movies
 
 // The paramManager maintains a private copy of the parameter values, and a copy

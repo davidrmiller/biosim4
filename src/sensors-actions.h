@@ -56,6 +56,8 @@ enum Sensor {
     SIGNAL0_FWD,       // W strength of signal0 in the forward-reverse axis
     SIGNAL0_LR,        // W strength of signal0 in the left-right axis
     NUM_SENSES,        // <<------------------ END OF ACTIVE SENSES MARKER
+    KILLS,             // W number of kills of nearby individuals
+    SELF_KILLS,        // W number of kills of self
 };
 
 
