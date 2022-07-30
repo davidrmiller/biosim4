@@ -259,14 +259,14 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
             }
 
             unsigned count = 0;
-            for (int16_t x = indiv.loc.x - 1; x < indiv.loc.x + 1; ++x) {
-                for (int16_t y = indiv.loc.y - 1; y < indiv.loc.y + 1; ++y) {
+            for (int16_t x = indiv.loc.x - 1; x <= indiv.loc.x + 1; ++x) {
+                for (int16_t y = indiv.loc.y - 1; y <= indiv.loc.y + 1; ++y) {
                     Coord tloc = { x, y };
                     if (tloc != indiv.loc && grid.isInBounds(tloc) && grid.isOccupiedAt(tloc)) {
                         ++count;
                         if (count == 1) {
-                            for (int16_t x1 = tloc.x - 1; x1 < tloc.x + 1; ++x1) {
-                                for (int16_t y1 = tloc.y - 1; y1 < tloc.y + 1; ++y1) {
+                            for (int16_t x1 = tloc.x - 1; x1 <= tloc.x + 1; ++x1) {
+                                for (int16_t y1 = tloc.y - 1; y1 <= tloc.y + 1; ++y1) {
                                     Coord tloc1 = { x1, y1 };
                                     if (tloc1 != tloc && tloc1 != indiv.loc && grid.isInBounds(tloc1) && grid.isOccupiedAt(tloc1)) {
                                         return { false, 0.0 };
