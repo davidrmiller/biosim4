@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:impish-20211102
+FROM docker.io/ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -yqq \
