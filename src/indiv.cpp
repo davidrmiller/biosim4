@@ -24,7 +24,30 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
     longProbeDist = p.longProbeDistance;
     challengeBits = (unsigned)false; // will be set true when some task gets accomplished
     genome = std::move(genome_);
+    energy = p.startingEnergy;
     createWiringFromGenome();
+    calculateNeuralNetStats();
+}
+
+void Indiv::calculateNeuralNetStats()
+{
+    // Determine unique neural network nodes:
+    using NeuronId = std::pair<uint16_t, uint16_t>;
+    std::vector<NeuronId> neuronIds;
+    for (auto const& conn : nnet.connections) {
+        neuronIds.push_back({ conn.sourceNum, conn.sourceType });
+        neuronIds.push_back({ conn.sinkNum, conn.sinkType });
+    }
+    std::sort(neuronIds.begin(), neuronIds.end());
+    auto uniqueEnd = std::unique(neuronIds.begin(), neuronIds.end());
+    
+    // Store unique neural network node count:
+    nnetNodesCount = uniqueEnd - neuronIds.begin(); 
+}
+
+unsigned Indiv::neuralNetEnergyCost() const
+{
+    return nnetNodesCount * p.neuralNetNodeEnergyCost + nnet.connections.size() * p.neuralNetConnectionEnergyCost;
 }
 
 } // end namespace BS
