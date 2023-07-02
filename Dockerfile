@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -yqq \
 	build-essential \
 	dumb-init \
 	python3-pip \
+	cmake \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
