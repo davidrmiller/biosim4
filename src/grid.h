@@ -7,6 +7,7 @@
 #include <vector>
 #include <functional>
 #include "basicTypes.h"
+#include "column.h"
 
 namespace BS {
 
@@ -25,15 +26,15 @@ class Grid {
 public:
     // Column order here allows us to access grid elements as data[x][y]
     // while thinking of x as column and y as row
-    struct Column {
-        Column(uint16_t numRows) : data { std::vector<uint16_t>(numRows, 0) } { }
-        void zeroFill() { std::fill(data.begin(), data.end(), 0); }
-        uint16_t& operator[](uint16_t rowNum) { return data[rowNum]; }
-        uint16_t operator[](uint16_t rowNum) const { return data[rowNum]; }
-        size_t size() const { return data.size(); }
-    private:
-        std::vector<uint16_t> data;
-    };
+    // struct Column {
+    //     Column(uint16_t numRows) : data { std::vector<uint16_t>(numRows, 0) } { }
+    //     void zeroFill() { std::fill(data.begin(), data.end(), 0); }
+    //     uint16_t& operator[](uint16_t rowNum) { return data[rowNum]; }
+    //     uint16_t operator[](uint16_t rowNum) const { return data[rowNum]; }
+    //     size_t size() const { return data.size(); }
+    // private:
+    //     std::vector<uint16_t> data;
+    // };
 
     void init(uint16_t sizeX, uint16_t sizeY);
     void zeroFill() { for (Column &column : data) column.zeroFill(); }
