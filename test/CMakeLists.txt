@@ -16,7 +16,10 @@ set(
     test_coord.cpp
     test_polar.cpp
     test_grid.cpp
+    test_column.cpp
     ../src/basicTypes.cpp
+    ../src/column.cpp
+    
     # ../src/grid.cpp
     # ../src/random.cpp
     # ../src/simulator.cpp
