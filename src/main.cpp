@@ -18,8 +18,6 @@ namespace BS {
 
 int main(int argc, char **argv)
 {
-    BS::unitTestBasicTypes(); // called only for unit testing of basic types
-
     // Start the simulator with optional config filename (default "biosim4.ini").
     // See simulator.cpp and simulator.h.
     BS::simulator(argc, argv); 

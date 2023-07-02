@@ -14,6 +14,7 @@ set(
     test_dir.cpp
     test_compass.cpp
     test_coord.cpp
+    test_polar.cpp
     ../src/basicTypes.cpp
 )
 
