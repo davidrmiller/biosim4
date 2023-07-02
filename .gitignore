@@ -1,3 +1,8 @@
 obj/
 tools/*.svg
 build/
+CMakeFiles/
+DartConfiguration.tcl
+CMakeCache.txt
+*.cmake
+.vscode/*
