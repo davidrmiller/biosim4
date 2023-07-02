@@ -15,7 +15,11 @@ set(
     test_compass.cpp
     test_coord.cpp
     test_polar.cpp
+    test_grid.cpp
     ../src/basicTypes.cpp
+    ../src/grid.cpp
+    ../src/random.cpp
+    ../src/simulator.cpp
 )
 
 include(FetchContent)
