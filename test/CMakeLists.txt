@@ -13,6 +13,7 @@ set(
     sources
     test_dir.cpp
     test_compass.cpp
+    test_coord.cpp
     ../src/basicTypes.cpp
 )
 

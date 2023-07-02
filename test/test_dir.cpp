@@ -3,7 +3,7 @@
 
 namespace BS {
 
-TEST(CommonTests, TestDirAsInt) {
+TEST(DirTests, TestDirAsInt) {
     
     Dir d1 = Dir(Compass::N);
 
@@ -12,7 +12,19 @@ TEST(CommonTests, TestDirAsInt) {
     EXPECT_NE(d1.asInt(), 0);
 }
 
-TEST(CommonTests, TestDirEquality) {
+TEST(DirTests, TestDirCopyAssignment) {
+    
+    Dir d1 = Dir(Compass::N);
+    Dir d2 = Dir(Compass::CENTER);
+
+    d1 = d2;
+
+    EXPECT_EQ(d1.asInt(), (int)Compass::CENTER);
+
+    EXPECT_NE(d1.asInt(), 0);
+}
+
+TEST(DirTests, TestDirEquality) {
 
     EXPECT_EQ(Dir(Compass::W), Compass::W);
 
@@ -24,7 +36,7 @@ TEST(CommonTests, TestDirEquality) {
     EXPECT_NE(d3, d5);
 }
 
-TEST(CommonTests, TestDirRotate) {
+TEST(DirTests, TestDirRotate) {
 
     Dir d1 = Compass::NE;
     // rotation happens in 45 degree increments, positive is clockwise
@@ -36,4 +48,35 @@ TEST(CommonTests, TestDirRotate) {
     EXPECT_EQ(Dir(Compass::SW).rotate(-2), Compass::SE);
 }
 
+TEST(DirTests, TestDirAsNormalisedCoord) {
+
+    Coord c1 = Dir(Compass::CENTER).asNormalizedCoord();
+
+    EXPECT_EQ(0, c1.x);
+    EXPECT_EQ(0, c1.y);
+
+    Dir d1 = Compass::SW;
+    
+    Coord c2 = d1.asNormalizedCoord();
+    EXPECT_EQ(-1, c2.x);
+    EXPECT_EQ(-1, c2.y);
+
 }
+
+TEST(DirTests, TestDirAsNormalizedPolar) {
+
+    Dir d1 = Compass::SW;
+    Polar p1 = d1.asNormalizedPolar();
+    
+    EXPECT_EQ(1, p1.mag);
+    EXPECT_EQ(d1, p1.dir);
+
+    Dir d2 = Compass::S;
+    Polar p2 = d2.asNormalizedPolar();
+
+    EXPECT_EQ(1, p2.mag);
+    EXPECT_EQ(d2, p2.dir);
+
+}
+
+} // namespace BS

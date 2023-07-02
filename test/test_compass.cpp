@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 
-TEST(CommonTests, TestCompass) {
+TEST(CompassTests, TestCompass) {
     
     BS::Compass compass = BS::Compass(BS::Compass::SW);
 
