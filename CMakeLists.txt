@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(BioSim4 VERSION 0.2.0)
+cmake_minimum_required(VERSION 3.22.1)
+project(BioSim4 VERSION 0.3.0)
 
-include(CTest)
-enable_testing()
+# include(CTest)
+# enable_testing()
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 
 install(FILES ./biosim4.ini DESTINATION ./)
