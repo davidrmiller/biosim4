@@ -2,8 +2,9 @@
 FILE(GLOB MyCppSources ./*.cpp)
 FILE(GLOB MyCppheaders ./*.h)
 
+add_subdirectory(common)
+
 # TODO move the unit test to test build and include in test mechanims of cmake
-#list(REMOVE_ITEM MyCppSources "./unitTestBasicTypes.cpp")
 #list(REMOVE_ITEM MyCppSources "./unitTestConnectNeuralNetWiringFromGenome.cpp")
 #list(REMOVE_ITEM MyCppSources "./unitTestGridVisitNeighborhood.cpp")
 
@@ -21,6 +22,8 @@ set( CMAKE_VERBOSE_MAKEFILE on )
 add_executable(biosim4 ${MyCppSources} ${MyCppheaders})
 target_link_libraries( biosim4 PUBLIC ${OpenCV_LIBS} )
 
+# add the common library
+target_link_libraries( biosim4 PUBLIC biosim4_common )
 
 install(TARGETS biosim4 DESTINATION bin)
 

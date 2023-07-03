@@ -3,7 +3,8 @@
 
 #include <cstdint>
 #include <vector>
-#include "basicTypes.h"
+// #include "common/basicTypes.h"
+#include "common/coord.h"
 #include "grid.h"
 #include "params.h"
 #include "indiv.h"

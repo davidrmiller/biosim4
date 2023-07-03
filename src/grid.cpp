@@ -13,8 +13,12 @@ void Grid::init(uint16_t sizeX, uint16_t sizeY)
     data = std::vector<Column>(sizeX, col);
 }
 
-
-// Finds a random unoccupied location in the grid
+/**
+ * Finds a random unoccupied location in the grid
+ * TODO: rewrite to not depend on globals, which is simple
+ * remove the reference to the global grid, use this instance!!
+ * remove the use of the global parameter p - use the size of this instance!!
+*/
 Coord Grid::findEmptyLocation() const {
     Coord loc;
 

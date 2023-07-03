@@ -1,4 +1,6 @@
-#include "../src/basicTypes.h"
+#include "../src/common/coord.h"
+
+
 #include <gtest/gtest.h>
 
 

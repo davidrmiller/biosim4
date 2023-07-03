@@ -1,7 +1,5 @@
 #include <iostream>
 
-// This is included here only for the purpose of unit testing of basic types
-#include "basicTypes.h"
 
 // This is the only call needed to start the simulator. No header file
 // because it's just one declaration. Pass it argc and argv as if from main().

@@ -3,7 +3,8 @@
 
 // Main header for the simulator. Also see simulator.cpp.
 
-#include "basicTypes.h"   // types Dir, Coord, Polar and their values
+#include "common/coord.h"
+// #include "common/basicTypes.h"   // types Dir, Coord, Polar and their values
 #include "params.h"       // params from the config file plus some extra stuff
 #include "indiv.h"        // data structure for an individual
 #include "grid.h"         // the 2D world where the peeps live

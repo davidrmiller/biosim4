@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/column.h"
+#include "../src/common/column.h"
 
 namespace BS {
 

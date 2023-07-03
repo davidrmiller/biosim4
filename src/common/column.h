@@ -1,5 +1,4 @@
-#ifndef COLUMN_H_INCLUDED
-#define COLUMN_H_INCLUDED
+#pragma once
 
 #include <cstdint>
 #include <vector>
@@ -28,4 +27,4 @@ namespace BS {
 
 } // end namespace BS
 
-#endif // COLUMN_H_INCLUDED
+// #endif // COLUMN_H_INCLUDED

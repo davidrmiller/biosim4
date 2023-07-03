@@ -5,6 +5,8 @@ project(BioSim4 VERSION 0.3.0)
 # enable_testing()
 
 add_subdirectory(src)
+
+#  this builds the test exe
 add_subdirectory(test)
 
 

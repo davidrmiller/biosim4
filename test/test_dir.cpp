@@ -1,4 +1,8 @@
-#include "../src/basicTypes.h"
+#include "../src/common/dir.h"
+#include "../src/common/compass.h"
+
+
+
 #include <gtest/gtest.h>
 
 namespace BS {

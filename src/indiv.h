@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <cstdint>
 #include <array>
-#include "basicTypes.h"
+// #include "common/basicTypes.h"
+#include "common/coord.h"
+#include "common/dir.h"
 #include "genome-neurons.h"
 
 namespace BS {

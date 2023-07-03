@@ -1,0 +1,36 @@
+// #ifndef POLAR_H_INCLUDED
+// #define POLAR_H_INCLUDED
+#pragma once
+
+#include "compass.h"
+// #include "common.h"
+#include "dir.h"
+// #include "coord.h"
+
+namespace BS {
+
+    struct Dir;
+    struct Coord;
+
+    /**
+     * Polar magnitudes are signed 32-bit integers so that they can extend across any 2D
+     * area defined by the Coord class.
+    */
+    struct __attribute__((packed)) Polar {
+
+        explicit Polar(int mag0, Compass dir0);
+            // : mag{mag0}, dir{Dir{dir0}};// { }
+            
+        explicit Polar(int mag0, Dir dir0);
+            // : mag{mag0}, dir{dir0};// { }
+
+        Coord asCoord() const;
+        
+    public:
+        int mag;
+        Dir dir;
+    };
+
+}
+
+// #endif

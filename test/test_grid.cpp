@@ -1,4 +1,6 @@
-#include "../src/basicTypes.h"
+#include "../src/common/basicTypes.h"
+
+
 // #include "../src/grid.h"
 #include <gtest/gtest.h>
 

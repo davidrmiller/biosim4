@@ -1,4 +1,5 @@
-#include "../src/basicTypes.h"
+#include "../src/common/compass.h"
+
 #include <gtest/gtest.h>
 
 

@@ -6,8 +6,8 @@
 #include <cstdint>
 #include <vector>
 #include <functional>
-#include "basicTypes.h"
-#include "column.h"
+#include "./common/coord.h"
+#include "./common/column.h"
 
 namespace BS {
 
