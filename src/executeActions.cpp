@@ -7,6 +7,7 @@
 #include <cassert>
 #include "simulator.h"
 #include "omp.h"
+#include "dirFactory.h"
 
 namespace BS {
 
@@ -203,7 +204,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
 
     if (isEnabled(Action::MOVE_RANDOM)) {
         level = actionLevels[Action::MOVE_RANDOM];
-        offset = Dir::random8().asNormalizedCoord();
+        offset = DirFactory::random8().asNormalizedCoord();
         moveX += offset.x * level;
         moveY += offset.y * level;
     }

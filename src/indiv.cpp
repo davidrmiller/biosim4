@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cassert>
 #include "simulator.h"
-
+#include "dirFactory.h"
 namespace BS {
 
 // This is called when any individual is spawned.
@@ -19,7 +19,7 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
     age = 0;
     oscPeriod = 34; // ToDo !!! define a constant
     alive = true;
-    lastMoveDir = Dir::random8();
+    lastMoveDir = DirFactory::random8();
     responsiveness = 0.5; // range 0.0..1.0
     longProbeDist = p.longProbeDistance;
     challengeBits = (unsigned)false; // will be set true when some task gets accomplished

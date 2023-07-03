@@ -2,7 +2,7 @@
 
 #include "polar.h"
 #include "coord.h"
-#include "../random.h"
+// #include "../random.h"
 
 namespace BS
 {
@@ -38,11 +38,7 @@ namespace BS
     {
 
     }
-    
-    Dir Dir::random8() 
-    { 
-        return Dir(Compass::N).rotate(randomUint(0, 7)); 
-    }
+
 
     Dir::Dir(Compass dir = Compass::CENTER) : dir9
     {

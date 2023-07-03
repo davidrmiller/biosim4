@@ -17,7 +17,7 @@ namespace BS
         Coord(1,1)    // NE
     };
 
-    Polar::Polar(int mag0 = 0, Compass dir0 = Compass::CENTER)
+    Polar::Polar(int mag0, Compass dir0)
             : mag{mag0}, dir{Dir{dir0}} { }
             
     Polar::Polar(int mag0, Dir dir0)

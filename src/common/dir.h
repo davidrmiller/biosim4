@@ -20,8 +20,6 @@ namespace BS {
 
         Dir();
         
-        static Dir random8();// { return Dir(Compass::N).rotate(randomUint(0, 7)); }
-
         Dir(Compass dir);// : dir9{dir} {}
 
         Dir& operator=(const Compass& d);// { dir9 = d; return *this; }

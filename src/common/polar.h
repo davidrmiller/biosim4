@@ -18,11 +18,9 @@ namespace BS {
     */
     struct __attribute__((packed)) Polar {
 
-        explicit Polar(int mag0, Compass dir0);
-            // : mag{mag0}, dir{Dir{dir0}};// { }
+        explicit Polar(int mag0 = 0, Compass dir0 = Compass::CENTER);
             
         explicit Polar(int mag0, Dir dir0);
-            // : mag{mag0}, dir{dir0};// { }
 
         Coord asCoord() const;
         

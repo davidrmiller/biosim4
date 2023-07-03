@@ -5,7 +5,6 @@
 
 #include <vector>
 #include <cstdint>
-#include "common/basicTypes.h"
 
 namespace BS {
 
