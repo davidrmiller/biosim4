@@ -27,4 +27,5 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
     createWiringFromGenome();
 }
 
+
 } // end namespace BS

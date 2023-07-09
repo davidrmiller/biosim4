@@ -3,29 +3,128 @@
 * remove dependencies on globals - eg params instance
 
 * move the static Dir::random8() method to a factory method - out of the Dir class
-    * temporarily to a global factory function?
 
     * pass the dir instance to the Indiv::initialise() method
         * instead of it calling Dir::random8()
     
     * executeActions() Action::MOVE_RANDOM
         * use the dirRandom8() factory method
+        * DONE
+
+* move create barrier method definition into grid.cpp
+
+
+# four layers, proposal
+
+# common contains stand-alone classes not specific to this domain
+* code to interact with a 2d world
+
+    * Compass
+    * Coord(inate)
+    * Dir(ection)
+    * Polar (coordinate)
+    * Grid
+        * move global functions in getSensor.cpp to Grid class
+    * RandomUintGenerator
+
+# domain contains classes that form the domain model
+
+* Declare class responsibilities and the domain model first
+* Find other domain models hidden in the procedural code
+
+    * Individual - rename?
+        * move feedForward method to indiv.cpp
+    * Peeps - rename to Population
+        
+    * Gene 
+    * Genome - convert to a class
+    * Signals
+    * Sensor
+    * Actions
+    * genome-compare.cpp
+    * factory / builders of the domain
+
+* move executeActions() to be an Indiv class method
+* move Indiv::feedForward to be a NeuralNet class method?
+
+# application
+* classes / code
+    * Simulator class
+    * endOfSimStep.cpp
+    * endOfGeneration.cpp
+    * executeActions.cpp
+    * main.cpp
+    * Params class
+    * spawnNewGeneration.cpp
+    * survival-criteria.cpp?? 
+        * move the grid logic into Grid class, eg is a location inside a Grid area
+        * the application code is the parts that decide how to calculate if an individual survives
     
 
-* move Grid to the common lib? or domain?
+* uses the domain for a specific application / demonstration of the domain model
+* instantiates the domain
+* uses it's parameters to build the world
 
-* common lib contains stand-alone classes not specific to this domain
-    * compass
-    * coord(inate)
-    * dir(ection)
-    * polar (coordinate)
-    * grid?
+# storage
+* save & load state?
 
-* domain lib contains classes that form the domain model
-    * Individual - rename?
-    * peeps - rename to population
-    * grid? 
-    * genome
-    * signals
-    * sensor
-    * actions
+# presentation
+* Text 
+* image file
+* video file
+* real-time
+
+* code / classes    
+    * analysis.cpp
+    * imageWriter.cpp - decouple from the biosim application
+    * image / video generation
+
+
+# Gene 
+* convert to a class? add more methods at least
+
+* move Gene::makeRandomWeight to a Gene factory class, it's only used by makeRandomGene()
+* move makeRandomGenome() to Genome or Gene factory too
+
+* move genesMatch to Gene == operator?
+* move global Gene comparison methods to Gene 
+
+    * jaro_winkler_distance(g1, g2);
+    * hammingDistanceBits(g1, g2);
+    * hammingDistanceBytes(g1, g2);
+
+* move genomeSimilarity to Gene - remove the global p
+
+* move geneticDiversity to peeps 
+
+# genome.cpp contains global procedural functions to operate on the Genome
+* make Genome into a class with this methods
+
+# Peeps & Grid
+
+* think about how Peeps interacts with Grid and Indiv
+* grid is used directly to understand the game area
+
+* spawnNewGeneration should be a Peeps method?
+
+* Peeps::drainMoveQueue
+
+
+* rewrite 'Indiv move' as a Grid method? moving individuals must then be declared as a responsibility of Grid
+
+Grid::moveIndiv(Indiv i, Coord newLoc)
+{
+    if (isEmptyAt(newLoc)) {
+        Dir moveDir = (newLoc - indiv.loc).asDir();
+        set(indiv.loc, 0);
+        set(newLoc, indiv.index);
+        indiv.loc = newLoc;
+        indiv.lastMoveDir = moveDir;
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+        

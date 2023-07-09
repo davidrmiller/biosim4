@@ -21,9 +21,8 @@ set(
     ../src/common/coord.cpp 
     ../src/common/dir.cpp
     ../src/common/column.cpp
-    
+    ../src/grid.cpp
     # ../src/grid.cpp
-    # ../src/random.cpp
     # ../src/simulator.cpp
 )
 

@@ -26,12 +26,14 @@ class Grid {
 public:
 
     void init(uint16_t sizeX, uint16_t sizeY);
-    void zeroFill() { for (Column &column : data) column.zeroFill(); }
-    uint16_t sizeX() const { return data.size(); }
-    uint16_t sizeY() const { return data[0].size(); }
-    bool isInBounds(Coord loc) const { return loc.x >= 0 && loc.x < sizeX() && loc.y >= 0 && loc.y < sizeY(); }
+    void zeroFill();// { for (Column &column : data) column.zeroFill(); }
+    uint16_t sizeX() const;// { return data.size(); }
+    uint16_t sizeY() const;// { return data[0].size(); }
+
+    bool isInBounds(Coord loc) const; //{ return loc.x >= 0 && loc.x < sizeX() && loc.y >= 0 && loc.y < sizeY(); }
     bool isEmptyAt(Coord loc) const { return at(loc) == EMPTY; }
     bool isBarrierAt(Coord loc) const { return at(loc) == BARRIER; }
+
     // Occupied means an agent is living there.
     bool isOccupiedAt(Coord loc) const { return at(loc) != EMPTY && at(loc) != BARRIER; }
     bool isBorder(Coord loc) const { return loc.x == 0 || loc.x == sizeX() - 1 || loc.y == 0 || loc.y == sizeY() - 1; }
@@ -40,20 +42,24 @@ public:
 
     void set(Coord loc, uint16_t val) { data[loc.x][loc.y] = val; }
     void set(uint16_t x, uint16_t y, uint16_t val) { data[x][y] = val; }
-    Coord findEmptyLocation() const;
+    // Coord findEmptyLocation() const;
     void createBarrier(unsigned barrierType);
     const std::vector<Coord> &getBarrierLocations() const { return barrierLocations; }
     const std::vector<Coord> &getBarrierCenters() const { return barrierCenters; }
     // Direct access:
     Column & operator[](uint16_t columnXNum) { return data[columnXNum]; }
     const Column & operator[](uint16_t columnXNum) const { return data[columnXNum]; }
+
+    unsigned longProbeBarrierFwd(Coord loc, Dir dir, unsigned longProbeDist);
+    float getShortProbeBarrierDistance(Coord loc0, Dir dir, unsigned probeDistance);
+    unsigned longProbePopulationFwd(Coord loc, Dir dir, unsigned longProbeDist);
+
 private:
     std::vector<Column> data;
     std::vector<Coord> barrierLocations;
     std::vector<Coord> barrierCenters;
 };
 
-extern void visitNeighborhood(Coord loc, float radius, std::function<void(Coord)> f);
 extern void unitTestGridVisitNeighborhood();
 
 } // end namespace BS
