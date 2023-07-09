@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <cstdint>
 #include <array>
-// #include "common/basicTypes.h"
 #include "common/include/coord.h"
 #include "common/include/dir.h"
 #include "genome-neurons.h"

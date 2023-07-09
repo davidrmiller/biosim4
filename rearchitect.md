@@ -1,8 +1,8 @@
-* use the Grid instance as the source of world size, don't refer to the parameters x & y apart from instantiating the grid
+[] use the Grid instance as the source of world size, don't refer to the parameters x & y apart from instantiating the grid
 
-* remove dependencies on globals - eg params instance
+[] remove dependencies on globals - eg params instance
 
-* move the static Dir::random8() method to a factory method - out of the Dir class
+[x] move the static Dir::random8() method to a factory method - out of the Dir class
 
     * pass the dir instance to the Indiv::initialise() method
         * instead of it calling Dir::random8()
@@ -10,9 +10,6 @@
     * executeActions() Action::MOVE_RANDOM
         * use the dirRandom8() factory method
         * DONE
-
-* move create barrier method definition into grid.cpp
-
 
 # four layers, proposal
 
@@ -26,7 +23,18 @@
     * Grid
         * move global functions in getSensor.cpp to Grid class
         * createBarrier(Grid g, barrier_type) - move to a grid builder class? 
-        * move visitNeighborhood to Grid class?
+        * move visitNeighborhood to a GridVisitor class & interface
+            * https://refactoring.guru/design-patterns/visitor?
+            * GridVisitor v = BarrierCreatorVisitor(Grid g)
+
+            * Grid::accept(GridVisitor v)
+                * iterate through Coordinates calling
+                    * visitor.visit(Coord loc)
+        
+        * add layers to the Grid data type? - for use by signals
+
+        * add an explicit Grid::setBarrier(Coord loc) method
+
 
     * RandomUintGenerator
 
@@ -40,6 +48,8 @@
 
         * move feedForward method to indiv.cpp
         * Indiv::getSensor method to Peeps class?
+        * Indiv::createWiringFromGenome - move to a builder / factory?
+        * move Indiv::feedForward to be a NeuralNet class method?
 
     * Peeps - rename to Population?
         * make into a wrapper around grid, pass grid instance to constructor
@@ -62,7 +72,6 @@
     * factory / builders of the domain
 
 * move executeActions() to be an Indiv class method
-* move Indiv::feedForward to be a NeuralNet class method?
 
 # application
 * classes / code

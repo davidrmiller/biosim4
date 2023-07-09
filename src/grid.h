@@ -44,7 +44,6 @@ public:
     void set(Coord loc, uint16_t val);
     void set(uint16_t x, uint16_t y, uint16_t val);
 
-    // Coord findEmptyLocation() const;
     void createBarrier(unsigned barrierType);
     const std::vector<Coord> &getBarrierLocations() const;
     const std::vector<Coord> &getBarrierCenters() const;
