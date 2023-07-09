@@ -1,7 +1,7 @@
-#include "dir.h"
+#include "../include/dir.h"
 
-#include "polar.h"
-#include "coord.h"
+#include "../include/polar.h"
+#include "../include/coord.h"
 // #include "../random.h"
 
 namespace BS

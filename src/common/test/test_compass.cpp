@@ -1,4 +1,4 @@
-#include "../src/common/compass.h"
+#include "../include/compass.h"
 
 #include <gtest/gtest.h>
 

@@ -1,7 +1,7 @@
-#include "../src/common/coord.h"
-#include "../src/common/compass.h"
-#include "../src/common/dir.h"
-#include "../src/common/polar.h"
+#include "../include/coord.h"
+#include "../include/compass.h"
+#include "../include/dir.h"
+#include "../include/polar.h"
 
 #include <gtest/gtest.h>
 

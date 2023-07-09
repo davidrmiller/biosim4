@@ -1,5 +1,4 @@
-// #include "../src/common/basicTypes.h"
-#include "../src/grid.h"
+#include "../../grid.h"
 #include <gtest/gtest.h>
 
 namespace BS {

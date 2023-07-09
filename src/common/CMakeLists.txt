@@ -6,7 +6,7 @@ set (
     biosim4_common
 )
 
-FILE(GLOB sources ./*.cpp)
+FILE(GLOB sources ./src/*.cpp)
 # FILE(GLOB headers ./*.h)
 
 add_library(${lib_name} ${sources})

@@ -1,7 +1,7 @@
-#include "coord.h"
-#include "dir.h"
-#include "polar.h"
-#include "compass.h"
+#include "../include/coord.h"
+#include "../include/dir.h"
+#include "../include/polar.h"
+#include "../include/compass.h"
 
 namespace BS
 {

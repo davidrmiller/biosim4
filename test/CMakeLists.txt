@@ -11,16 +11,16 @@ set (
 
 set(
     sources
-    test_dir.cpp
-    test_compass.cpp
-    test_coord.cpp
-    test_polar.cpp
-    test_grid.cpp
-    test_column.cpp
-    ../src/common/polar.cpp
-    ../src/common/coord.cpp 
-    ../src/common/dir.cpp
-    ../src/common/column.cpp
+    ../src/common/test/test_dir.cpp
+    ../src/common/test/test_compass.cpp
+    ../src/common/test/test_coord.cpp
+    ../src/common/test/test_polar.cpp
+    ../src/common/test/test_grid.cpp
+    ../src/common/test/test_column.cpp
+    ../src/common/src/polar.cpp
+    ../src/common/src/coord.cpp 
+    ../src/common/src/dir.cpp
+    ../src/common/src/column.cpp
     ../src/grid.cpp
 )
 

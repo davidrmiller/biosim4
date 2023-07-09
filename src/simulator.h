@@ -3,7 +3,7 @@
 
 // Main header for the simulator. Also see simulator.cpp.
 
-#include "common/coord.h"
+#include "common/include/coord.h"
 // #include "common/basicTypes.h"   // types Dir, Coord, Polar and their values
 #include "params.h"       // params from the config file plus some extra stuff
 #include "indiv.h"        // data structure for an individual

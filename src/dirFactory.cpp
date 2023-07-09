@@ -1,5 +1,5 @@
 #include "dirFactory.h"
-#include "common/compass.h"
+#include "common/include/compass.h"
 #include "random.h"
 
 namespace BS {

@@ -1,6 +1,6 @@
-#include "polar.h"
+#include "../include/polar.h"
 // #include "dir.h"
-#include "coord.h"
+#include "../include/coord.h"
 
 namespace BS
 {
