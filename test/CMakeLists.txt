@@ -22,8 +22,6 @@ set(
     ../src/common/dir.cpp
     ../src/common/column.cpp
     ../src/grid.cpp
-    # ../src/grid.cpp
-    # ../src/simulator.cpp
 )
 
 include(FetchContent)

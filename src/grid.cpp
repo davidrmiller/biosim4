@@ -29,9 +29,88 @@ uint16_t Grid::sizeY() const
     return data[0].size(); 
 }
 
+bool Grid::isInBounds(int16_t x, uint16_t y) const
+{
+    return x >= 0 && x < sizeX() && y >= 0 && y < sizeY(); 
+}
+
 bool Grid::isInBounds(Coord loc) const 
 { 
     return loc.x >= 0 && loc.x < sizeX() && loc.y >= 0 && loc.y < sizeY(); 
+}
+
+bool Grid::isEmptyAt(Coord loc) const
+{
+    return at(loc) == EMPTY; 
+}
+
+bool Grid::isBarrierAt(Coord loc) const
+{ 
+    return at(loc) == BARRIER; 
+}
+
+bool Grid::isOccupiedAt(Coord loc) const
+{
+    return at(loc) != EMPTY && at(loc) != BARRIER;
+}
+
+bool Grid::isBorder(Coord loc) const
+{
+    return loc.x == 0 || loc.x == sizeX() - 1 || loc.y == 0 || loc.y == sizeY() - 1;
+}
+
+uint16_t Grid::at(Coord loc) const
+{ 
+    if (isInBounds(loc)) {
+        return data[loc.x][loc.y];
+    } else {
+        return 0;
+    }
+}
+
+uint16_t Grid::at(uint16_t x, uint16_t y) const
+{ 
+    if (isInBounds(x,y) ) {
+        return data[x][y];
+    } else {
+        // s this the correct response?
+        return 0;
+    }
+}
+
+void Grid::set(Coord loc, uint16_t val)
+{ 
+    if (isInBounds(loc)){
+        data[loc.x][loc.y] = val;
+    }
+}
+
+void Grid::set(uint16_t x, uint16_t y, uint16_t val)
+{
+    if (isInBounds(x,y)){
+        data[x][y] = val;
+    }
+}
+
+const std::vector<Coord> &Grid::getBarrierLocations() const
+{ 
+    return barrierLocations;
+}
+
+const std::vector<Coord> &Grid::getBarrierCenters() const
+{
+    return barrierCenters;
+}
+
+// Direct access:
+Column & Grid::operator[](uint16_t columnXNum)
+{ 
+    return data[columnXNum];
+}
+
+const Column & Grid::operator[](uint16_t columnXNum) const
+{ 
+    return data[columnXNum];
 }
 
 // Returns the number of locations to the next barrier in the
@@ -87,6 +166,9 @@ float Grid::getShortProbeBarrierDistance(Coord loc0, Dir dir, unsigned probeDist
         countRev = probeDistance;
     }
 
+    /**
+     * TODO: does this belong in Grid? and if not where?
+    */
     float sensorVal = ((countFwd - countRev) + probeDistance); // convert to 0..2*probeDistance
     sensorVal = (sensorVal / 2.0) / probeDistance; // convert to 0.0..1.0
     return sensorVal;
@@ -113,25 +195,6 @@ unsigned Grid::longProbePopulationFwd(Coord loc, Dir dir, unsigned longProbeDist
         return count;
     }
 }
-
-/**
- * Finds a random unoccupied location in the grid
- * TODO: rewrite to not depend on globals, which is simple
- * remove the reference to the global grid, use this instance!!
- * remove the use of the global parameter p - use the size of this instance!!
-*/
-// Coord Grid::findEmptyLocation() const {
-//     Coord loc;
-
-//     while (true) {
-//         loc.x = randomUint(0, sizeX() - 1);
-//         loc.y = randomUint(0, sizeY() - 1);
-//         if (isEmptyAt(loc)) {
-//             break;
-//         }
-//     }
-//     return loc;
-// }
 
 
 } // end namespace BS

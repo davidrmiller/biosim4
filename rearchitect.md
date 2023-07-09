@@ -25,6 +25,9 @@
     * Polar (coordinate)
     * Grid
         * move global functions in getSensor.cpp to Grid class
+        * createBarrier(Grid g, barrier_type) - move to a grid builder class? 
+        * move visitNeighborhood to Grid class?
+
     * RandomUintGenerator
 
 # domain contains classes that form the domain model
@@ -32,9 +35,23 @@
 * Declare class responsibilities and the domain model first
 * Find other domain models hidden in the procedural code
 
-    * Individual - rename?
+    * Indiv(idual) - rename to full name?
+        * convert to a class
+
         * move feedForward method to indiv.cpp
-    * Peeps - rename to Population
+        * Indiv::getSensor method to Peeps class?
+
+    * Peeps - rename to Population?
+        * make into a wrapper around grid, pass grid instance to constructor
+        * change
+        if (grid.isInBounds(otherLoc) && grid.isOccupiedAt(otherLoc)) {
+                Indiv &indiv2 = peeps.getIndiv(otherLoc);
+        }
+
+        * to
+            if peeps.hasIndiv(loc){
+                Indiv &indiv2 = peeps.getIndiv(loc);
+            }
         
     * Gene 
     * Genome - convert to a class
@@ -56,6 +73,7 @@
     * main.cpp
     * Params class
     * spawnNewGeneration.cpp
+        * convert to a world builder class - build grid, creates a population 
     * survival-criteria.cpp?? 
         * move the grid logic into Grid class, eg is a location inside a Grid area
         * the application code is the parts that decide how to calculate if an individual survives
