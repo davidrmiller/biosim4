@@ -73,7 +73,7 @@ uint16_t Grid::at(uint16_t x, uint16_t y) const
     if (isInBounds(x,y) ) {
         return data[x][y];
     } else {
-        // s this the correct response?
+        // is this the correct response?
         return 0;
     }
 }

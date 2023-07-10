@@ -32,6 +32,7 @@
                     * visitor.visit(Coord loc)
         
         * add layers to the Grid data type? - for use by signals
+            * Layer struct in signals is a variety of Grid
 
         * add an explicit Grid::setBarrier(Coord loc) method
 
@@ -139,7 +140,7 @@
 
 * rewrite 'Indiv move' as a Grid method? moving individuals must then be declared as a responsibility of Grid
 
-Grid::moveIndiv(Indiv i, Coord newLoc)
+bool Grid::moveIndiv(Indiv i, Coord newLoc)
 {
     if (isEmptyAt(newLoc)) {
         Dir moveDir = (newLoc - indiv.loc).asDir();
@@ -154,4 +155,7 @@ Grid::moveIndiv(Indiv i, Coord newLoc)
 
 }
 
+# Questions
+
+[] How much has the presentation of the simulation affected the design of the domain?
         

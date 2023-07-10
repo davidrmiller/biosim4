@@ -90,7 +90,24 @@ TEST(GridTests, TestGridIsOccupiedAt) {
 
     Coord c3 = Coord(10, 10);
     g.set(c3, BARRIER);
-    EXPECT_FALSE(g.isOccupiedAt(c2));
+    EXPECT_FALSE(g.isOccupiedAt(c3));
 }
+
+TEST(GridTests, TestGridIsBorder) {
+    Grid g = Grid();
+    uint16_t sizeX = 128;
+    uint16_t sizeY = 128;
+    g.init(sizeX, sizeY);
+
+    Coord c1 = Coord(0, 0);
+    EXPECT_TRUE(g.isBorder(c1));
+
+    Coord c2 = Coord(10, 10);
+    EXPECT_FALSE(g.isBorder(c2));
+
+    Coord c3 = Coord(sizeX-1, 10);
+    EXPECT_TRUE(g.isBorder(c3));
+}
+
 
 }
