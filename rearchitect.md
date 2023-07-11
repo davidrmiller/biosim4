@@ -1,3 +1,5 @@
+[] testing? Catch2? 
+
 [] use the Grid instance as the source of world size, don't refer to the parameters x & y apart from instantiating the grid
 
 [] remove dependencies on globals - eg params instance
