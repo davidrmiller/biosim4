@@ -28,7 +28,7 @@ struct Indiv {
     Dir lastMoveDir;  // direction of last movement
     unsigned challengeBits; // modified when the indiv accomplishes some task
     std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep); // reads sensors, returns actions
-    // make this private
+    // make getSensor private
     float getSensor(Sensor sensorNum, unsigned simStep) const;
     void initialize(uint16_t index, Coord loc, Genome &&genome);
     void createWiringFromGenome(); // creates .nnet member from .genome member

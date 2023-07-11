@@ -20,9 +20,10 @@
     * Coord(inate)
     * Dir(ection)
     * Polar (coordinate)
-    * Grid
+    * Grid? is this just a comntainer?
         * move global functions in getSensor.cpp to Grid class
         * createBarrier(Grid g, barrier_type) - move to a grid builder class? 
+        
         * move visitNeighborhood to a GridVisitor class & interface
             * https://refactoring.guru/design-patterns/visitor?
             * GridVisitor v = BarrierCreatorVisitor(Grid g)
@@ -30,7 +31,8 @@
             * Grid::accept(GridVisitor v)
                 * iterate through Coordinates calling
                     * visitor.visit(Coord loc)
-        
+        * or a Grid iterator to iterate over points on the grid
+
         * add layers to the Grid data type? - for use by signals
             * Layer struct in signals is a variety of Grid
 
@@ -131,9 +133,11 @@
 # Peeps & Grid
 
 * think about how Peeps interacts with Grid and Indiv
+* also how an Indiv behaviour is a combination of its position on the grid, its neural network & the pheremones, Indiv uses global Grid instance, should it have a reference?
+
 * grid is used directly to understand the game area
 
-* spawnNewGeneration should be a Peeps method?
+* spawnNewGeneration should be a Peeps method? or a builder class method?
 
 * Peeps::drainMoveQueue
 
