@@ -110,5 +110,22 @@ TEST_CASE("TestGridIsBorder","[Grid]") {
     CHECK(g.isBorder(c3));
 }
 
+TEST_CASE("TestSetBarrier","[Grid]") {
+
+    Grid g = Grid();
+    uint16_t sizeX = 128;
+    uint16_t sizeY = 128;
+    g.init(sizeX, sizeY);
+
+    Coord c1 = Coord(10, 10);
+
+    CHECK_FALSE(g.isBarrierAt(c1));
+
+    g.setBarrier(c1);
+
+    CHECK(g.isBarrierAt(c1));
+
+}
+
 
 }
