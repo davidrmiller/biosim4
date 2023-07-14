@@ -3,59 +3,59 @@
 #include "../include/compass.h"
 #include "../include/coord.h"
 
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
 
 namespace BS {
 
-TEST(PolarTests, TestPolarDefault) {
+TEST_CASE("TestPolarDefault","[Polar]") {
     
     Polar p1 = Polar();
 
-    EXPECT_EQ(p1.mag, 0);
-    EXPECT_EQ(p1.dir, Dir(Compass::CENTER));
+    CHECK(p1.mag == 0);
+    CHECK(p1.dir == Dir(Compass::CENTER));
 
 }
 
-TEST(PolarTests, TestPolarConstruct) {
+TEST_CASE("TestPolarConstruct","[Polar]") {
     Polar p1 = Polar(-10, Compass::NW);
-    EXPECT_EQ(p1.mag, -10);
-    EXPECT_EQ(p1.dir, Dir(Compass::NW));
+    CHECK(p1.mag == -10);
+    CHECK(p1.dir == Dir(Compass::NW));
 }
 
-TEST(PolarTests, TestPolarAsCoord) {
+TEST_CASE("TestPolarAsCoord","[Polar]") {
 
     Coord c1 = Polar(0, Compass::CENTER).asCoord();
-    EXPECT_EQ(c1.x, 0);
-    EXPECT_EQ(c1.y, 0);
+    CHECK(c1.x == 0);
+    CHECK(c1.y == 0);
 
     c1 = Polar(10, Compass::CENTER).asCoord();
-    EXPECT_EQ(c1.x, 0);
-    EXPECT_EQ(c1.y, 0);
+    CHECK(c1.x == 0);
+    CHECK(c1.y == 0);
     
     c1 = Polar(20, Compass::N).asCoord();
-    EXPECT_EQ(c1.x, 0);
-    EXPECT_EQ(c1.y, 20);
+    CHECK(c1.x == 0);
+    CHECK(c1.y == 20);
 
     Polar p1 = Polar(12, Compass::W);
     c1 = p1.asCoord();
-    EXPECT_EQ(c1.x, -12);
-    EXPECT_EQ(c1.y, 0);
+    CHECK(c1.x == -12);
+    CHECK(c1.y == 0);
 
     c1 = Polar(14, Compass::NE).asCoord();
-    EXPECT_EQ(c1.x, 10);
-    EXPECT_EQ(c1.y, 10);
+    CHECK(c1.x == 10);
+    CHECK(c1.y == 10);
 
     c1 = Polar(-14, Compass::NE).asCoord();
-    EXPECT_EQ(c1.x, -10);
-    EXPECT_EQ(c1.y, -10);
+    CHECK(c1.x == -10);
+    CHECK(c1.y == -10);
 
     c1 = Polar(14, Compass::E).asCoord();
-    EXPECT_EQ(c1.x, 14);
-    EXPECT_EQ(c1.y, 0);
+    CHECK(c1.x == 14);
+    CHECK(c1.y == 0);
 
     c1 = Polar(-14, Compass::E).asCoord();
-    EXPECT_EQ(c1.x, -14);
-    EXPECT_EQ(c1.y, 0);
+    CHECK(c1.x == -14);
+    CHECK(c1.y == 0);
 
 }
 

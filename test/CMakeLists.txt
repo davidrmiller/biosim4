@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(BioSim4 VERSION 0.3.0)
 
-include(CTest)
-enable_testing()
+# include(CTest)
+# enable_testing()
 
 set (
     exe_name
@@ -27,20 +27,19 @@ set(
 include(FetchContent)
 
 FetchContent_Declare(
-  googletest
-  # Specify the commit you depend on and update it regularly.
-  URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.0.1 # or a later release
 )
 
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+FetchContent_MakeAvailable(Catch2)
 
 add_executable(${exe_name} ${sources})
 
 target_link_libraries(
     ${exe_name}
-    gtest_main
+    PRIVATE 
+    Catch2::Catch2WithMain
 )
 
 install(TARGETS ${exe_name} DESTINATION bin)

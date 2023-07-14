@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -yqq \
 	cimg-dev \
 	gnuplot \
 	libopencv-dev \
+	git \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 

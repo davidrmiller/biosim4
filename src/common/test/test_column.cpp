@@ -1,27 +1,27 @@
-#include <gtest/gtest.h>
 #include "../include/column.h"
+#include <catch2/catch_test_macros.hpp>
 
 namespace BS {
 
-TEST(ColumnTests, TestColumn) {
+TEST_CASE("TestColumn","[Column]") {
     
     uint16_t rows = 128;
     Column col = Column(rows);
 
-    EXPECT_EQ(rows, col.size());
+    CHECK(rows == col.size());
 
 }
 
-TEST(ColumnTests, TestColumnZeroFill) {
+TEST_CASE("TestColumnZeroFill","[Column]") {
     
     uint16_t rows = 128;
     Column col = Column(rows);
 
     col.zeroFill();
 
-    EXPECT_EQ(0, col[1]);
-    EXPECT_EQ(0, col[13]);
-    EXPECT_EQ(0, col[127]);
+    CHECK(0 == col[1]);
+    CHECK(0 == col[13]);
+    CHECK(0 == col[127]);
 
 }
 

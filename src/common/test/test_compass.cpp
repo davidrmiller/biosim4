@@ -1,11 +1,10 @@
 #include "../include/compass.h"
 
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
 
-
-TEST(CompassTests, TestCompass) {
+TEST_CASE("TestCompass", "[Compass]") {
     
     BS::Compass compass = BS::Compass(BS::Compass::SW);
 
-    EXPECT_EQ(0, (uint8_t)compass);
+    CHECK(0 == (uint8_t)compass);
 }
