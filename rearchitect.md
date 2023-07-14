@@ -1,4 +1,4 @@
-[] testing? Catch2? 
+[x] testing? Catch2? 
 
 [] use the Grid instance as the source of world size, don't refer to the parameters x & y apart from instantiating the grid
 
@@ -22,9 +22,9 @@
     * Coord(inate)
     * Dir(ection)
     * Polar (coordinate)
-    * Grid? is this just a comntainer?
+    * Grid? is this just a container?
         * move global functions in getSensor.cpp to Grid class
-        * createBarrier(Grid g, barrier_type) - move to a grid builder class? 
+        * createBarrier(Grid g, barrier_type) - move to a grid builder class 
         
         * move visitNeighborhood to a GridVisitor class & interface
             * https://refactoring.guru/design-patterns/visitor?
@@ -164,4 +164,5 @@ bool Grid::moveIndiv(Indiv i, Coord newLoc)
 # Questions
 
 [] How much has the presentation of the simulation affected the design of the domain?
-        
+[] The Grid is the environment of the experiment, as such it's part of the domain, since the experiment takes place in an environment of Individuals with their neighbors
+* 

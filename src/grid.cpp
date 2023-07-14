@@ -92,6 +92,18 @@ void Grid::set(uint16_t x, uint16_t y, uint16_t val)
     }
 }
 
+void Grid::setBarrier(int16_t x, int16_t y)
+{
+    set(x, y, BARRIER);
+    barrierLocations.push_back( {x, y} );
+}
+
+void Grid::setBarrier(Coord loc)
+{
+    set(loc, BARRIER);
+    barrierLocations.push_back( loc );
+}
+
 const std::vector<Coord> &Grid::getBarrierLocations() const
 { 
     return barrierLocations;

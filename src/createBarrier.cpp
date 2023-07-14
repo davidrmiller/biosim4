@@ -23,8 +23,9 @@ void Grid::createBarrier(unsigned barrierType)
     auto drawBox = [&](int16_t minX, int16_t minY, int16_t maxX, int16_t maxY) {
         for (int16_t x = minX; x <= maxX; ++x) {
             for (int16_t y = minY; y <= maxY; ++y) {
-                grid.set(x, y, BARRIER);
-                barrierLocations.push_back( {x, y} );
+                // grid.set(x, y, BARRIER);
+                // barrierLocations.push_back( {x, y} );
+                setBarrier(x,y);
             }
         }
     };
@@ -43,8 +44,9 @@ void Grid::createBarrier(unsigned barrierType)
 
             for (int16_t x = minX; x <= maxX; ++x) {
                 for (int16_t y = minY; y <= maxY; ++y) {
-                    grid.set(x, y, BARRIER);
-                    barrierLocations.push_back( {x, y} );
+                    setBarrier(x,y);
+                    // grid.set(x, y, BARRIER);
+                    // barrierLocations.push_back( {x, y} );
                 }
             }
         }
@@ -60,8 +62,9 @@ void Grid::createBarrier(unsigned barrierType)
 
             for (int16_t x = minX; x <= maxX; ++x) {
                 for (int16_t y = minY; y <= maxY; ++y) {
-                    grid.set(x, y, BARRIER);
-                    barrierLocations.push_back( {x, y} );
+                    setBarrier(x,y);
+                    // grid.set(x, y, BARRIER);
+                    // barrierLocations.push_back( {x, y} );
                 }
             }
         }
@@ -107,8 +110,9 @@ void Grid::createBarrier(unsigned barrierType)
 
             for (int16_t x = minX; x <= maxX; ++x) {
                 for (int16_t y = minY; y <= maxY; ++y) {
-                    grid.set(x, y, BARRIER);
-                    barrierLocations.push_back( {x, y} );
+                    setBarrier(x,y);
+                    // grid.set(x, y, BARRIER);
+                    // barrierLocations.push_back( {x, y} );
                 }
             }
         }
@@ -144,8 +148,9 @@ void Grid::createBarrier(unsigned barrierType)
             //barrierCenters.push_back(center2);
 
             auto f = [&](Coord loc) {
-                grid.set(loc, BARRIER);
-                barrierLocations.push_back(loc);
+                setBarrier(loc);
+                // grid.set(loc, BARRIER);
+                // barrierLocations.push_back(loc);
             };
 
             visitNeighborhood(center0, radius, f);
@@ -161,8 +166,9 @@ void Grid::createBarrier(unsigned barrierType)
             float radius = 5.0;
 
             auto f = [&](Coord loc) {
-                grid.set(loc, BARRIER);
-                barrierLocations.push_back(loc);
+                setBarrier(loc);
+                // grid.set(loc, BARRIER);
+                // barrierLocations.push_back(loc);
             };
 
             unsigned verticalSliceSize = p.sizeY / (numberOfLocations + 1);

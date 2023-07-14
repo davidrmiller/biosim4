@@ -43,6 +43,10 @@ public:
 
     void set(Coord loc, uint16_t val);
     void set(uint16_t x, uint16_t y, uint16_t val);
+    
+    // set this location as a barrier
+    void setBarrier(int16_t x, int16_t y);
+    void setBarrier(Coord loc);
 
     void createBarrier(unsigned barrierType);
     const std::vector<Coord> &getBarrierLocations() const;
