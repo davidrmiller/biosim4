@@ -5,7 +5,8 @@
 
 #include <vector>
 #include <cstdint>
-
+#include "common/include/column.h"
+#include "common/include/layer.h"
 namespace BS {
 
 // Usage: uint8_t magnitude = signals[layer][x][y];
@@ -16,23 +17,7 @@ constexpr unsigned SIGNAL_MIN = 0;
 constexpr unsigned SIGNAL_MAX = UINT8_MAX;
 
 struct Signals {
-    struct Column {
-        Column(uint16_t numRows) : data { std::vector<uint8_t>(numRows, 0) } { }
-        uint8_t& operator[](uint16_t rowNum) { return data[rowNum]; }
-        uint8_t operator[](uint16_t rowNum) const { return data[rowNum]; }
-        void zeroFill() { std::fill(data.begin(), data.end(), 0); }
-    private:
-        std::vector<uint8_t> data;
-    };
 
-    struct Layer {
-        Layer(uint16_t numCols, uint16_t numRows) : data { std::vector<Column>(numCols, Column(numRows)) } { }
-        Column& operator[](uint16_t colNum) { return data[colNum]; }
-        const Column& operator[](uint16_t colNum) const { return data[colNum]; }
-        void zeroFill() { for (Column &col : data) { col.zeroFill(); } }
-    private:
-        std::vector<Column> data;
-    };
 
     void init(uint16_t layers, uint16_t sizeX, uint16_t sizeY);
     Layer& operator[](uint16_t layerNum) { return data[layerNum]; }
