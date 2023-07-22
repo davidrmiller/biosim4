@@ -41,11 +41,13 @@ set(
 
     ../src/domain/src/gene.cpp
     ../src/domain/src/connectionList.cpp
-    
+    ../src/domain/src/genomeBuilder.cpp
+
     ../src/domain/test/test_helper.cpp
     ../src/domain/test/test_gene.cpp
     ../src/domain/test/test_connectionList.cpp
     ../src/domain/test/test_neuralNet.cpp
+    ../src/domain/test/test_genomeBuilder.cpp
 )
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-O3 -Wall -fexceptions -fopenmp")
