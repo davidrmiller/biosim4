@@ -21,6 +21,7 @@ set(
     ../src/common/test/test_gridBuilder.cpp
     ../src/common/test/test_layer.cpp
     ../src/common/test/test_gridCircle.cpp
+    
     ../src/common/src/polar.cpp
     ../src/common/src/coord.cpp 
     ../src/common/src/dir.cpp
@@ -34,8 +35,11 @@ set(
     ../src/common/src/gridBuilder.cpp
     ../src/common/src/gridShape.cpp
     ../src/common/src/gridLocationVisitor.cpp 
-    ../src/common/src/layer.cpp
+    
     ../src/random.cpp
+
+    ../src/domain/src/gene.cpp
+    ../src/domain/test/test_gene.cpp
 )
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-O3 -Wall -fexceptions -fopenmp")

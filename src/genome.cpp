@@ -8,6 +8,7 @@
 #include <string>
 #include "simulator.h"
 #include "random.h"
+#include "domain/include/gene.h"
 
 namespace BS {
 
@@ -47,7 +48,8 @@ Gene makeRandomGene()
     gene.sourceNum = (uint16_t)randomUint(0, 0x7fff);
     gene.sinkType = randomUint() & 1;
     gene.sinkNum = (uint16_t)randomUint(0, 0x7fff);
-    gene.weight = Gene::makeRandomWeight();
+    gene.weight =  randomUint(0, 0xffff) - 0x8000; //Gene::makeRandomWeight();
+
 
     return gene;
 }
