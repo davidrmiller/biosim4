@@ -19,7 +19,7 @@ private:
     // for the Jenkins algorithm
     uint32_t a, b, c, d;
 public:
-    void initialize(); // must be called to seed the RNG
+    void initialize(bool deterministic, unsigned RNGSeed); // must be called to seed the RNG
     uint32_t operator()();
     unsigned operator()(unsigned min, unsigned max);
 };

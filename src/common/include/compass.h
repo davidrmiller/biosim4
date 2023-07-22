@@ -1,5 +1,3 @@
-// #ifndef COMPASS_H_INCLUDED
-// #define COMPASS_H_INCLUDED
 #pragma once
 #include <cstdint>
 
@@ -11,5 +9,3 @@ namespace BS {
     };
 
 }
-
-// #endif 

@@ -14,7 +14,8 @@ namespace BS {
             Column& operator[](uint16_t colNum);
             const Column& operator[](uint16_t colNum) const;
             void zeroFill();
-        
+            size_t size() const;
+            
         private:
             std::vector<Column> data;
     

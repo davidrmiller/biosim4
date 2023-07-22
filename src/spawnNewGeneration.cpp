@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include "simulator.h"
+#include "common/include/gridBuilder.h"
 
 namespace BS {
 
@@ -19,7 +20,14 @@ void initializeGeneration0()
 {
     // The grid has already been allocated, just clear and reuse it
     grid.zeroFill();
-    grid.createBarrier(p.barrierType);
+
+    // use a GridBuilder to create the barriers
+    auto barrierType = GridBuilder::barrierType(p.barrierType);
+
+    GridBuilder gridBuilder = GridBuilder(randomUint);
+    gridBuilder.createBarrier(grid, barrierType);
+
+    // grid.createBarrier(p.barrierType);
 
     // The signal layers have already been allocated, so just reuse them
     signals.zeroFill();
@@ -58,7 +66,13 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
     // The grid, signals, and peeps containers have already been allocated, just
     // clear them if needed and reuse the elements
     grid.zeroFill();
-    grid.createBarrier(p.barrierType);
+
+    auto barrierType = GridBuilder::barrierType(p.barrierType);
+
+    GridBuilder gridBuilder = GridBuilder(randomUint);
+    gridBuilder.createBarrier(grid, barrierType);
+
+    // grid.createBarrier(p.barrierType);
     signals.zeroFill();
 
     // Spawn the population. This overwrites all the elements of peeps[]

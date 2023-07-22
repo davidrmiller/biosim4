@@ -27,18 +27,18 @@ namespace BS {
 // the RNG with a random seed. This initializes both the Marsaglia and
 // the Jenkins algorithms. The member function operator() determines
 // which algorithm is actually used.
-void RandomUintGenerator::initialize()
+void RandomUintGenerator::initialize(bool deterministic, unsigned RNGSeed)
 {
-    if (p.deterministic) {
+    if (deterministic) {
         // Initialize Marsaglia. Overflow wrap-around is ok. We just want
         // the four parameters to be unrelated. In the extremely unlikely
         // event that a coefficient is zero, we'll force it to an arbitrary
         // non-zero value. Each thread uses a different seed, yet
         // deterministic per-thread.
-        rngx = p.RNGSeed + 123456789 + omp_get_thread_num();
-        rngy = p.RNGSeed + 362436000 + omp_get_thread_num();
-        rngz = p.RNGSeed + 521288629 + omp_get_thread_num();
-        rngc = p.RNGSeed + 7654321 + omp_get_thread_num();
+        rngx = RNGSeed + 123456789 + omp_get_thread_num();
+        rngy = RNGSeed + 362436000 + omp_get_thread_num();
+        rngz = RNGSeed + 521288629 + omp_get_thread_num();
+        rngc = RNGSeed + 7654321 + omp_get_thread_num();
         rngx = rngx != 0 ? rngx : 123456789;
         rngy = rngy != 0 ? rngy : 123456789;
         rngz = rngz != 0 ? rngz : 123456789;
@@ -46,7 +46,7 @@ void RandomUintGenerator::initialize()
 
         // Initialize Jenkins determinstically per-thread:
         a = 0xf1ea5eed;
-        b = c = d = p.RNGSeed + omp_get_thread_num();
+        b = c = d = RNGSeed + omp_get_thread_num();
         if (b == 0) {
             b = c = d + 123456789;
         }

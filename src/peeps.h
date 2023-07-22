@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include "common/include/coord.h"
-#include "grid.h"
+#include "common/include/grid.h"  
 #include "params.h"
 #include "indiv.h"
 

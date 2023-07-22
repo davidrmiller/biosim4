@@ -114,11 +114,11 @@ void simulator(int argc, char **argv)
     paramManager.updateFromConfigFile(0);
     paramManager.checkParameters(); // check and report any problems
 
-    randomUint.initialize(); // seed the RNG for main-thread use
+    randomUint.initialize(p.deterministic, p.RNGSeed); // seed the RNG for main-thread use
 
     // Allocate container space. Once allocated, these container elements
     // will be reused in each new generation.
-    grid.init(p.sizeX, p.sizeY); // the land on which the peeps live
+    grid.init(p.signalLayers, p.sizeX, p.sizeY); // the land on which the peeps live
     signals.init(p.signalLayers, p.sizeX, p.sizeY);  // where the pheromones waft
     peeps.init(p.population); // the peeps themselves
 
@@ -138,7 +138,7 @@ void simulator(int argc, char **argv)
     // modifications in the single-thread regions.
     #pragma omp parallel num_threads(p.numThreads) default(shared)
     {
-        randomUint.initialize(); // seed the RNG, each thread has a private instance
+        randomUint.initialize(p.deterministic, p.RNGSeed); // seed the RNG, each thread has a private instance
 
         while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
             #pragma omp single

@@ -17,14 +17,33 @@ set(
     ../src/common/test/test_polar.cpp
     ../src/common/test/test_grid.cpp
     ../src/common/test/test_column.cpp
+    ../src/common/test/test_createGridBarrierVisitor.cpp
+    ../src/common/test/test_gridBuilder.cpp
     ../src/common/test/test_layer.cpp
+    ../src/common/test/test_gridCircle.cpp
     ../src/common/src/polar.cpp
     ../src/common/src/coord.cpp 
     ../src/common/src/dir.cpp
     ../src/common/src/column.cpp
     ../src/common/src/layer.cpp
-    ../src/grid.cpp
+    ../src/common/src/gridCircle.cpp
+    ../src/common/src/gridRectangle.cpp
+    ../src/common/src/grid.cpp
+    ../src/common/src/createGridBarrierVisitor.cpp
+    ../src/common/src/gridShapeFactory.cpp
+    ../src/common/src/gridBuilder.cpp
+    ../src/common/src/gridShape.cpp
+    ../src/common/src/gridLocationVisitor.cpp 
+    ../src/common/src/layer.cpp
+    ../src/random.cpp
 )
+
+SET(GCC_COVERAGE_COMPILE_FLAGS "-O3 -Wall -fexceptions -fopenmp")
+SET(GCC_COVERAGE_LINK_FLAGS    "-lpthread -O3 -lz -lgomp")
+
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+set( CMAKE_VERBOSE_MAKEFILE on )
 
 include(FetchContent)
 

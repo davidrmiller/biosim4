@@ -25,4 +25,9 @@ namespace BS {
         } 
     }
 
+    size_t Layer::size() const 
+    { 
+        return data.size();
+    }
+
 } // namespace BS

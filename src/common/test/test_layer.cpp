@@ -30,4 +30,12 @@ namespace BS {
 
     }
 
+    TEST_CASE("TestSize","[Layer]") {
+        
+        Layer l = Layer(32, 32);
+        l.zeroFill();
+
+        CHECK(32 == l.size());
+
+    }
 }

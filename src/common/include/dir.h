@@ -1,12 +1,6 @@
-//#ifndef DIR_H_INCLUDED
-//#define DIR_H_INCLUDED
 #pragma once
 
 #include "compass.h"
-// #include "polar.h"
-// #include "coord.h"
-// #include "common.h"
-// #include "../random.h"
 
 namespace BS {
 
@@ -20,27 +14,25 @@ namespace BS {
 
         Dir();
         
-        Dir(Compass dir);// : dir9{dir} {}
+        Dir(Compass dir);
 
-        Dir& operator=(const Compass& d);// { dir9 = d; return *this; }
-        uint8_t asInt() const;// { return (uint8_t)dir9; }
-        Coord asNormalizedCoord() const;  // (-1, -0, 1, -1, 0, 1)
+        Dir& operator=(const Compass& d);
+        uint8_t asInt() const;
+        Coord asNormalizedCoord() const;  
         Polar asNormalizedPolar() const;
 
         Dir rotate(int n = 0) const;
-        Dir rotate90DegCW() const;// { return rotate(2); }
-        Dir rotate90DegCCW() const;// { return rotate(-2); }
-        Dir rotate180Deg() const;// { return rotate(4); }
+        Dir rotate90DegCW() const;
+        Dir rotate90DegCCW() const;
+        Dir rotate180Deg() const;
 
-        bool operator==(Compass d) const;// { return asInt() == (uint8_t)d; }
-        bool operator!=(Compass d) const;// { return asInt() != (uint8_t)d; }
-        bool operator==(Dir d) const;// { return asInt() == d.asInt(); }
-        bool operator!=(Dir d) const;// { return asInt() != d.asInt(); }
+        bool operator==(Compass d) const;
+        bool operator!=(Compass d) const;
+        bool operator==(Dir d) const;
+        bool operator!=(Dir d) const;
 
     private:
         Compass dir9;
     };
 
-} // NAMESPACE
-
-// #endif // DIR_H_INCLUDED
+}
