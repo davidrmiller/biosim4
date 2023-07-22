@@ -5,7 +5,7 @@
 
 #include "./node.h"
 #include "./gene.h"
-#include "../../genome-neurons.h"
+#include "../../sensors-actions.h"
 
 namespace BS
 {

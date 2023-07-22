@@ -6,6 +6,13 @@ namespace BS
 {
     ConnectionList::ConnectionList(unsigned max, NodeMap &map) : maxNeurons {max}, nodeMap{map} {}
 
+    /**
+     * Convert the indiv's genome to a renumbered connection list.
+     * This renumbers the neurons from their uint16_t values in the genome
+     * to the range 0..p.maxNumberNeurons - 1 by using a modulo operator.
+     * Sensors are renumbered 0..Sensor::NUM_SENSES - 1
+     * Actions are renumbered 0..Action::NUM_ACTIONS - 1
+    */
     void ConnectionList::renumber(const Genome &genome)
     {
         connectionList.clear();
@@ -28,6 +35,11 @@ namespace BS
         }
     }
 
+    /**
+    * Scan the connections and make a list of all the neuron numbers
+    * mentioned in the connections. Also keep track of how many inputs and
+    * outputs each neuron has.
+    */
     void ConnectionList::makeNodeList() const
     {
         nodeMap.clear();
@@ -79,6 +91,10 @@ namespace BS
         }
     }
 
+    /** 
+     * During the culling process, we will remove any neuron that has no outputs,
+     * and all the connections that feed the useless neuron.
+    */
     void ConnectionList::removeConnectionsToNeuron(uint16_t neuronNumber)
     {
         for (auto itConn = connectionList.begin(); itConn != connectionList.end(); ) {
@@ -95,6 +111,13 @@ namespace BS
         }
     }
 
+
+    /**
+    * If a neuron has no outputs or only outputs that feed itself, then we
+    * remove it along with all connections that feed it. Reiterative, because
+    * after we remove a connection to a useless neuron, it may result in a
+    * different neuron having no outputs.
+    */
     void ConnectionList::cullUselessNeurons()
     {
         bool allDone = false;

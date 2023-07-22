@@ -1,12 +1,14 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 
 namespace BS
 {
+    
+
     constexpr uint8_t SENSOR = 1;  // always a source
     constexpr uint8_t ACTION = 1;  // always a sink
     constexpr uint8_t NEURON = 0;  // can be either a source or sink
-
 
     class Gene {
 
@@ -22,6 +24,8 @@ namespace BS
 
             float weightAsFloat() const;
         // static int16_t makeRandomWeight() { return randomUint(0, 0xffff) - 0x8000; }
-};
+    };
 
+    typedef std::vector<Gene> Genome;
+    
 } // namespace BS
