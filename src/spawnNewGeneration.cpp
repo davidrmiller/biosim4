@@ -8,6 +8,7 @@
 #include "simulator.h"
 #include "genome-neurons.h"
 #include "common/include/gridBuilder.h"
+#include "domain/include/genomeBuilder.h"
 
 namespace BS {
 
@@ -33,10 +34,16 @@ void initializeGeneration0()
     // The signal layers have already been allocated, so just reuse them
     signals.zeroFill();
 
+    GenomeBuilder genomeBuilder = GenomeBuilder(
+        randomUint, p.genomeInitialLengthMin, p.genomeInitialLengthMax, p.genomeMaxLength,
+        p.pointMutationRate, p.geneInsertionDeletionRate, p.deletionRatio,
+        p.sexualReproduction, p.chooseParentsByFitness
+    );
+
     // Spawn the population. The peeps container has already been allocated,
     // just clear and reuse it
     for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(index, findEmptyLocation(grid), makeRandomGenome());
+        peeps[index].initialize(index, findEmptyLocation(grid), genomeBuilder.makeRandomGenome());
     }
 }
 
@@ -75,6 +82,8 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
 
     // grid.createBarrier(p.barrierType);
     signals.zeroFill();
+
+
 
     // Spawn the population. This overwrites all the elements of peeps[]
     for (uint16_t index = 1; index <= p.population; ++index) {

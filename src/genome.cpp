@@ -26,36 +26,36 @@ namespace BS {
 typedef std::map<uint16_t, Node> NodeMap; // key is neuron number 0..p.maxNumberNeurons - 1
 
 
-// Returns by value a single gene with random members.
-// See genome.h for the width of the members.
-// ToDo: don't assume the width of the members in gene.
-Gene makeRandomGene()
-{
-    Gene gene;
+// // Returns by value a single gene with random members.
+// // See genome.h for the width of the members.
+// // ToDo: don't assume the width of the members in gene.
+// Gene makeRandomGene()
+// {
+//     Gene gene;
 
-    gene.sourceType = randomUint() & 1;
-    gene.sourceNum = (uint16_t)randomUint(0, 0x7fff);
-    gene.sinkType = randomUint() & 1;
-    gene.sinkNum = (uint16_t)randomUint(0, 0x7fff);
-    gene.weight =  randomUint(0, 0xffff) - 0x8000; //Gene::makeRandomWeight();
-
-
-    return gene;
-}
+//     gene.sourceType = randomUint() & 1;
+//     gene.sourceNum = (uint16_t)randomUint(0, 0x7fff);
+//     gene.sinkType = randomUint() & 1;
+//     gene.sinkNum = (uint16_t)randomUint(0, 0x7fff);
+//     gene.weight =  randomUint(0, 0xffff) - 0x8000; //Gene::makeRandomWeight();
 
 
-// Returns by value a single genome with random genes.
-Genome makeRandomGenome()
-{
-    Genome genome;
+//     return gene;
+// }
 
-    unsigned length = randomUint(p.genomeInitialLengthMin, p.genomeInitialLengthMax);
-    for (unsigned n = 0; n < length; ++n) {
-        genome.push_back(makeRandomGene());
-    }
 
-    return genome;
-}
+// // Returns by value a single genome with random genes.
+// Genome makeRandomGenome()
+// {
+//     Genome genome;
+
+//     unsigned length = randomUint(p.genomeInitialLengthMin, p.genomeInitialLengthMax);
+//     for (unsigned n = 0; n < length; ++n) {
+//         genome.push_back(makeRandomGene());
+//     }
+
+//     return genome;
+// }
 
 
 

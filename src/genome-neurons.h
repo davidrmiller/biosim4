@@ -15,8 +15,8 @@ namespace BS {
 //constexpr float initialNeuronOutput() { return (NEURON_RANGE / 2.0) + NEURON_MIN; }
 constexpr float initialNeuronOutput() { return 0.5; }
 
-extern Gene makeRandomGene();
-extern Genome makeRandomGenome();
+// extern Gene makeRandomGene();
+// extern Genome makeRandomGenome();
 extern void unitTestConnectNeuralNetWiringFromGenome();
 extern float genomeSimilarity(const Genome &g1, const Genome &g2); // 0.0..1.0
 extern float geneticDiversity();  // 0.0..1.0
