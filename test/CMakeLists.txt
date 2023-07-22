@@ -45,6 +45,7 @@ set(
     ../src/domain/test/test_helper.cpp
     ../src/domain/test/test_gene.cpp
     ../src/domain/test/test_connectionList.cpp
+    ../src/domain/test/test_neuralNet.cpp
 )
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-O3 -Wall -fexceptions -fopenmp")
