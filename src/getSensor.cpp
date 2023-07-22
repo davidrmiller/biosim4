@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include "simulator.h"
+#include "genome-neurons.h"
 
 namespace BS {
 

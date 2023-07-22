@@ -7,7 +7,8 @@
 #include <cstring>
 #include <string>
 #include "simulator.h"
-
+#include "sensors-actions.h"
+#include "genome-neurons.h"
 namespace BS {
 
 // This converts sensor numbers to descriptive strings.

@@ -5,6 +5,12 @@
 namespace BS
 {
     
+    // Each gene specifies one synaptic connection in a neural net. Each
+    // connection has an input (source) which is either a sensor or another neuron.
+    // Each connection has an output, which is either an action or another neuron.
+    // Each connection has a floating point weight derived from a signed 16-bit
+    // value. The signed integer weight is scaled to a small range, then cubed
+    // to provide fine resolution near zero.
 
     constexpr uint8_t SENSOR = 1;  // always a source
     constexpr uint8_t ACTION = 1;  // always a sink
@@ -25,6 +31,11 @@ namespace BS
             float weightAsFloat() const;
         // static int16_t makeRandomWeight() { return randomUint(0, 0xffff) - 0x8000; }
     };
+
+
+    // An individual's genome is a set of Genes (see Gene comments above). Each
+    // gene is equivalent to one connection in a neural net. An individual's
+    // neural net is derived from its set of genes.
 
     typedef std::vector<Gene> Genome;
     

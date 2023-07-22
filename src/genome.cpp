@@ -8,6 +8,8 @@
 #include <string>
 #include "simulator.h"
 #include "random.h"
+#include "genome-neurons.h"
+
 #include "domain/include/gene.h"
 #include "domain/include/connectionList.h"
 #include "domain/include/node.h"

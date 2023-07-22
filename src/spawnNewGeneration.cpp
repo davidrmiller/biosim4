@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include "simulator.h"
+#include "genome-neurons.h"
 #include "common/include/gridBuilder.h"
 
 namespace BS {
