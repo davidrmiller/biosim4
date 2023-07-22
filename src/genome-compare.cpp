@@ -9,11 +9,13 @@ namespace BS {
 //
 bool genesMatch(const Gene &g1, const Gene &g2)
 {
-    return g1.sinkNum == g2.sinkNum
-        && g1.sourceNum == g2.sourceNum
-        && g1.sinkType == g2.sinkType
-        && g1.sourceType == g2.sourceType
-        && g1.weight == g2.weight;
+    return (g1 == g2);
+
+    // return g1.sinkNum == g2.sinkNum
+    //     && g1.sourceNum == g2.sourceNum
+    //     && g1.sinkType == g2.sinkType
+    //     && g1.sourceType == g2.sourceType
+    //     && g1.weight == g2.weight;
 }
 
 
@@ -51,7 +53,7 @@ float jaro_winkler_distance(const Genome &genome1, const Genome &genome2) {
     /* calculate matching characters */
     for (i = 0; i < al; i++) {
         for (j = max(i - range, 0), l = min(i + range + 1, sl); j < l; j++) {
-            if (genesMatch(a[i], s[j]) && !sflags[j]) {
+            if ((a[i] == s[j]) && !sflags[j]) {
                 sflags[j] = 1;
                 aflags[i] = 1;
                 m++;
@@ -73,7 +75,7 @@ float jaro_winkler_distance(const Genome &genome1, const Genome &genome2) {
                     break;
                 }
             }
-            if (!genesMatch(a[i], s[j]))
+            if (a[i] != s[j])
                 t++;
         }
     }

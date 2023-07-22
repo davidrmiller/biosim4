@@ -29,7 +29,10 @@ namespace BS
             static constexpr float f2 = 64.0;
 
             float weightAsFloat() const;
-        // static int16_t makeRandomWeight() { return randomUint(0, 0xffff) - 0x8000; }
+
+            bool operator== (const Gene& g1) const;
+            bool operator!= (const Gene& g1) const;
+
     };
 
 
