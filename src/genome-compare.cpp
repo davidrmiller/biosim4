@@ -5,19 +5,6 @@
 
 namespace BS {
 
-// Approximate gene match: Has to match same source, sink, with similar weight
-//
-bool genesMatch(const Gene &g1, const Gene &g2)
-{
-    return (g1 == g2);
-
-    // return g1.sinkNum == g2.sinkNum
-    //     && g1.sourceNum == g2.sourceNum
-    //     && g1.sinkType == g2.sinkType
-    //     && g1.sourceType == g2.sourceType
-    //     && g1.weight == g2.weight;
-}
-
 
 // The jaro_winkler_distance() function is adapted from the C version at
 // https://github.com/miguelvps/c/blob/master/jarowinkler.c
