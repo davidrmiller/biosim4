@@ -9,6 +9,8 @@
 #include "simulator.h"
 #include "random.h"
 #include "domain/include/gene.h"
+#include "domain/include/connectionList.h"
+#include "domain/include/node.h"
 
 namespace BS {
 
@@ -19,12 +21,12 @@ namespace BS {
 // or those that only feed themselves, i.e., .numSelfInputs == .numOutputs.
 // Finally, we'll renumber the remaining neurons sequentially starting
 // at zero using the .remappedNumber member.
-struct Node {
-    uint16_t remappedNumber;
-    uint16_t numOutputs;
-    uint16_t numSelfInputs;
-    uint16_t numInputsFromSensorsOrOtherNeurons;
-};
+// struct Node {
+//     uint16_t remappedNumber;
+//     uint16_t numOutputs;
+//     uint16_t numSelfInputs;
+//     uint16_t numInputsFromSensorsOrOtherNeurons;
+// };
 
 
 // Two neuron renumberings occur: The original genome uses a uint16_t for
@@ -34,7 +36,7 @@ struct Node {
 // starting at 0.
 typedef std::map<uint16_t, Node> NodeMap; // key is neuron number 0..p.maxNumberNeurons - 1
 
-typedef std::list<Gene> ConnectionList;
+// typedef std::list<Gene> ConnectionList;
 
 
 // Returns by value a single gene with random members.
@@ -74,116 +76,116 @@ Genome makeRandomGenome()
 // to the range 0..p.maxNumberNeurons - 1 by using a modulo operator.
 // Sensors are renumbered 0..Sensor::NUM_SENSES - 1
 // Actions are renumbered 0..Action::NUM_ACTIONS - 1
-void makeRenumberedConnectionList(ConnectionList &connectionList, const Genome &genome)
-{
-    connectionList.clear();
-    for (auto const &gene : genome) {
-        connectionList.push_back(gene);
-        auto &conn = connectionList.back();
+// void makeRenumberedConnectionList(ConnectionList &connectionList, const Genome &genome)
+// {
+//     connectionList.clear();
+//     for (auto const &gene : genome) {
+//         connectionList.push_back(gene);
+//         auto &conn = connectionList.back();
 
-        if (conn.sourceType == NEURON) {
-            conn.sourceNum %= p.maxNumberNeurons;
-        } else {
-            conn.sourceNum %= Sensor::NUM_SENSES;
-        }
+//         if (conn.sourceType == NEURON) {
+//             conn.sourceNum %= p.maxNumberNeurons;
+//         } else {
+//             conn.sourceNum %= Sensor::NUM_SENSES;
+//         }
 
-        if (conn.sinkType == NEURON) {
-            conn.sinkNum %= p.maxNumberNeurons;
-        } else {
-            conn.sinkNum %= Action::NUM_ACTIONS;
-        }
-    }
-}
+//         if (conn.sinkType == NEURON) {
+//             conn.sinkNum %= p.maxNumberNeurons;
+//         } else {
+//             conn.sinkNum %= Action::NUM_ACTIONS;
+//         }
+//     }
+// }
 
 
 // Scan the connections and make a list of all the neuron numbers
 // mentioned in the connections. Also keep track of how many inputs and
 // outputs each neuron has.
-void makeNodeList(NodeMap &nodeMap, const ConnectionList &connectionList)
-{
-    nodeMap.clear();
+// void makeNodeList(NodeMap &nodeMap, const ConnectionList &connectionList)
+// {
+//     nodeMap.clear();
 
-    for (const Gene &conn : connectionList) {
-        if (conn.sinkType == NEURON) {
-            auto it = nodeMap.find(conn.sinkNum);
-            if (it == nodeMap.end()) {
-                assert(conn.sinkNum < p.maxNumberNeurons);
-                nodeMap.insert(std::pair<uint16_t, Node>(conn.sinkNum, {} ));
-                it = nodeMap.find(conn.sinkNum);
-                assert(it->first < p.maxNumberNeurons);
-                it->second.numOutputs = 0;
-                it->second.numSelfInputs = 0;
-                it->second.numInputsFromSensorsOrOtherNeurons = 0;
-            }
+//     for (const Gene &conn : connectionList) {
+//         if (conn.sinkType == NEURON) {
+//             auto it = nodeMap.find(conn.sinkNum);
+//             if (it == nodeMap.end()) {
+//                 assert(conn.sinkNum < p.maxNumberNeurons);
+//                 nodeMap.insert(std::pair<uint16_t, Node>(conn.sinkNum, {} ));
+//                 it = nodeMap.find(conn.sinkNum);
+//                 assert(it->first < p.maxNumberNeurons);
+//                 it->second.numOutputs = 0;
+//                 it->second.numSelfInputs = 0;
+//                 it->second.numInputsFromSensorsOrOtherNeurons = 0;
+//             }
 
-            if (conn.sourceType == NEURON && (conn.sourceNum == conn.sinkNum)) {
-                ++(it->second.numSelfInputs);
-            } else {
-                ++(it->second.numInputsFromSensorsOrOtherNeurons);
-            }
-            assert(nodeMap.count(conn.sinkNum) == 1);
-        }
-        if (conn.sourceType == NEURON) {
-            auto it = nodeMap.find(conn.sourceNum);
-            if (it == nodeMap.end()) {
-                assert(conn.sourceNum < p.maxNumberNeurons);
-                nodeMap.insert(std::pair<uint16_t, Node>(conn.sourceNum, {} ));
-                it = nodeMap.find(conn.sourceNum);
-                assert(it->first < p.maxNumberNeurons);
-                it->second.numOutputs = 0;
-                it->second.numSelfInputs = 0;
-                it->second.numInputsFromSensorsOrOtherNeurons = 0;
-            }
-            ++(it->second.numOutputs);
-            assert(nodeMap.count(conn.sourceNum) == 1);
-        }
-    }
-}
+//             if (conn.sourceType == NEURON && (conn.sourceNum == conn.sinkNum)) {
+//                 ++(it->second.numSelfInputs);
+//             } else {
+//                 ++(it->second.numInputsFromSensorsOrOtherNeurons);
+//             }
+//             assert(nodeMap.count(conn.sinkNum) == 1);
+//         }
+//         if (conn.sourceType == NEURON) {
+//             auto it = nodeMap.find(conn.sourceNum);
+//             if (it == nodeMap.end()) {
+//                 assert(conn.sourceNum < p.maxNumberNeurons);
+//                 nodeMap.insert(std::pair<uint16_t, Node>(conn.sourceNum, {} ));
+//                 it = nodeMap.find(conn.sourceNum);
+//                 assert(it->first < p.maxNumberNeurons);
+//                 it->second.numOutputs = 0;
+//                 it->second.numSelfInputs = 0;
+//                 it->second.numInputsFromSensorsOrOtherNeurons = 0;
+//             }
+//             ++(it->second.numOutputs);
+//             assert(nodeMap.count(conn.sourceNum) == 1);
+//         }
+//     }
+// }
 
 
 // During the culling process, we will remove any neuron that has no outputs,
 // and all the connections that feed the useless neuron.
-void removeConnectionsToNeuron(ConnectionList &connections, NodeMap &nodeMap, uint16_t neuronNumber)
-{
-    for (auto itConn = connections.begin(); itConn != connections.end(); ) {
-        if (itConn->sinkType == NEURON && itConn->sinkNum == neuronNumber) {
-            // Remove the connection. If the connection source is from another
-            // neuron, also decrement the other neuron's numOutputs:
-            if (itConn->sourceType == NEURON) {
-                --(nodeMap[itConn->sourceNum].numOutputs);
-            }
-            itConn = connections.erase(itConn);
-        } else {
-            ++itConn;
-        }
-    }
-}
+// void removeConnectionsToNeuron(ConnectionList &connections, NodeMap &nodeMap, uint16_t neuronNumber)
+// {
+//     for (auto itConn = connections.begin(); itConn != connections.end(); ) {
+//         if (itConn->sinkType == NEURON && itConn->sinkNum == neuronNumber) {
+//             // Remove the connection. If the connection source is from another
+//             // neuron, also decrement the other neuron's numOutputs:
+//             if (itConn->sourceType == NEURON) {
+//                 --(nodeMap[itConn->sourceNum].numOutputs);
+//             }
+//             itConn = connections.erase(itConn);
+//         } else {
+//             ++itConn;
+//         }
+//     }
+// }
 
 
 // If a neuron has no outputs or only outputs that feed itself, then we
 // remove it along with all connections that feed it. Reiterative, because
 // after we remove a connection to a useless neuron, it may result in a
 // different neuron having no outputs.
-void cullUselessNeurons(ConnectionList &connections, NodeMap &nodeMap)
-{
-    bool allDone = false;
-    while (!allDone) {
-        allDone = true;
-        for (auto itNeuron = nodeMap.begin(); itNeuron != nodeMap.end(); ) {
-            assert(itNeuron->first < p.maxNumberNeurons);
-            // We're looking for neurons with zero outputs, or neurons that feed itself
-            // and nobody else:
-            if (itNeuron->second.numOutputs == itNeuron->second.numSelfInputs) {  // could be 0
-                allDone = false;
-                // Find and remove connections from sensors or other neurons
-                removeConnectionsToNeuron(connections, nodeMap, itNeuron->first);
-                itNeuron = nodeMap.erase(itNeuron);
-            } else {
-                ++itNeuron;
-            }
-        }
-    }
-}
+// void cullUselessNeurons(ConnectionList &connections, NodeMap &nodeMap)
+// {
+//     bool allDone = false;
+//     while (!allDone) {
+//         allDone = true;
+//         for (auto itNeuron = nodeMap.begin(); itNeuron != nodeMap.end(); ) {
+//             assert(itNeuron->first < p.maxNumberNeurons);
+//             // We're looking for neurons with zero outputs, or neurons that feed itself
+//             // and nobody else:
+//             if (itNeuron->second.numOutputs == itNeuron->second.numSelfInputs) {  // could be 0
+//                 allDone = false;
+//                 // Find and remove connections from sensors or other neurons
+//                 removeConnectionsToNeuron(connections, nodeMap, itNeuron->first);
+//                 itNeuron = nodeMap.erase(itNeuron);
+//             } else {
+//                 ++itNeuron;
+//             }
+//         }
+//     }
+// }
 
 
 // This function is used when an agent is spawned. This function converts the
@@ -199,17 +201,17 @@ void cullUselessNeurons(ConnectionList &connections, NodeMap &nodeMap)
 void Indiv::createWiringFromGenome()
 {
     NodeMap nodeMap;  // list of neurons and their number of inputs and outputs
-    ConnectionList connectionList; // synaptic connections
+    ConnectionList connectionList(p.maxNumberNeurons, nodeMap); // synaptic connections
 
     // Convert the indiv's genome to a renumbered connection list
-    makeRenumberedConnectionList(connectionList, genome);
+    connectionList.renumber(genome);
 
     // Make a node (neuron) list from the renumbered connection list
-    makeNodeList(nodeMap, connectionList);
+    connectionList.makeNodeList();
 
     // Find and remove neurons that don't feed anything or only feed themself.
     // This reiteratively removes all connections to the useless neurons.
-    cullUselessNeurons(connectionList, nodeMap);
+    connectionList.cullUselessNeurons();
 
     // The neurons map now has all the referenced neurons, their neuron numbers, and
     // the number of outputs for each neuron. Now we'll renumber the neurons
@@ -229,7 +231,7 @@ void Indiv::createWiringFromGenome()
     nnet.connections.clear();
 
     // First, the connections from sensor or neuron to a neuron
-    for (auto const &conn : connectionList) {
+    for (auto const &conn : connectionList.connections()) {
         if (conn.sinkType == NEURON) {
             nnet.connections.push_back(conn);
             auto &newConn = nnet.connections.back();
@@ -243,7 +245,7 @@ void Indiv::createWiringFromGenome()
     }
 
     // Last, the connections from sensor or neuron to an action
-    for (auto const &conn : connectionList) {
+    for (auto const &conn : connectionList.connections()) {
         if (conn.sinkType == ACTION) {
             nnet.connections.push_back(conn);
             auto &newConn = nnet.connections.back();
