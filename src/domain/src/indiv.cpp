@@ -11,21 +11,18 @@ namespace BS {
     // The responsiveness parameter will be initialized here to maximum value
     // of 1.0, then depending on which action activation function is used,
     // the default undriven value may be changed to 1.0 or action midrange.
-    void Indiv::initialize(uint16_t index_, Coord loc_, std::shared_ptr<Genome> genome_, Dir lastMove)
+    void Indiv::initialize(uint16_t index_, Coord loc_, std::shared_ptr<Genome> genome_, Dir lastMove, unsigned dist)
     {
         index = index_;
         loc = loc_;
         //birthLoc = loc_;
         
-        // remove dependency on global Grid instance
-        grid.set(loc_, index_);
         age = 0;
         oscPeriod = 34; // ToDo !!! define a constant
         alive = true;
         lastMoveDir = lastMove;
         responsiveness = 0.5; // range 0.0..1.0
-        // remove dependency on global Params instance
-        longProbeDist = p.longProbeDistance;
+        longProbeDist = dist;
         challengeBits = (unsigned)false; // will be set true when some task gets accomplished
         
         genome = genome_;

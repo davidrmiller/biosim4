@@ -9,12 +9,13 @@
 #include "genome-neurons.h"
 #include "common/include/gridBuilder.h"
 #include "domain/include/genomeBuilder.h"
-#include "dirFactory.h"
+#include "domain/include/indivBuilder.h"
+// #include "dirFactory.h"
 
 namespace BS {
 
 extern std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned challenge);
-Coord findEmptyLocation(Grid grid);
+// Coord findEmptyLocation(Grid grid);
 
 // Requires that the grid, signals, and peeps containers have been allocated.
 // This will erase the grid and signal layers, then create a new population in
@@ -41,31 +42,38 @@ void initializeGeneration0()
         p.sexualReproduction, p.chooseParentsByFitness
     );
 
+    IndivBuilder indivBuilder = IndivBuilder(
+        randomUint, grid, genomeBuilder, p.longProbeDistance
+    );
+
     // Spawn the population. The peeps container has already been allocated,
     // just clear and reuse it
     for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(
-            index, 
-            findEmptyLocation(grid), 
-            genomeBuilder.makeRandomGenome(),
-            DirFactory::random8());
+        
+        indivBuilder.initIndividual(peeps[index], index);
+
+        // peeps[index].initialize(
+        //     index, 
+        //     findEmptyLocation(grid), 
+        //     genomeBuilder.makeRandomGenome(),
+        //     DirFactory::random8());
     }
 }
 
-Coord findEmptyLocation(Grid grid) {
-    Coord loc;
-    uint16_t size_x = grid.sizeX();
-    uint16_t size_y = grid.sizeY();
+// Coord findEmptyLocation(Grid grid) {
+//     Coord loc;
+//     uint16_t size_x = grid.sizeX();
+//     uint16_t size_y = grid.sizeY();
 
-    while (true) {
-        loc.x = randomUint(0, size_x - 1);
-        loc.y = randomUint(0, size_y - 1);
-        if (grid.isEmptyAt(loc)) {
-            break;
-        }
-    }
-    return loc;
-}
+//     while (true) {
+//         loc.x = randomUint(0, size_x - 1);
+//         loc.y = randomUint(0, size_y - 1);
+//         if (grid.isEmptyAt(loc)) {
+//             break;
+//         }
+//     }
+//     return loc;
+// }
 
 // Requires a container with one or more parent genomes to choose from.
 // Called from spawnNewGeneration(). This requires that the grid, signals, and
@@ -94,15 +102,21 @@ void initializeNewGeneration(const std::vector<std::shared_ptr<Genome>> &parentG
         p.sexualReproduction, p.chooseParentsByFitness
     );
 
+    IndivBuilder indivBuilder = IndivBuilder(
+        randomUint, grid, genomeBuilder, p.longProbeDistance
+    );
 
     // Spawn the population. This overwrites all the elements of peeps[]
     for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(
-            index, 
-            findEmptyLocation(grid), 
-            genomeBuilder.generateChildGenome(parentGenomes),
-            DirFactory::random8()
-        );
+
+        indivBuilder.reinitIndividual(peeps[index], index, parentGenomes);
+
+        // peeps[index].initialize(
+        //     index, 
+        //     findEmptyLocation(grid), 
+        //     genomeBuilder.generateChildGenome(parentGenomes),
+        //     DirFactory::random8()
+        // );
     }
 }
 

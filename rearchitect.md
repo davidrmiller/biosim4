@@ -50,7 +50,7 @@
 
     * Indiv(idual) - rename to full name?
         * convert to a class
-
+        * create a IndivBuilder class
         * move feedForward method to indiv.cpp
         * Indiv::getSensor method to Peeps class?
         * Indiv::createWiringFromGenome - move to a builder / factory?

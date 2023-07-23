@@ -42,7 +42,7 @@ class Indiv {
         unsigned challengeBits; // modified when the indiv accomplishes some task
         
 
-        void initialize(uint16_t index, Coord loc, std::shared_ptr<Genome> genome, Dir lastMove);
+        void initialize(uint16_t index, Coord loc, std::shared_ptr<Genome> genome, Dir lastMove, unsigned dist);
 
         std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep); // reads sensors, returns actions
         

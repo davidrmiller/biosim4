@@ -6,7 +6,7 @@
 namespace BS
 {
     GenomeBuilder::GenomeBuilder(RandomUintGenerator &r, unsigned min, unsigned max, unsigned gml, double pmr, double gidr, double dr, bool sr, bool cp) : 
-    randomUint{r}, minLength{min}, maxLength{max}, genomeMaxLength{gml}, pointMutationRate{pmr}, geneInsertionDeletionRate{gidr}, deletionRatio{dr}, sexualReproduction{sr}, chooseParentsByFitness{cp}
+        randomUint{r}, minLength{min}, maxLength{max}, genomeMaxLength{gml}, pointMutationRate{pmr}, geneInsertionDeletionRate{gidr}, deletionRatio{dr}, sexualReproduction{sr}, chooseParentsByFitness{cp}
     {}
 
     std::shared_ptr<Genome> GenomeBuilder::makeRandomGenome()
