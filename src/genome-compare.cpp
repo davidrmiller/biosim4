@@ -137,11 +137,11 @@ float genomeSimilarity(const Genome &g1, const Genome &g2)
 {
     switch (p.genomeComparisonMethod) {
     case 0:
-        return jaro_winkler_distance(g1, g2);
+        return g1.jaro_winkler_distance(g2);
     case 1:
-        return hammingDistanceBits(g1, g2);
+        return g1.hammingDistanceBits(g2);
     case 2:
-        return hammingDistanceBytes(g1, g2);
+        return g1.hammingDistanceBytes(g2);
     default:
         assert(false);
     }

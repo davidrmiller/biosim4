@@ -25,7 +25,7 @@ struct Indiv {
     Coord birthLoc;
     unsigned age;
     
-    // keep a reference to the genome?
+    // keep a reference to the genome? use a smart ptr to avoid copying
     Genome genome;
     NeuralNet nnet;   // derived from .genome
     float responsiveness;  // 0.0..1.0 (0 is like asleep)
