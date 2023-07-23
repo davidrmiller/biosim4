@@ -9,6 +9,7 @@
 #include "genome-neurons.h"
 #include "common/include/gridBuilder.h"
 #include "domain/include/genomeBuilder.h"
+#include "dirFactory.h"
 
 namespace BS {
 
@@ -43,7 +44,11 @@ void initializeGeneration0()
     // Spawn the population. The peeps container has already been allocated,
     // just clear and reuse it
     for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(index, findEmptyLocation(grid), genomeBuilder.makeRandomGenome());
+        peeps[index].initialize(
+            index, 
+            findEmptyLocation(grid), 
+            genomeBuilder.makeRandomGenome(),
+            DirFactory::random8());
     }
 }
 
@@ -92,7 +97,12 @@ void initializeNewGeneration(const std::vector<std::shared_ptr<Genome>> &parentG
 
     // Spawn the population. This overwrites all the elements of peeps[]
     for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(index, findEmptyLocation(grid), genomeBuilder.generateChildGenome(parentGenomes));
+        peeps[index].initialize(
+            index, 
+            findEmptyLocation(grid), 
+            genomeBuilder.generateChildGenome(parentGenomes),
+            DirFactory::random8()
+        );
     }
 }
 

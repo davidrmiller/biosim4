@@ -13,7 +13,7 @@ namespace BS {
 // When a new population is generated and every individual is given a
 // neural net, the neuron outputs must be initialized to something:
 //constexpr float initialNeuronOutput() { return (NEURON_RANGE / 2.0) + NEURON_MIN; }
-constexpr float initialNeuronOutput() { return 0.5; }
+// constexpr float initialNeuronOutput() { return 0.5; }
 
 // extern Gene makeRandomGene();
 // extern Genome makeRandomGenome();

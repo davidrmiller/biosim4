@@ -214,8 +214,7 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
     case CHALLENGE_MIGRATE_DISTANCE:
         {
             //unsigned requiredDistance = p.sizeX / 2.0;
-            float distance = (indiv.loc - indiv.birthLoc).length();
-            distance = distance / (float)(std::max(p.sizeX, p.sizeY));
+            float distance = indiv.distanceMoved() / (float)(std::max(p.sizeX, p.sizeY));
             return { true, distance };
         }
 

@@ -6,7 +6,7 @@
 #include "common/include/coord.h"
 #include "common/include/grid.h"  
 #include "params.h"
-#include "indiv.h"
+#include "domain/include/indiv.h"
 
 namespace BS {
 
