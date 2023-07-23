@@ -1,6 +1,6 @@
 #include "./test_helper.h"
 #include "../../random.h"
-
+#include "../../domain/include/genome.h"
 namespace BS
 {
     
@@ -28,6 +28,18 @@ namespace BS
         gene.sinkNum = sinkNum;
         gene.weight = weight;
         return gene;
+    }
+
+    std::shared_ptr<Genome> makeRandomGenome(unsigned min, unsigned max)
+    {
+        std::shared_ptr<Genome> genome = std::make_shared<Genome>();
+
+        unsigned length = randomUint(min, max);
+        for (unsigned n = 0; n < length; ++n) {
+            genome->add(makeRandomGene());
+        }
+
+        return genome;
     }
 
 } // namespace BS

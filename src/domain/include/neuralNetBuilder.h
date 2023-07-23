@@ -1,10 +1,15 @@
 #pragma once
 #include <memory>
+#include <cassert>
+
 #include "./neuralNet.h"
 #include "./genome.h"
+#include "./connectionList.h"
 
 namespace BS
 {
+    constexpr float initialNeuronOutput() { return 0.5; }
+
     /**
      * Builds a NeuralNet from a Genome
      * Returns smart pointers to the NeuralNet

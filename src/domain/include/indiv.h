@@ -19,7 +19,7 @@ namespace BS {
 
 // Also see class Peeps.
 
-constexpr float initialNeuronOutput() { return 0.5; }
+// constexpr float initialNeuronOutput() { return 0.5; }
 
 class Indiv {
 
