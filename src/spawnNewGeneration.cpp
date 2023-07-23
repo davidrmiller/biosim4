@@ -83,11 +83,16 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
     // grid.createBarrier(p.barrierType);
     signals.zeroFill();
 
+    GenomeBuilder genomeBuilder = GenomeBuilder(
+        randomUint, p.genomeInitialLengthMin, p.genomeInitialLengthMax, p.genomeMaxLength,
+        p.pointMutationRate, p.geneInsertionDeletionRate, p.deletionRatio,
+        p.sexualReproduction, p.chooseParentsByFitness
+    );
 
 
     // Spawn the population. This overwrites all the elements of peeps[]
     for (uint16_t index = 1; index <= p.population; ++index) {
-        peeps[index].initialize(index, findEmptyLocation(grid), generateChildGenome(parentGenomes));
+        peeps[index].initialize(index, findEmptyLocation(grid), genomeBuilder.generateChildGenome(parentGenomes));
     }
 }
 
