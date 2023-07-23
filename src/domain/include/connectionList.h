@@ -20,7 +20,7 @@ namespace BS
 
             ConnectionList(unsigned maxNeurons, NodeMap &nodeMap);
             
-            void renumber(const Genome &genome);
+            void renumber(const std::shared_ptr<Genome> genome);
             void makeNodeList() const;
             void cullUselessNeurons();
 

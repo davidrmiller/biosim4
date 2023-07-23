@@ -148,7 +148,7 @@ void Indiv::printGenome() const
 {
     constexpr unsigned genesPerLine = 8;
     unsigned count = 0;
-    for (Gene gene : genome.genes()) {
+    for (Gene gene : genome->genes()) {
         if (count == genesPerLine) {
             std::cout << std::endl;
             count = 0;
@@ -260,7 +260,7 @@ float averageGenomeLength()
     unsigned long sum = 0;
 
     while (count-- > 0) {
-        sum += peeps[randomUint(1, p.population)].genome.size();
+        sum += peeps[randomUint(1, p.population)].genome->size();
         ++numberSamples;
     }
     return sum / numberSamples;

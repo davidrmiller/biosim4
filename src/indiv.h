@@ -2,7 +2,7 @@
 #define INDIV_H_INCLUDED
 
 // Indiv is the structure that represents one individual agent.
-
+#include <memory>
 #include <algorithm>
 #include <cstdint>
 #include <array>
@@ -26,7 +26,7 @@ struct Indiv {
     unsigned age;
     
     // keep a reference to the genome? use a smart ptr to avoid copying
-    Genome genome;
+    std::shared_ptr<Genome> genome;
     NeuralNet nnet;   // derived from .genome
     float responsiveness;  // 0.0..1.0 (0 is like asleep)
     unsigned oscPeriod; // 2..4*p.stepsPerGeneration (TBD, see executeActions())
@@ -37,7 +37,7 @@ struct Indiv {
     std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep); // reads sensors, returns actions
     // make getSensor private
     float getSensor(Sensor sensorNum, unsigned simStep) const;
-    void initialize(uint16_t index, Coord loc, Genome &&genome);
+    void initialize(uint16_t index, Coord loc, std::shared_ptr<Genome> genome);
     void createWiringFromGenome(); // creates .nnet member from .genome member
     void printNeuralNet() const;
     void printIGraphEdgeList() const;

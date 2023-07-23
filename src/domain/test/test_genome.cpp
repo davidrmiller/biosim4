@@ -27,14 +27,14 @@ namespace BS {
 
     TEST_CASE("TestAdd","[Genome]") {
         
-        Genome genome;
-        genome.add(makeRandomGene());
+        const std::shared_ptr<Genome> genome = std::make_shared<Genome>();
+        genome->add(makeRandomGene());
 
-        CHECK(genome.size() == 1);
+        CHECK(genome->size() == 1);
 
-        genome.add(makeRandomGene());
+        genome->add(makeRandomGene());
 
-        CHECK(genome.size() == 2);
+        CHECK(genome->size() == 2);
     }
 
     TEST_CASE("TestGeneAt","[Genome]") {
@@ -184,50 +184,51 @@ namespace BS {
 
     TEST_CASE("TestOverlayWithSliceOf","[Genome]") {
         
-        Genome genome1;
+        const std::shared_ptr<Genome> genome1 = std::make_shared<Genome>();
+        // Genome genome1;
 
         for (int i = 0; i < 10; i++){
-            genome1.add(makeGene(SENSOR, i, NEURON, i, i*10));
+            genome1->add(makeGene(SENSOR, i, NEURON, i, i*10));
         }
 
-        Genome genome2;
+        const std::shared_ptr<Genome> genome2 = std::make_shared<Genome>();
 
         for (int i = 0; i < 10; i++){
-            genome2.add(makeGene(SENSOR, i+100, NEURON, i+100, i*100));
+            genome2->add(makeGene(SENSOR, i+100, NEURON, i+100, i*100));
         }
 
-        genome1.overlayWithSliceOf(genome2, 0, 5);
+        genome1->overlayWithSliceOf(genome2, 0, 5);
 
-        CHECK(genome1.size() == 10);
+        CHECK(genome1->size() == 10);
 
         // first 5 Genes from 1 should be copied into 2
         for (int i = 0; i < 5; i++){
-            Gene g = genome1.geneAt(i);
+            Gene g = genome1->geneAt(i);
             CHECK(g.sourceNum == i+100);
             CHECK(g.sinkNum == i+100);
         }
 
         // last 5 Genes from 1 should be unchanged
         for (int i = 0; i < 5; i++){
-            Gene g = genome1.geneAt(i+5);
+            Gene g = genome1->geneAt(i+5);
             CHECK(g.sourceNum == i+5);
             CHECK(g.sinkNum == i+5);
         }
 
-        genome2.overlayWithSliceOf(genome1, 5, 10);
+        genome2->overlayWithSliceOf(genome1, 5, 10);
 
-        CHECK(genome2.size() == 10);
+        CHECK(genome2->size() == 10);
 
         // first 5 Genes from 2 should be unchanged
         for (int i = 0; i < 5; i++){
-            Gene g = genome2.geneAt(i);
+            Gene g = genome2->geneAt(i);
             CHECK(g.sourceNum == i+100);
             CHECK(g.sinkNum == i+100);
         }
 
         // last 5 Genes from 2 should be copied from 1
         for (int i = 0; i < 5; i++){
-            Gene g = genome2.geneAt(i+5);
+            Gene g = genome2->geneAt(i+5);
             CHECK(g.sourceNum == i+5);
             CHECK(g.sinkNum == i+5);
         }

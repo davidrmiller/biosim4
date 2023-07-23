@@ -130,7 +130,7 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
             const Indiv &indiv = peeps[index];
             if (indiv.alive) {
                 data.indivLocs.push_back(indiv.loc);
-                data.indivColors.push_back(indiv.genome.color());
+                data.indivColors.push_back(indiv.genome->color());
             }
         }
 
@@ -171,7 +171,7 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
         const Indiv &indiv = peeps[index];
         if (indiv.alive) {
             data.indivLocs.push_back(indiv.loc);
-            data.indivColors.push_back(indiv.genome.color());
+            data.indivColors.push_back(indiv.genome->color());
         }
     }
 

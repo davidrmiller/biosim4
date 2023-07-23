@@ -13,11 +13,11 @@ namespace BS
      * Sensors are renumbered 0..Sensor::NUM_SENSES - 1
      * Actions are renumbered 0..Action::NUM_ACTIONS - 1
     */
-    void ConnectionList::renumber(const Genome &genome)
+    void ConnectionList::renumber(const std::shared_ptr<Genome> genome)
     {
         connectionList.clear();
 
-        for (auto const &gene : genome.genes()) {
+        for (auto const &gene : genome->genes()) {
             connectionList.push_back(gene);
             auto &conn = connectionList.back();
 

@@ -9,15 +9,15 @@ namespace BS {
 // Returns 0.0..1.0
 //
 // ToDo: optimize by approximation for long genomes
-float genomeSimilarity(const Genome &g1, const Genome &g2)
+float genomeSimilarity(const std::shared_ptr<Genome> g1, const std::shared_ptr<Genome> g2)
 {
     switch (p.genomeComparisonMethod) {
     case 0:
-        return g1.jaroWinklerDistance(g2);
+        return g1->jaroWinklerDistance(g2);
     case 1:
-        return g1.hammingDistanceBits(g2);
+        return g1->hammingDistanceBits(g2);
     case 2:
-        return g1.hammingDistanceBytes(g2);
+        return g1->hammingDistanceBytes(g2);
     default:
         assert(false);
     }

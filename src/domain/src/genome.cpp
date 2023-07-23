@@ -12,6 +12,11 @@ namespace BS
         genome.push_back(g);
     }
 
+    void Genome::clone(const std::shared_ptr<Genome> other)
+    {
+        genome = other->genes();
+    }
+
     const std::vector<Gene>& Genome::genes() const
     {
         return genome;
@@ -65,9 +70,9 @@ namespace BS
         return genome[index];
     }
 
-    void Genome::overlayWithSliceOf(const Genome &other, uint16_t index0, uint16_t index1)
+    void Genome::overlayWithSliceOf(const std::shared_ptr<Genome> other, uint16_t index0, uint16_t index1)
     {
-        std::copy(other.genes().begin() + index0, other.genes().begin() + index1, genome.begin() + index0);
+        std::copy(other->genes().begin() + index0, other->genes().begin() + index1, genome.begin() + index0);
     }
 
     // The jaro_winkler_distance() function is adapted from the C version at
@@ -77,7 +82,7 @@ namespace BS
     // to relocate to different offsets in the genome. I.e., this function is
     // tolerant of gaps, relocations, and genomes of unequal lengths.
     //
-    float Genome::jaroWinklerDistance(const Genome &other) const
+    float Genome::jaroWinklerDistance(const std::shared_ptr<Genome> other) const
     {
         float dw;
         auto max = [](int a, int b) { return a > b ? a : b; };
@@ -89,7 +94,7 @@ namespace BS
         int i, j, l;
         int m = 0, t = 0;
         int sl = s.size(); // strlen(s);
-        int al = a.size(); // strlen(a);
+        int al = a->size(); // strlen(a);
 
         constexpr unsigned maxNumGenesToCompare = 20;
         sl = min(maxNumGenesToCompare, sl); // optimization: approximate for long genomes
@@ -106,7 +111,7 @@ namespace BS
         for (i = 0; i < al; i++) {
             for (j = max(i - range, 0), l = min(i + range + 1, sl); j < l; j++) {
                 
-                if ((a.geneAt(i) == geneAt(j)) && !sflags[j]) {
+                if ((a->geneAt(i) == geneAt(j)) && !sflags[j]) {
                     sflags[j] = 1;
                     aflags[i] = 1;
                     m++;
@@ -128,7 +133,7 @@ namespace BS
                         break;
                     }
                 }
-                if (a.geneAt(i) != geneAt(j))
+                if (a->geneAt(i) != geneAt(j))
                     t++;
             }
         }
@@ -140,11 +145,11 @@ namespace BS
     }
 
     // Works only for genomes of equal length
-    float Genome::hammingDistanceBytes(const Genome &other) const
+    float Genome::hammingDistanceBytes(const std::shared_ptr<Genome> other) const
     {
-        assert(genome.size() == other.size());
+        assert(genome.size() == other->size());
 
-        std::vector<Gene> otherGenome = other.genes();
+        std::vector<Gene> otherGenome = other->genes();
 
         const unsigned int *p1 = (const unsigned int *)genome.data();
         const unsigned int *p2 = (const unsigned int *)otherGenome.data();
@@ -162,11 +167,11 @@ namespace BS
     }
 
     // Works only for genomes of equal length
-    float Genome::hammingDistanceBits(const Genome &other) const
+    float Genome::hammingDistanceBits(const std::shared_ptr<Genome> other) const
     {
-        assert(genome.size() == other.size());
+        assert(genome.size() == other->size());
 
-        std::vector<Gene> otherGenome = other.genes();
+        std::vector<Gene> otherGenome = other->genes();
 
         const unsigned int *p1 = (const unsigned int *)genome.data();
         const unsigned int *p2 = (const unsigned int *)otherGenome.data();

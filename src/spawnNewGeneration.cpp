@@ -67,9 +67,9 @@ Coord findEmptyLocation(Grid grid) {
 // peeps containers have been allocated. This will erase the grid and signal
 // layers, then create a new population in the peeps container with random
 // locations and genomes derived from the container of parent genomes.
-void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned generation)
+void initializeNewGeneration(const std::vector<std::shared_ptr<Genome>> &parentGenomes, unsigned generation)
 {
-    extern Genome generateChildGenome(const std::vector<Genome> &parentGenomes);
+    // extern Genome generateChildGenome(const std::vector<Genome> &parentGenomes);
 
     // The grid, signals, and peeps containers have already been allocated, just
     // clear them if needed and reuse the elements
@@ -120,7 +120,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
     std::vector<std::pair<uint16_t, float>> parents; // <indiv index, score>
 
     // This container will hold the genomes of the survivors
-    std::vector<Genome> parentGenomes;
+    std::vector<std::shared_ptr<Genome>> parentGenomes;
 
     if (p.challenge != CHALLENGE_ALTRUISM) {
         // First, make a list of all the individuals who will become parents; save
@@ -177,8 +177,8 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
                         unsigned startIndex = randomUint(0, parents.size() - 1);
                         for (unsigned count = 0; count < parents.size(); ++count) {
                             const std::pair<uint16_t, float> &possibleParent = parents[(startIndex + count) % parents.size()];
-                            const Genome &g1 = peeps[sacrificedIndex].genome;
-                            const Genome &g2 = peeps[possibleParent.first].genome;
+                            const std::shared_ptr<Genome> g1 = peeps[sacrificedIndex].genome;
+                            const std::shared_ptr<Genome> g2 = peeps[possibleParent.first].genome;
                             float similarity = genomeSimilarity(g1, g2);
                             if (similarity >= threshold) {
                                 survivingKin.push_back(possibleParent);

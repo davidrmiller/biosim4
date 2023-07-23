@@ -32,14 +32,14 @@ namespace BS {
             chooseParentsByFitness
         );
         
-        Genome genome = b.makeRandomGenome();
+        const std::shared_ptr<Genome> genome = b.makeRandomGenome();
 
-        CHECK(genome.size() >= min);
-        CHECK(genome.size() <= max);
+        CHECK(genome->size() >= min);
+        CHECK(genome->size() <= max);
         bool sourceTypeResult = false;
         bool sinkTypeResult = false;
 
-        for (Gene gene : genome.genes()) {
+        for (Gene gene : genome->genes()) {
             sourceTypeResult = (gene.sourceType == SENSOR || gene.sourceType == NEURON);
             CHECK(sourceTypeResult);
             
