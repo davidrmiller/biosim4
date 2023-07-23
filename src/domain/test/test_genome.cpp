@@ -233,4 +233,45 @@ namespace BS {
             CHECK(g.sinkNum == i+5);
         }
     }
+
+    TEST_CASE("TestClone","[Genome]") {
+        
+        Genome genome1;
+        const std::shared_ptr<Genome> genome2 = std::make_shared<Genome>();
+        
+        for (int i = 0; i < 10; i++){
+            genome2->add(makeGene(SENSOR, i, NEURON, i, i));
+        }
+
+        CHECK(genome1.size() == 0);
+
+        genome1.clone(genome2);
+    
+        CHECK(genome1.size() == 10);
+        for (int i = 0; i < 10; i++){
+            Gene g = genome1.geneAt(i);
+            CHECK(g.sourceNum == i);
+            CHECK(g.sinkNum == i);
+        }
+
+        // ensure the clone has copied the Genes
+        for (int i = 0; i < 10; i++){
+            Gene &g = genome1.geneAt(i);
+            g.sourceNum = 20;
+            g.sinkNum = 30;
+        }
+
+        for (int i = 0; i < 10; i++){
+            Gene g = genome1.geneAt(i);
+            CHECK(g.sourceNum == 20);
+            CHECK(g.sinkNum == 30);
+        }
+
+        for (int i = 0; i < 10; i++){
+            Gene g = genome2->geneAt(i);
+            CHECK(g.sourceNum == i);
+            CHECK(g.sinkNum == i);
+        }
+    }
+
 }
