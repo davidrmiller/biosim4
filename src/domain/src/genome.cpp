@@ -32,8 +32,9 @@ namespace BS
     */
     void Genome::erase(unsigned length)
     {
-        unsigned number = genome.size() - length;
-        genome.erase(genome.begin(), genome.begin() + number);
+        unsigned len = std::min<unsigned>(length, genome.size());
+
+        genome.erase(genome.begin(), genome.begin() + len);
     }
 
     /**
@@ -41,12 +42,15 @@ namespace BS
     */
     void Genome::eraseBack(unsigned length)
     {
-        genome.erase(genome.end() - (genome.size() - length), genome.end());
+        unsigned len = std::min<unsigned>(length, genome.size());
+        genome.erase(genome.end() - len, genome.end());
     }
 
     void Genome::eraseAt(unsigned index)
     {
-        genome.erase(genome.begin() + index);
+        if (index >= 0 and index < genome.size()){
+            genome.erase(genome.begin() + index);
+        }
     }
 
     const Gene& Genome::geneAt(unsigned index) const
