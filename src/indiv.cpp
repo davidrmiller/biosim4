@@ -23,6 +23,8 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
     responsiveness = 0.5; // range 0.0..1.0
     longProbeDist = p.longProbeDistance;
     challengeBits = (unsigned)false; // will be set true when some task gets accomplished
+    
+    // examine this
     // genome = std::move(genome_);
     genome = genome_;
     createWiringFromGenome();
