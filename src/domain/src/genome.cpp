@@ -187,4 +187,16 @@ namespace BS
         return 1.0 - std::min(1.0, (2.0 * bitCount) / (float)lengthBits);
     }
 
+    uint8_t Genome::color() const
+    {
+        return ((genome.size() & 1)
+            | ((genome.front().sourceType)    << 1)
+            | ((genome.back().sourceType)     << 2)
+            | ((genome.front().sinkType)      << 3)
+            | ((genome.back().sinkType)       << 4)
+            | ((genome.front().sourceNum & 1) << 5)
+            | ((genome.front().sinkNum & 1)   << 6)
+            | ((genome.back().sourceNum & 1)  << 7));
+    }
+    
 } // namespace BS

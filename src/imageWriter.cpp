@@ -96,19 +96,6 @@ void ImageWriter::startNewGeneration()
 }
 
 
-uint8_t makeGeneticColor(const Genome &g)
-{
-    std::vector<Gene> genome = g.genes();
-    
-    return ((genome.size() & 1)
-         | ((genome.front().sourceType)    << 1)
-         | ((genome.back().sourceType)     << 2)
-         | ((genome.front().sinkType)      << 3)
-         | ((genome.back().sinkType)       << 4)
-         | ((genome.front().sourceNum & 1) << 5)
-         | ((genome.front().sinkNum & 1)   << 6)
-         | ((genome.back().sourceNum & 1)  << 7));
-}
 
 
 // This is a synchronous gate for giving a job to saveFrameThread().
@@ -143,7 +130,7 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
             const Indiv &indiv = peeps[index];
             if (indiv.alive) {
                 data.indivLocs.push_back(indiv.loc);
-                data.indivColors.push_back(makeGeneticColor(indiv.genome));
+                data.indivColors.push_back(indiv.genome.color());
             }
         }
 
@@ -184,7 +171,7 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
         const Indiv &indiv = peeps[index];
         if (indiv.alive) {
             data.indivLocs.push_back(indiv.loc);
-            data.indivColors.push_back(makeGeneticColor(indiv.genome));
+            data.indivColors.push_back(indiv.genome.color());
         }
     }
 

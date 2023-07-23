@@ -28,7 +28,7 @@ namespace BS
 
             void overlayWithSliceOf(const Genome &other, uint16_t index0, uint16_t index1);
 
-            // uint8_t color() const;
+            uint8_t color() const;
 
         private:
             std::vector<Gene> genome;
