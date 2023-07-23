@@ -66,7 +66,14 @@ namespace BS
         std::copy(other.genes().begin() + index0, other.genes().begin() + index1, genome.begin() + index0);
     }
 
-    float Genome::jaro_winkler_distance(const Genome &other) const
+    // The jaro_winkler_distance() function is adapted from the C version at
+    // https://github.com/miguelvps/c/blob/master/jarowinkler.c
+    // under a GNU license, ver. 3. This comparison function is useful if
+    // the simulator allows genomes to change length, or if genes are allowed
+    // to relocate to different offsets in the genome. I.e., this function is
+    // tolerant of gaps, relocations, and genomes of unequal lengths.
+    //
+    float Genome::jaroWinklerDistance(const Genome &other) const
     {
         float dw;
         auto max = [](int a, int b) { return a > b ? a : b; };
@@ -128,6 +135,7 @@ namespace BS
         return dw;
     }
 
+    // Works only for genomes of equal length
     float Genome::hammingDistanceBytes(const Genome &other) const
     {
         assert(genome.size() == other.size());
@@ -149,6 +157,7 @@ namespace BS
         return byteCount / (float)lengthBytes;
     }
 
+    // Works only for genomes of equal length
     float Genome::hammingDistanceBits(const Genome &other) const
     {
         assert(genome.size() == other.size());

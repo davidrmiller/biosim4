@@ -15,7 +15,7 @@ namespace BS
             size_t size() const;
             bool empty() const;
             
-            float jaro_winkler_distance(const Genome &other) const;
+            float jaroWinklerDistance(const Genome &other) const;
             float hammingDistanceBytes(const Genome &other) const;
             float hammingDistanceBits(const Genome &other) const;
 
