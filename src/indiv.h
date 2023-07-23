@@ -8,6 +8,8 @@
 #include <array>
 #include "common/include/coord.h"
 #include "common/include/dir.h"
+#include "domain/include/genome.h"
+
 // #include "genome-neurons.h"
 #include "sensors-actions.h"
 #include "domain/include/neuralNet.h"

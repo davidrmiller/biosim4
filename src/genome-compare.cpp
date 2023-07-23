@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "simulator.h"
+#include "domain/include/genome.h"
 
 namespace BS {
 
@@ -13,7 +14,11 @@ namespace BS {
 // to relocate to different offsets in the genome. I.e., this function is
 // tolerant of gaps, relocations, and genomes of unequal lengths.
 //
-float jaro_winkler_distance(const Genome &genome1, const Genome &genome2) {
+float jaro_winkler_distance(const Genome &g1, const Genome &g2) {
+    
+    std::vector<Gene> genome1 = g1.genes();
+    std::vector<Gene> genome2 = g2.genes();
+
     float dw;
     auto max = [](int a, int b) { return a > b ? a : b; };
     auto min = [](int a, int b) { return a < b ? a : b; };
@@ -75,8 +80,11 @@ float jaro_winkler_distance(const Genome &genome1, const Genome &genome2) {
 
 
 // Works only for genomes of equal length
-float hammingDistanceBits(const Genome &genome1, const Genome &genome2)
+float hammingDistanceBits(const Genome &g1, const Genome &g2)
 {
+    std::vector<Gene> genome1 = g1.genes();
+    std::vector<Gene> genome2 = g2.genes();
+
     assert(genome1.size() == genome2.size());
 
     const unsigned int *p1 = (const unsigned int *)genome1.data();
@@ -100,8 +108,11 @@ float hammingDistanceBits(const Genome &genome1, const Genome &genome2)
 
 
 // Works only for genomes of equal length
-float hammingDistanceBytes(const Genome &genome1, const Genome &genome2)
+float hammingDistanceBytes(const Genome &g1, const Genome &g2)
 {
+    std::vector<Gene> genome1 = g1.genes();
+    std::vector<Gene> genome2 = g2.genes();
+
     assert(genome1.size() == genome2.size());
 
     const unsigned int *p1 = (const unsigned int *)genome1.data();

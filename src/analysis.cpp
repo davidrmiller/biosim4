@@ -148,7 +148,7 @@ void Indiv::printGenome() const
 {
     constexpr unsigned genesPerLine = 8;
     unsigned count = 0;
-    for (Gene gene : genome) {
+    for (Gene gene : genome.genes()) {
         if (count == genesPerLine) {
             std::cout << std::endl;
             count = 0;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./gene.h"
+#include "./genome.h"
 #include "../../random.h"
 
 namespace BS

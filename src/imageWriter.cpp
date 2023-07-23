@@ -96,8 +96,10 @@ void ImageWriter::startNewGeneration()
 }
 
 
-uint8_t makeGeneticColor(const Genome &genome)
+uint8_t makeGeneticColor(const Genome &g)
 {
+    std::vector<Gene> genome = g.genes();
+    
     return ((genome.size() & 1)
          | ((genome.front().sourceType)    << 1)
          | ((genome.back().sourceType)     << 2)

@@ -6,7 +6,7 @@
 #include <cmath>
 #include "sensors-actions.h"
 #include "random.h"
-#include "domain/include/gene.h"
+#include "domain/include/genome.h"
 namespace BS {
 
 

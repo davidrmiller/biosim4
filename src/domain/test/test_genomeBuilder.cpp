@@ -39,7 +39,7 @@ namespace BS {
         bool sourceTypeResult = false;
         bool sinkTypeResult = false;
 
-        for (Gene gene : genome) {
+        for (Gene gene : genome.genes()) {
             sourceTypeResult = (gene.sourceType == SENSOR || gene.sourceType == NEURON);
             CHECK(sourceTypeResult);
             

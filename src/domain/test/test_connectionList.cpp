@@ -19,7 +19,7 @@ namespace BS {
         
         Genome genome;
         for (unsigned n = 0; n < 5; ++n) {
-            genome.push_back(Gene());
+            genome.add(Gene());
         }
 
         unsigned maxNeurons = 5;
@@ -39,7 +39,7 @@ namespace BS {
         
         Genome genome;
         for (unsigned n = 0; n < 5; ++n) {
-            genome.push_back(makeRandomGene());
+            genome.add(makeRandomGene());
         }
 
         unsigned maxNeurons = 5;

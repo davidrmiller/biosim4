@@ -17,7 +17,7 @@ namespace BS
     {
         connectionList.clear();
 
-        for (auto const &gene : genome) {
+        for (auto const &gene : genome.genes()) {
             connectionList.push_back(gene);
             auto &conn = connectionList.back();
 
