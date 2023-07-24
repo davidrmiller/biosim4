@@ -26,7 +26,6 @@ namespace BS
         // the number of outputs for each neuron. Now we'll renumber the neurons
         // starting at zero.
 
-        // remove dependency on global Params instance
         assert(nodeMap.size() <= maxNeurons);
 
         uint16_t newNumber = 0;

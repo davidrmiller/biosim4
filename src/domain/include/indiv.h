@@ -33,7 +33,10 @@ class Indiv {
         
         // keep a reference to the genome? use a smart ptr to avoid copying
         std::shared_ptr<Genome> genome;
-        NeuralNet nnet;   // derived from .genome
+
+        // peeps[index].nnet->connections.empty()
+        // add a method to test if this indiv's nnet connections a empty
+        std::shared_ptr<NeuralNet> nnet;   // derived from .genome
 
         float responsiveness;  // 0.0..1.0 (0 is like asleep)
         unsigned oscPeriod; // 2..4*p.stepsPerGeneration (TBD, see executeActions())
@@ -42,7 +45,7 @@ class Indiv {
         unsigned challengeBits; // modified when the indiv accomplishes some task
         
 
-        void initialize(uint16_t index, Coord loc, std::shared_ptr<Genome> genome, Dir lastMove, unsigned dist);
+        void initialize(uint16_t index, Coord loc, std::shared_ptr<Genome> genome, std::shared_ptr<NeuralNet> nnet, Dir lastMove, unsigned dist);
 
         std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep); // reads sensors, returns actions
         
@@ -51,7 +54,7 @@ class Indiv {
         // make getSensor private
         float getSensor(Sensor sensorNum, unsigned simStep) const;
 
-        void createWiringFromGenome(); // creates .nnet member from .genome member
+        // void createWiringFromGenome(); // creates .nnet member from .genome member
         
         // void printNeuralNet() const;
         

@@ -7,9 +7,12 @@
 #include <cassert>
 #include "simulator.h"
 #include "genome-neurons.h"
+
 #include "common/include/gridBuilder.h"
 #include "domain/include/genomeBuilder.h"
 #include "domain/include/indivBuilder.h"
+#include "domain/include/neuralNetBuilder.h"
+
 // #include "dirFactory.h"
 
 namespace BS {
@@ -42,8 +45,12 @@ void initializeGeneration0()
         p.sexualReproduction, p.chooseParentsByFitness
     );
 
+    NeuralNetBuilder nnetBuilder = NeuralNetBuilder(
+        p.maxNumberNeurons
+    );
+
     IndivBuilder indivBuilder = IndivBuilder(
-        randomUint, grid, genomeBuilder, p.longProbeDistance
+        randomUint, grid, genomeBuilder, nnetBuilder, p.longProbeDistance
     );
 
     // Spawn the population. The peeps container has already been allocated,
@@ -102,8 +109,12 @@ void initializeNewGeneration(const std::vector<std::shared_ptr<Genome>> &parentG
         p.sexualReproduction, p.chooseParentsByFitness
     );
 
+    NeuralNetBuilder nnetBuilder = NeuralNetBuilder(
+        p.maxNumberNeurons
+    );
+
     IndivBuilder indivBuilder = IndivBuilder(
-        randomUint, grid, genomeBuilder, p.longProbeDistance
+        randomUint, grid, genomeBuilder, nnetBuilder, p.longProbeDistance
     );
 
     // Spawn the population. This overwrites all the elements of peeps[]
@@ -155,7 +166,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             // ToDo: if the parents no longer need their genome record, we could
             // possibly do a move here instead of copy, although it's doubtful that
             // the optimization would be noticeable.
-            if (passed.first && !peeps[index].nnet.connections.empty()) {
+            if (passed.first && !peeps[index].nnet->connections.empty()) {
                 parents.push_back( { index, passed.second } );
             }
         }
@@ -171,12 +182,12 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
         for (uint16_t index = 1; index <= p.population; ++index) {
             // This the test for the spawning area:
             std::pair<bool, float> passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM);
-            if (passed.first && !peeps[index].nnet.connections.empty()) {
+            if (passed.first && !peeps[index].nnet->connections.empty()) {
                 parents.push_back( { index, passed.second } );
             } else {
                 // This is the test for the sacrificial area:
                 passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM_SACRIFICE);
-                if (passed.first && !peeps[index].nnet.connections.empty()) {
+                if (passed.first && !peeps[index].nnet->connections.empty()) {
                     if (considerKinship) {
                         sacrificesIndexes.push_back(index);
                     } else {

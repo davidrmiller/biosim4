@@ -4,8 +4,8 @@
 namespace BS
 {
 
-    IndivBuilder::IndivBuilder(RandomUintGenerator &r, Grid &g, GenomeBuilder &builder, unsigned dist) :
-        randomUint{r}, grid{g}, genomeBuilder{builder}, longProbeDist{dist}
+    IndivBuilder::IndivBuilder(RandomUintGenerator &r, Grid &g, GenomeBuilder &builder, NeuralNetBuilder nBuilder, unsigned dist) :
+        randomUint{r}, grid{g}, genomeBuilder{builder}, nnetBuilder{nBuilder}, longProbeDist{dist}
     {}
 
     /**
@@ -14,11 +14,14 @@ namespace BS
     void IndivBuilder::initIndividual(Indiv &i, uint16_t index)
     {
         Coord loc = findEmptyLocation();
+        std::shared_ptr<Genome> genome = genomeBuilder.makeRandomGenome();
+        std::shared_ptr<NeuralNet> nnet = nnetBuilder.buildNeuralNet(genome);
 
         i.initialize(
-            index, 
+            index,
             loc,
-            genomeBuilder.makeRandomGenome(),
+            genome,
+            nnet,
             DirFactory::random8(),
             longProbeDist
         );
@@ -30,11 +33,14 @@ namespace BS
     void IndivBuilder::reinitIndividual(Indiv &i, uint16_t index, const std::vector<std::shared_ptr<Genome>> &parentGenomes)
     {
         Coord loc = findEmptyLocation();
+        std::shared_ptr<Genome> genome = genomeBuilder.generateChildGenome(parentGenomes);
+        std::shared_ptr<NeuralNet> nnet = nnetBuilder.buildNeuralNet(genome);
 
         i.initialize(
             index, 
             loc,
-            genomeBuilder.generateChildGenome(parentGenomes),
+            genome,
+            nnet,
             DirFactory::random8(),
             longProbeDist
         );
