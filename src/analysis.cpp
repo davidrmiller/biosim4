@@ -144,7 +144,7 @@ void printSensorsActions()
 
 
 // Format: 32-bit hex strings, one per gene
-void Indiv::printGenome() const
+void printGenome(std::shared_ptr<Genome> genome)
 {
     constexpr unsigned genesPerLine = 8;
     unsigned count = 0;
@@ -231,7 +231,7 @@ void Indiv::printGenome() const
 
 // This prints a neural net in a form that can be processed with
 // graph-nnet.py to produce a graphic illustration of the net.
-void Indiv::printIGraphEdgeList() const
+void printIGraphEdgeList(std::shared_ptr<NeuralNet> nnet)
 {
     for (auto & conn : nnet->connections) {
         if (conn.sourceType == SENSOR) {
@@ -358,11 +358,11 @@ void displaySampleGenomes(unsigned count)
     for (index = 1; count > 0 && index <= p.population; ++index) {
         if (peeps[index].alive) {
             std::cout << "---------------------------\nIndividual ID " << index << std::endl;
-            peeps[index].printGenome();
+            printGenome(peeps[index].genome);
             std::cout << std::endl;
 
             //peeps[index].printNeuralNet();
-            peeps[index].printIGraphEdgeList();
+            printIGraphEdgeList(peeps[index].nnet);
 
 
             std::cout << "---------------------------" << std::endl;

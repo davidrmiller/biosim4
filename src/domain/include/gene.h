@@ -35,11 +35,5 @@ namespace BS
 
     };
 
-
-    // An individual's genome is a set of Genes (see Gene comments above). Each
-    // gene is equivalent to one connection in a neural net. An individual's
-    // neural net is derived from its set of genes.
-
-    // typedef std::vector<Gene> Genome;
     
 } // namespace BS

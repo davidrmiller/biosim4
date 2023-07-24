@@ -8,6 +8,7 @@
 
 namespace BS {
 
+// move to Grid class
 float getPopulationDensityAlongAxis(Coord loc, Dir dir)
 {
     // Converts the population along the specified axis to the sensor range. The
@@ -23,8 +24,10 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
     assert(dir != Compass::CENTER);  // require a defined axis
 
     double sum = 0.0;
+    
     Coord dirVec = dir.asNormalizedCoord();
-    // turn this into a method of Coord?
+
+    // turn this into a method of Coord? return a point instance?
     double len = std::sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
     double dirVecX = dirVec.x / len;
     double dirVecY = dirVec.y / len; // Unit vector components along dir

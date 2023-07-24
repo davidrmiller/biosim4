@@ -43,7 +43,7 @@ namespace BS
         std::shared_ptr<NeuralNet> nnet = std::make_shared<NeuralNet>();
 
         // TODO: this is redundant
-        nnet->connections.clear();
+        // nnet->connections.clear();
 
         // First, the connections from sensor or neuron to a neuron
         for (auto const &conn : connectionList.connections()) {
@@ -72,7 +72,7 @@ namespace BS
         }
 
         // Create the indiv's neural node list
-        nnet->neurons.clear();
+        // nnet->neurons.clear();
 
         for (unsigned neuronNum = 0; neuronNum < nodeMap.size(); ++neuronNum) {
             nnet->neurons.push_back( {} );
