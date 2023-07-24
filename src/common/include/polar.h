@@ -3,9 +3,7 @@
 #pragma once
 
 #include "compass.h"
-// #include "common.h"
 #include "dir.h"
-// #include "coord.h"
 
 namespace BS {
 

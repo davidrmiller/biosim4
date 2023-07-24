@@ -52,7 +52,6 @@ class Indiv {
         float distanceMoved()const;
 
         // make getSensor private
-        float getSensor(Sensor sensorNum, unsigned simStep) const;
 
         // void createWiringFromGenome(); // creates .nnet member from .genome member
         
@@ -66,6 +65,9 @@ class Indiv {
     private:
 
         Coord birthLoc;
+
+        float getSensor(Sensor sensorNum, unsigned simStep) const;
+
 };
 
 } // end namespace BS

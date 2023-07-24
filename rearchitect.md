@@ -43,6 +43,9 @@
 
     * RandomUintGenerator
 
+    [] Add Point class, simple x & y locations
+
+
 # domain contains classes that form the domain model
 
 * Declare class responsibilities and the domain model first
@@ -77,6 +80,9 @@
     * factory / builders of the domain
 
 * move executeActions() to be an Indiv class method
+
+* Add an Environment class to contain the Grid, Peeps etc
+    * Use this to operate on Indivs in the environment eg getSensor()
 
 # application
 * classes / code
@@ -145,6 +151,8 @@
 
 
 * rewrite 'Indiv move' as a Grid method? moving individuals must then be declared as a responsibility of Grid
+    * Need to move Grid out of Common into the Domain 
+    * Is this an Environment method? env->moveIndiv(I, C)?
 
 bool Grid::moveIndiv(Indiv i, Coord newLoc)
 {

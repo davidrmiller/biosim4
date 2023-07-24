@@ -7,7 +7,7 @@
 #include <vector>
 #include <functional>
 
-#include "gridLocationVisitor.h"
+// #include "gridLocationVisitor.h"
 #include "coord.h"
 #include "column.h"
 #include "layer.h"
@@ -95,8 +95,6 @@ namespace BS {
             std::vector<Coord> barrierLocations;
             std::vector<Coord> barrierCenters;
     };
-
-    extern void unitTestGridVisitNeighborhood();
 
 } // end namespace BS
 

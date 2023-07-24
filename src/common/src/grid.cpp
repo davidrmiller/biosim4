@@ -170,7 +170,7 @@ namespace BS {
         }
     }
 
-/**
+    /**
      * TODO: if this overwrites a barrier then remove from barrierLocations
     */
     bool Grid::set(uint16_t x, uint16_t y, uint16_t val)

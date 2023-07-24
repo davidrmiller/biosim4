@@ -24,6 +24,7 @@ float getPopulationDensityAlongAxis(Coord loc, Dir dir)
 
     double sum = 0.0;
     Coord dirVec = dir.asNormalizedCoord();
+    // turn this into a method of Coord?
     double len = std::sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
     double dirVecX = dirVec.x / len;
     double dirVecY = dirVec.y / len; // Unit vector components along dir
