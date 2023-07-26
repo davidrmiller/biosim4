@@ -12,8 +12,8 @@ namespace BS {
     TEST_CASE("TestEmptyByDefault","[ConnectionList]") {
         
         unsigned maxNeurons = 5;
-        NodeMap n;
-        ConnectionList c = ConnectionList(maxNeurons, n);
+        // NodeMap n;
+        ConnectionList c = ConnectionList(maxNeurons);
 
         CHECK(c.connections().size() == 0);
     }
@@ -27,8 +27,8 @@ namespace BS {
         }
 
         unsigned maxNeurons = 5;
-        NodeMap n;
-        ConnectionList c = ConnectionList(maxNeurons, n);
+        // NodeMap n;
+        ConnectionList c = ConnectionList(maxNeurons);
 
         CHECK(c.connections().size() == 0);
 
@@ -47,8 +47,8 @@ namespace BS {
         }
 
         unsigned maxNeurons = 5;
-        NodeMap n;
-        ConnectionList c = ConnectionList(maxNeurons, n);
+        // NodeMap n;
+        ConnectionList c = ConnectionList(maxNeurons);
 
         CHECK(c.connections().size() == 0);
 
@@ -57,6 +57,6 @@ namespace BS {
 
         CHECK(c.connections().size() == 5);
 
-        CHECK(n.size() > 0);
+        CHECK(c.getNodeMap().size() > 0);
     }
 }

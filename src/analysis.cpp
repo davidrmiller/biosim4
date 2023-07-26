@@ -233,7 +233,7 @@ void printGenome(std::shared_ptr<Genome> genome)
 // graph-nnet.py to produce a graphic illustration of the net.
 void printIGraphEdgeList(std::shared_ptr<NeuralNet> nnet)
 {
-    for (auto & conn : nnet->connections) {
+    for (auto & conn : nnet->getConnections()) {
         if (conn.sourceType == SENSOR) {
             std::cout << sensorShortName((Sensor)(conn.sourceNum));
         } else {
@@ -324,7 +324,7 @@ void displaySensorActionReferenceCounts()
     for (unsigned index = 1; index <= p.population; ++index) {
         if (peeps[index].alive) {
             const Indiv &indiv = peeps[index];
-            for (const Gene &gene : indiv.nnet->connections) {
+            for (const Gene &gene : indiv.nnet->getConnections()) {
                 if (gene.sourceType == SENSOR) {
                     assert(gene.sourceNum < Sensor::NUM_SENSES);
                     ++sensorCounts[(Sensor)gene.sourceNum];

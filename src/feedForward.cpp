@@ -59,7 +59,7 @@ std::array<float, Action::NUM_ACTIONS> Indiv::feedForward(unsigned simStep)
     // transfer function will leave each neuron's output in the range -1.0..1.0.
 
     bool neuronOutputsComputed = false;
-    for (Gene & conn : nnet->connections) {
+    for (const Gene & conn : nnet->getConnections()) {
         if (conn.sinkType == ACTION && !neuronOutputsComputed) {
             // We've handled all the connections from sensors and now we are about to
             // start on the connections to the action outputs, so now it's time to

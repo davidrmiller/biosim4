@@ -1,8 +1,10 @@
 #pragma once
 
+#include <list>
 #include <cstdint>
 #include <vector>
 #include "./gene.h"
+#include "./node.h"
 
 namespace BS
 {
@@ -30,17 +32,30 @@ namespace BS
     // by taking the 15-bit index modulo the max number of allowed neurons.
     // In the neural net, the neurons that end up connected get new indices
     // assigned sequentially starting at 0.
+    
+    constexpr float initialNeuronOutput() { return 0.5; }
 
-
-    struct NeuralNet {
+    class NeuralNet {
         
-        std::vector<Gene> connections; // connections are equivalent to genes
+        public:
+            
+            void create(std::list<Gene> genes, const NodeMap &nmap);
 
-        struct Neuron {
-            float output;
-            bool driven;        // undriven neurons have fixed output values
-        };
-        std::vector<Neuron> neurons;
+            bool hasConnections() const;
+
+            const std::vector<Gene> &getConnections() const;
+
+            Gene & addConnection(Gene g);
+
+            struct Neuron {
+                float output;
+                bool driven;        // undriven neurons have fixed output values
+            };
+
+            std::vector<Neuron> neurons;
+        
+        private:
+            std::vector<Gene> connections; // connections are equivalent to genes
     };
 
 }

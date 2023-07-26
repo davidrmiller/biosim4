@@ -17,34 +17,45 @@
 
 namespace BS {
 
-// Also see class Peeps.
-
 class Indiv {
 
     public:
 
         bool alive;
-        uint16_t index; // index into peeps[] container
-        Coord loc;   // refers to a location in grid[][]
+
+        // index into peeps[] container
+        uint16_t index;
+        
+        // refers to a location in a grid
+        Coord loc;
         
         unsigned age;
         
         // this Indiv's genome
         std::shared_ptr<Genome> genome;
 
-        // peeps[index].nnet->connections.empty()
-        // add a method to test if this indiv's nnet connections a empty
-        std::shared_ptr<NeuralNet> nnet;   // derived from .genome
+        // derived from .genome
+        std::shared_ptr<NeuralNet> nnet;   
 
-        float responsiveness;  // 0.0..1.0 (0 is like asleep)
-        unsigned oscPeriod; // 2..4*p.stepsPerGeneration (TBD, see executeActions())
-        unsigned longProbeDist; // distance for long forward probe for obstructions
-        Dir lastMoveDir;  // direction of last movement
-        unsigned challengeBits; // modified when the indiv accomplishes some task
+        // 0.0..1.0 (0 is like asleep)
+        float responsiveness;
+
+        // 2..4*p.stepsPerGeneration (TBD, see executeActions())
+        unsigned oscPeriod;
+
+        // distance for long forward probe for obstructions
+        unsigned longProbeDist;
+
+        // direction of last movement
+        Dir lastMoveDir;
+
+        // modified when the indiv accomplishes some task
+        unsigned challengeBits;
         
         void initialize(uint16_t index, Coord loc, std::shared_ptr<Genome> genome, std::shared_ptr<NeuralNet> nnet, Dir lastMove, unsigned dist);
-
-        std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep); // reads sensors, returns actions
+        
+        // reads sensors, returns actions
+        std::array<float, Action::NUM_ACTIONS> feedForward(unsigned simStep);
         
         float distanceMoved() const;
 

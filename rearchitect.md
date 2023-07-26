@@ -174,3 +174,44 @@ bool Grid::moveIndiv(Indiv i, Coord newLoc)
 [] How much has the presentation of the simulation affected the design of the domain?
 [] The Grid is the environment of the experiment, as such it's part of the domain, since the experiment takes place in an environment of Individuals with their neighbors
 * 
+
+# Additions
+
+[] Multiple Gene containers exist - why?
+
+    * Genome std::vector<Gene> genome;
+        - the full Genome (produced randomly or from sexual reproduction)
+
+    * ConnectionList std::list<Gene> list; 
+        - the Genes from a Genome with useless Genes removed
+
+    * NeuralNet std::vector<Gene> connections; 
+        - from a ConnectionList's set of Genes, reordered by sinkType
+
+[] Idea: Genome has the set of Genomes and the NodeMap
+    * remove the need for Connection List
+    * Genome creates the NeuralNet based on its Genes
+
+# Environment class: the bounded context of the world
+    * An instance of the Domain
+    * Entry point to access an Environment's objects
+    * Has a Grid + layers
+    * Has a population (Peeps instance)
+    * Peeps has Indivs
+    * Indivs have a Genome & a NNet
+    * Can be reset? or just create a new instance from (part of) the Genome of another Environment?
+    * Can be presented
+
+# Experiment class: runs the steps
+
+    * Abstract interface defines the steps: 
+        * It is given an Environment to experiment with?
+            * How is the environment re-spawned? 
+        * Experiment(Env env (smart ptr))
+        * startExperiment(generations, stepsInGeneration)
+        * startGeneration
+        * updateStepOfGeneration
+        * endGeneration
+        * endExperiment
+
+    * Support extensions of each Experiment step?

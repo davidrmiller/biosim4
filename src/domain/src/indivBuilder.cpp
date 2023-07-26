@@ -49,6 +49,9 @@ namespace BS
         grid.set(loc, index);
     }
 
+    /**
+     * TODO: Should be a Grid method
+    */
     Coord IndivBuilder::findEmptyLocation() const
     {
         Coord loc;

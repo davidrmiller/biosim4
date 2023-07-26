@@ -8,7 +8,7 @@
 
 namespace BS
 {
-    constexpr float initialNeuronOutput() { return 0.5; }
+    // constexpr float initialNeuronOutput() { return 0.5; }
 
     /**
      * Builds a NeuralNet from a Genome

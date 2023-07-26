@@ -10,7 +10,7 @@
 
 namespace BS
 {
-    typedef std::map<uint16_t, Node> NodeMap;
+    // typedef std::map<uint16_t, Node> NodeMap;
 
     typedef std::list<Gene> ConnList;
 
@@ -18,11 +18,14 @@ namespace BS
 
         public:
 
-            ConnectionList(unsigned maxNeurons, NodeMap &nodeMap);
+            ConnectionList(unsigned maxNeurons);
             
+            const NodeMap &getNodeMap() const;
+
             void renumber(const std::shared_ptr<Genome> genome);
-            void makeNodeList() const;
+            void makeNodeList();
             void cullUselessNeurons();
+            void remapSecondNodes(uint16_t from);
 
             const ConnList &connections();
 
@@ -30,7 +33,7 @@ namespace BS
             unsigned maxNeurons = 300;
 
             ConnList connectionList;
-            NodeMap &nodeMap;
+            NodeMap nMap;
 
             void removeConnectionsToNeuron(uint16_t neuronNumber);
     };

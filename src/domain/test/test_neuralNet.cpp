@@ -1,4 +1,5 @@
 #include "../include/neuralNet.h"
+#include "../include/gene.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace BS {
@@ -18,4 +19,30 @@ namespace BS {
 
         CHECK(nnet.neurons.size() == size);
     }
+    
+    TEST_CASE("TestHasConnections","[NeuralNet]") {
+        NeuralNet nnet;
+
+        CHECK_FALSE(nnet.hasConnections());
+
+        Gene g;
+        nnet.addConnection(g);
+
+        CHECK(nnet.hasConnections());
+    }
+
+    TEST_CASE("TestGetConnections","[NeuralNet]") {
+        NeuralNet nnet;
+
+        CHECK_FALSE(nnet.hasConnections());
+
+        Gene g;
+        nnet.addConnection(g);
+
+        const std::vector<Gene> &connections = nnet.getConnections();
+
+        CHECK(connections.size() == 1);
+        
+    }
+
 }

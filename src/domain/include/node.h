@@ -1,8 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <map>
 
 namespace BS {
+
+    // Node keeps information about Genes & connections in a Genome outside of the Gene
 
     // This structure is used while converting the connection list to a
     // neural net. This helps us to find neurons that don't feed anything
@@ -18,4 +21,7 @@ namespace BS {
         uint16_t numSelfInputs;
         uint16_t numInputsFromSensorsOrOtherNeurons;
     };
+
+
+    typedef std::map<uint16_t, Node> NodeMap;
 }

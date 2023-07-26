@@ -43,6 +43,7 @@ set(
     ../src/domain/src/connectionList.cpp
     ../src/domain/src/genomeBuilder.cpp
     ../src/domain/src/genome.cpp
+    ../src/domain/src/neuralNet.cpp
 
     ../src/domain/test/test_helper.cpp
     ../src/domain/test/test_gene.cpp
