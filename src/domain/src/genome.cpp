@@ -4,12 +4,47 @@
 
 namespace BS
 {
+    Genome::Genome(){}
+
+    Genome::Genome(const std::shared_ptr<Genome> other)
+    {
+        genome = other->genes();
+    }
+
     /**
      * Adds a new Gene
     */
     void Genome::add(Gene g) 
     {
         genome.push_back(g);
+    }
+
+    /**
+     * Convert the genome to a renumbered connection list.
+     * 
+     * This renumbers the neurons from their uint16_t values in the genome
+     * to the range 0..p.maxNumberNeurons - 1 by using a modulo operator.
+     * Sensors are renumbered 0..Sensor::NUM_SENSES - 1
+     * Actions are renumbered 0..Action::NUM_ACTIONS - 1
+    */
+    void Genome::renumber()
+    {
+        unsigned maxNeurons = 300;
+
+        for (auto &gene : genome) {
+
+            if (gene.sourceType == NEURON) {
+                gene.sourceNum %= maxNeurons;
+            } else {
+                gene.sourceNum %= Sensor::NUM_SENSES;
+            }
+
+            if (gene.sinkType == NEURON) {
+                gene.sinkNum %= maxNeurons;
+            } else {
+                gene.sinkNum %= Action::NUM_ACTIONS;
+            }
+        }
     }
 
     void Genome::clone(const std::shared_ptr<Genome> other)

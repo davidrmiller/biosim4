@@ -1,4 +1,5 @@
 #include "../include/gene.h"
+#include "../../random.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace BS {
@@ -12,12 +13,25 @@ namespace BS {
         CHECK(g.weight == 2);
     }
 
+    /**
+     * SENSOR = 1;  // always a source
+     * ACTION = 1;  // always a sink
+     * NEURON = 0;  // can be either a source or sink
+    */
     TEST_CASE("TestSourceType","[Gene]") {
         
         Gene g;
         g.sourceType = NEURON;
 
         CHECK(g.sourceType == NEURON);
+
+        g.sourceType = randomUint() & 1;
+        g.sinkType = randomUint() & 1;
+
+        CHECK(((g.sourceType == NEURON) || (g.sourceType == SENSOR))) ;
+        CHECK(((g.sinkType == NEURON) || (g.sinkType == ACTION))) ;
+        CHECK_FALSE(g.sourceType == ACTION);
+        CHECK_FALSE(g.sinkType == SENSOR);
     }
 
     TEST_CASE("TestEquality","[Gene]") {

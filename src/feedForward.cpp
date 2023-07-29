@@ -64,6 +64,7 @@ std::array<float, Action::NUM_ACTIONS> Indiv::feedForward(unsigned simStep)
             // We've handled all the connections from sensors and now we are about to
             // start on the connections to the action outputs, so now it's time to
             // update and latch all the neuron outputs to their proper range (-1.0..1.0)
+            // TODO: should this be a NNet method?
             for (unsigned neuronIndex = 0; neuronIndex < nnet->neurons.size(); ++neuronIndex) {
                 if (nnet->neurons[neuronIndex].driven) {
                     nnet->neurons[neuronIndex].output = std::tanh(neuronAccumulators[neuronIndex]);

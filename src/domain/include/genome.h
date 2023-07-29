@@ -4,14 +4,24 @@
 #include <cstddef>
 #include "./gene.h"
 
+#include "../../sensors-actions.h"
+
 namespace BS
 {
     
     class Genome {
 
         public:
+            
+            Genome();
+
+            Genome(const std::shared_ptr<Genome> other);
+
             void add(Gene g);
 
+            void renumber();
+
+            // overwrite this Genomes genes with the others
             void clone(const std::shared_ptr<Genome> other);
 
             const std::vector<Gene>& genes() const;

@@ -35,6 +35,8 @@ namespace BS {
         c.renumber(genome);
 
         CHECK(c.connections().size() == 5);
+        
+        // test whether the original Genes in the genome are changed
 
     }
 

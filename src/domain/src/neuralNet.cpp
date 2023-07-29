@@ -63,6 +63,9 @@ namespace BS
         return connections;
     }
 
+    /**
+     * TODO: remove?
+    */
     Gene & NeuralNet::addConnection(Gene g)
     {
         connections.push_back(g);

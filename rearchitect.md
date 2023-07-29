@@ -72,7 +72,7 @@
             }
         
     * Gene 
-    * Genome - convert to a class
+    * Genome - [x] convert to a class
     * Signals
     * Sensor
     * Actions
@@ -192,26 +192,19 @@ bool Grid::moveIndiv(Indiv i, Coord newLoc)
     * remove the need for Connection List
     * Genome creates the NeuralNet based on its Genes
 
-# Environment class: the bounded context of the world
-    * An instance of the Domain
-    * Entry point to access an Environment's objects
-    * Has a Grid + layers
-    * Has a population (Peeps instance)
-    * Peeps has Indivs
-    * Indivs have a Genome & a NNet
-    * Can be reset? or just create a new instance from (part of) the Genome of another Environment?
-    * Can be presented
+[] Genome & other classes need to know about the parameter maxNeurons
+    * Set a static class variable on Genome? 
+    * as part of environment initialization?
+    * it's only used by ConnectionList for various validations of Genes
 
-# Experiment class: runs the steps
+[] Move Sensor & Action enums into Gene class
 
-    * Abstract interface defines the steps: 
-        * It is given an Environment to experiment with?
-            * How is the environment re-spawned? 
-        * Experiment(Env env (smart ptr))
-        * startExperiment(generations, stepsInGeneration)
-        * startGeneration
-        * updateStepOfGeneration
-        * endGeneration
-        * endExperiment
+# Sensors & getSensor?
 
-    * Support extensions of each Experiment step?
+[] getSensor uses the Gene (of the Nnet connections) not the NNet - shouldn't behaviour be based on the NNet not the Gene? or the interaction with the environment be something the Indiv does?
+
+[] consider sensor objects instead of values in a Gene
+* indiv.getSensor() becomes gene.sensor.getValue(&indiv, simStep)?
+* and gene.getActionValue(&indiv)?
+
+* sensors use flyweight pattern?
