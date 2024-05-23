@@ -13,6 +13,8 @@
 #define cimg_display 0
 #include "CImg.h"
 
+#include "ProfilingInstrumentor.h"
+
 namespace BS {
 
 cimg_library::CImgList<uint8_t> imageList;

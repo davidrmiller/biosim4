@@ -268,8 +268,6 @@ void ParamManager::ingestParameter(std::string name, std::string val)
 
 void ParamManager::updateFromConfigFile(unsigned generationNumber)
 {
-    //PROFILE_FUNCTION();
-
     // std::ifstream is RAII, i.e. no need to call close
     std::ifstream cFile(configFilename.c_str());
     if (cFile.is_open()) {

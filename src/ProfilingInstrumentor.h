@@ -5,11 +5,11 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include <chrono>
 #include <fstream>
-
+#include <vector>
 #include <thread>
-#include <atomic>
 #include <mutex>
 
 // Function macro
@@ -22,6 +22,8 @@
 #else
 #define PROFILE_FUNCTION()
 #endif
+
+#define THREAD_SAFETY true
 
 namespace ProfilingInstrumentor
 {
@@ -52,73 +54,12 @@ namespace ProfilingInstrumentor
         Session *m_CurrentSession;
         std::ofstream m_OutputStream;
         int m_ProfileCount;
+        bool sessionActive = false;
 
         std::string filepath;
         std::vector<ProfileResult> resultsBuffer;
-        bool threadSafe = true;
+        bool threadSafe = THREAD_SAFETY;
         mutable std::mutex m_mtx;
-
-    public:
-        Instrumentor()
-            : m_CurrentSession(nullptr), m_ProfileCount(0), filepath("")
-        {
-        }
-
-        /**
-         *  @brief Initialize profiling session
-         *  @param  name  The name of the session.
-         *  @param  filepath  filepath to results file
-         */
-        void beginSession(const std::string &name, const std::string &filepath = "results.json")
-        {
-            m_CurrentSession = new Session{name};
-            this->filepath = filepath;
-            if (threadSafe)
-            {
-                //nothing
-            }
-            else
-            {
-                startWriting();
-            }
-        }
-
-        /**
-         *  @brief End session, write closing footer into file and close output stream
-         */
-        void endSession()
-        {
-            if (threadSafe)
-            {
-                //write header
-                startWriting();
-                //write each result
-                for (unsigned i = 0; i < this->resultsBuffer.size(); i++)
-                {
-                    this->writeResult(this->resultsBuffer[i]);
-                }                
-                //write footer
-                endWriting();
-            }
-            else
-            {
-                endWriting();
-            }
-        }
-
-
-        void addResult(const ProfileResult &result)
-        {
-            if (threadSafe)
-            {
-                const std::lock_guard<std::mutex> lock{m_mtx};
-                this->resultsBuffer.push_back(result);
-            }
-            else
-            {
-                writeResult(result);
-            }
-        }
 
         /**
          *  @brief Write ProfileResult into stream
@@ -167,6 +108,86 @@ namespace ProfilingInstrumentor
             m_ProfileCount = 0;
         }
 
+    
+    public:
+        /*
+        * Public methods
+        */
+
+
+        /**
+         *  @brief constructor
+         */
+        Instrumentor()
+            : m_CurrentSession(nullptr), m_ProfileCount(0), filepath("")
+        {
+        }
+
+        /**
+         *  @brief Initialize profiling session
+         *  @param  name  The name of the session.
+         *  @param  filepath  filepath to results file
+         */
+        void beginSession(const std::string &name, const std::string &filepath = "profiling/results.json")
+        {
+            m_CurrentSession = new Session{name};
+            this->filepath = filepath;
+            sessionActive = true;
+            if (threadSafe)
+            {
+                //nothing
+            }
+            else
+            {
+                startWriting();
+            }
+        }
+
+        /**
+         *  @brief End session, write closing footer into file and close output stream
+         */
+        void endSession()
+        {
+            if (threadSafe)
+            {
+                //write header
+                startWriting();
+                //write each result
+                for (unsigned i = 0; i < this->resultsBuffer.size(); i++)
+                {
+                    this->writeResult(this->resultsBuffer[i]);
+                }                
+                //write footer
+                endWriting();
+            }
+            else
+            {
+                endWriting();
+            }
+            sessionActive = false;
+        }
+
+        /**
+         *  @brief Add ProfileResult into buffer or output
+         */
+        void addResult(const ProfileResult &result)
+        {
+            if (!this->sessionActive) {
+                std::cout << "WARNING::Instrumentor::addResult Called after session ended" << std::endl;
+                return;
+            }
+
+            if (threadSafe)
+            {
+                const std::lock_guard<std::mutex> lock{m_mtx};
+                this->resultsBuffer.push_back(result);
+            }
+            else
+            {
+                writeResult(result);
+            }
+        }
+
         /**
          *  @brief Get singleton
          */
@@ -186,7 +207,7 @@ namespace ProfilingInstrumentor
         /**
          *  @brief Constructor. Also starts the timer
          */
-        Timer(const char *name)
+        Timer(const std::string name)
             : m_Name(name), m_Stopped(false)
         {
             m_StartTimepoint = std::chrono::high_resolution_clock::now();
@@ -218,7 +239,7 @@ namespace ProfilingInstrumentor
         }
 
     private:
-        const char *m_Name;
+        const std::string m_Name;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimepoint;
         bool m_Stopped;
     };
