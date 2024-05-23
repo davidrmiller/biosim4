@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <map>
 #include "params.h"
+#include "ProfilingInstrumentor.h"
 
 // To add a new parameter:
 //    1. Add a member to struct Params in params.h.
@@ -267,6 +268,8 @@ void ParamManager::ingestParameter(std::string name, std::string val)
 
 void ParamManager::updateFromConfigFile(unsigned generationNumber)
 {
+    //PROFILE_FUNCTION();
+
     // std::ifstream is RAII, i.e. no need to call close
     std::ifstream cFile(configFilename.c_str());
     if (cFile.is_open()) {

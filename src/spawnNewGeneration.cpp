@@ -17,6 +17,8 @@ extern std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsign
 // the peeps container at random locations with random genomes.
 void initializeGeneration0()
 {
+    std::cout << "Init gen 0" << std::endl;
+
     // The grid has already been allocated, just clear and reuse it
     grid.zeroFill();
     grid.createBarrier(p.barrierType);

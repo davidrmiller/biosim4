@@ -10,6 +10,7 @@
 #include "signals.h"      // a 2D array of pheromones that overlay the world grid
 #include "peeps.h"        // the 2D world where the peeps live
 #include "random.h"
+#include "ProfilingInstrumentor.h"
 
 namespace BS {
 
@@ -43,6 +44,8 @@ extern Grid grid;  // 2D arena where the individuals live
 extern Signals signals;  // pheromone layers
 extern Peeps peeps;   // container of all the individuals
 extern void simulator(int argc, char **argv);
+void simGeneration(unsigned int &murderCount, unsigned int generation);
+void simEndGeneration(unsigned int &murderCount, unsigned int &generation);
 
 // Feeds in-bounds Coords to a function: given a center location and a radius, this
 // function will call f(Coord) once for each location inside the specified area.

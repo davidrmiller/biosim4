@@ -104,6 +104,10 @@ The threads are:
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
+    ProfilingInstrumentor::Instrumentor::getInstance().beginSession("Profile");
+
+    PROFILE_FUNCTION();
+
     printSensorsActions(); // show the agents' capabilities
 
     // Simulator parameters are available read-only through the global
@@ -144,6 +148,9 @@ void simulator(int argc, char **argv)
             #pragma omp single
             murderCount = 0; // for reporting purposes
 
+            std::cout << "I sim " << generation << std::endl;
+
+            ProfilingInstrumentor::Timer timer1("simGeneration");
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
 
                 // multithreaded loop: index 0 is reserved, start at 1
@@ -162,9 +169,12 @@ void simulator(int argc, char **argv)
                     endOfSimStep(simStep, generation);
                 }
             }
-
+            timer1.stop();
+            
             #pragma omp single
             {
+                ProfilingInstrumentor::Timer timer2("simEndGeneration");
+
                 endOfGeneration(generation);
                 paramManager.updateFromConfigFile(generation + 1);
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
@@ -176,16 +186,30 @@ void simulator(int argc, char **argv)
                 } else {
                     ++generation;
                 }
+
+                timer2.stop();
             }
         }
     }
-    displaySampleGenomes(3); // final report, for debugging
+    //displaySampleGenomes(3); // final report, for debugging
 
     std::cout << "Simulator exit." << std::endl;
+
+    ProfilingInstrumentor::Instrumentor::getInstance().endSession();
 
     // If imageWriter is in its own thread, stop it and wait for it here:
     //imageWriter.abort();
     //t.join();
+}
+
+void simGeneration(unsigned int &murderCount, unsigned int generation)
+{
+    PROFILE_FUNCTION();
+}
+
+void simEndGeneration(unsigned int &murderCount, unsigned int &generation)
+{
+    PROFILE_FUNCTION();
 }
 
 } // end namespace BS
