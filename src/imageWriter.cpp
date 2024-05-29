@@ -13,6 +13,8 @@
 #define cimg_display 0
 #include "CImg.h"
 
+#include "ProfilingInstrumentor.h"
+
 namespace BS {
 
 cimg_library::CImgList<uint8_t> imageList;
@@ -54,16 +56,16 @@ void saveOneFrameImmed(const ImageFrameData &data)
 
     for (size_t i = 0; i < data.indivLocs.size(); ++i) {
         int c = data.indivColors[i];
-            color[0] = (c);                  // R: 0..255
-            color[1] = ((c & 0x1f) << 3);    // G: 0..255
-            color[2] = ((c & 7)    << 5);    // B: 0..255
+        color[0] = (c);                  // R: 0..255
+        color[1] = ((c & 0x1f) << 3);    // G: 0..255
+        color[2] = ((c & 7)    << 5);    // B: 0..255
 
-            // Prevent color mappings to very bright colors (hard to see):
-            if (rgbToLuma(color[0], color[1], color[2]) > maxLumaVal) {
-                if (color[0] > maxColorVal) color[0] %= maxColorVal;
-                if (color[1] > maxColorVal) color[1] %= maxColorVal;
-                if (color[2] > maxColorVal) color[2] %= maxColorVal;
-            }
+        // Prevent color mappings to very bright colors (hard to see):
+        if (rgbToLuma(color[0], color[1], color[2]) > maxLumaVal) {
+            if (color[0] > maxColorVal) color[0] %= maxColorVal;
+            if (color[1] > maxColorVal) color[1] %= maxColorVal;
+            if (color[2] > maxColorVal) color[2] %= maxColorVal;
+        }
 
         image.draw_circle(
                 data.indivLocs[i].x * p.displayScale,
@@ -138,10 +140,10 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
         data.signalLayers.clear();
         //todo!!!
         for (uint16_t index = 1; index <= p.population; ++index) {
-            const Indiv &indiv = peeps[index];
+            Indiv &indiv = peeps[index];
             if (indiv.alive) {
                 data.indivLocs.push_back(indiv.loc);
-                data.indivColors.push_back(makeGeneticColor(indiv.genome));
+                data.indivColors.push_back(indiv.makeGeneticColor());
             }
         }
 
@@ -168,6 +170,8 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
 // Synchronous version, always returns true
 bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
 {
+	window->clear();
+
     // We cache a local copy of data from params, grid, and peeps because
     // those objects will change by the main thread at the same time our
     // saveFrameThread() is using it to output a video frame.
@@ -177,12 +181,20 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
     data.indivColors.clear();
     data.barrierLocs.clear();
     data.signalLayers.clear();
+
+    int liveDisplayScale = p.displayScale / 1.5;
     //todo!!!
     for (uint16_t index = 1; index <= p.population; ++index) {
-        const Indiv &indiv = peeps[index];
+        Indiv &indiv = peeps[index];
         if (indiv.alive) {
             data.indivLocs.push_back(indiv.loc);
             data.indivColors.push_back(makeGeneticColor(indiv.genome));
+
+            indiv.shape.setPosition(
+                static_cast<float>(indiv.loc.x * liveDisplayScale), 
+                static_cast<float>(((p.sizeY - indiv.loc.y) - 1) * liveDisplayScale)
+            );
+            window->draw(indiv.shape);
         }
     }
 
@@ -191,7 +203,9 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
         data.barrierLocs.push_back(loc);
     }
 
-    saveOneFrameImmed(data);
+    //saveOneFrameImmed(data);
+
+    window->display();
     return true;
 }
 
@@ -199,19 +213,19 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
 // ToDo: put save_video() in its own thread
 void ImageWriter::saveGenerationVideo(unsigned generation)
 {
-    if (imageList.size() > 0) {
-        std::stringstream videoFilename;
-        videoFilename << p.imageDir.c_str() << "/gen-"
-                      << std::setfill('0') << std::setw(6) << generation
-                      << ".avi";
-        cv::setNumThreads(2);
-        imageList.save_video(videoFilename.str().c_str(),
-                             25,
-                             "H264");
-        if (skippedFrames > 0) {
-            std::cout << "Video skipped " << skippedFrames << " frames" << std::endl;
-        }
-    }
+    // if (imageList.size() > 0) {
+    //     std::stringstream videoFilename;
+    //     videoFilename << p.imageDir.c_str() << "/gen-"
+    //                   << std::setfill('0') << std::setw(6) << generation
+    //                   << ".avi";
+    //     cv::setNumThreads(2);
+    //     imageList.save_video(videoFilename.str().c_str(),
+    //                          25,
+    //                          "H264");
+    //     if (skippedFrames > 0) {
+    //         std::cout << "Video skipped " << skippedFrames << " frames" << std::endl;
+    //     }
+    // }
     startNewGeneration();
 }
 

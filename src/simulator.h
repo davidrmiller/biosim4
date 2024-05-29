@@ -3,6 +3,9 @@
 
 // Main header for the simulator. Also see simulator.cpp.
 
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+
 #include "basicTypes.h"   // types Dir, Coord, Polar and their values
 #include "params.h"       // params from the config file plus some extra stuff
 #include "indiv.h"        // data structure for an individual
@@ -10,6 +13,7 @@
 #include "signals.h"      // a 2D array of pheromones that overlay the world grid
 #include "peeps.h"        // the 2D world where the peeps live
 #include "random.h"
+#include "ProfilingInstrumentor.h"
 
 namespace BS {
 
@@ -42,7 +46,10 @@ extern const Params &p; // read-only simulator config params
 extern Grid grid;  // 2D arena where the individuals live
 extern Signals signals;  // pheromone layers
 extern Peeps peeps;   // container of all the individuals
+extern sf::RenderWindow* window;
 extern void simulator(int argc, char **argv);
+void simGeneration(unsigned int &murderCount, unsigned int generation);
+void simEndGeneration(unsigned int &murderCount, unsigned int &generation);
 
 // Feeds in-bounds Coords to a function: given a center location and a radius, this
 // function will call f(Coord) once for each location inside the specified area.
