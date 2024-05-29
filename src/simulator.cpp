@@ -121,7 +121,7 @@ The threads are:
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
-	window = new sf::RenderWindow(sf::VideoMode(800, 600), "Game3", sf::Style::Close | sf::Style::Titlebar);
+	window = new sf::RenderWindow(sf::VideoMode(800, 700), "Game3", sf::Style::Close | sf::Style::Titlebar);
 	window->setFramerateLimit(144);
 	window->setVerticalSyncEnabled(false);
 	window->setPosition(sf::Vector2i(500, sf::VideoMode::getDesktopMode().height / 2 - 320));
@@ -183,6 +183,7 @@ void simulator(int argc, char **argv)
                 {
                     murderCount += peeps.deathQueueSize();
                     endOfSimStep(simStep, generation);
+                    updatePollEvents();
                 }
             }
             
@@ -192,7 +193,7 @@ void simulator(int argc, char **argv)
                 paramManager.updateFromConfigFile(generation + 1);
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
                 if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
-                    displaySampleGenomes(p.displaySampleGenomes);
+                    //displaySampleGenomes(p.displaySampleGenomes);
                 }
                 if (numberSurvivors == 0) {
                     generation = 0;  // start over
@@ -202,7 +203,7 @@ void simulator(int argc, char **argv)
             }
         }
     }
-    displaySampleGenomes(3); // final report, for debugging
+    //displaySampleGenomes(3); // final report, for debugging
 
     std::cout << "Simulator exit." << std::endl;
 

@@ -35,6 +35,8 @@ struct Indiv {
     void printGenome() const;
 
 	sf::CircleShape shape;
+    uint8_t makeGeneticColor();
+    void fillColor();
 };
 
 } // end namespace BS
