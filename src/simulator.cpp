@@ -32,6 +32,8 @@ Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
 ImageWriter imageWriter; // This is for generating the movies
 
+sf::RenderWindow* window;
+
 // The paramManager maintains a private copy of the parameter values, and a copy
 // is available read-only through global variable p. Although this is not
 // foolproof, you should be able to modify the config file during a simulation
@@ -71,6 +73,21 @@ void simStepOneIndiv(Indiv &indiv, unsigned simStep)
     executeActions(indiv, actionLevels);
 }
 
+void updatePollEvents()
+{
+	sf::Event e;
+	while (window->pollEvent(e))
+	{
+		if (e.Event::type == sf::Event::Closed)
+		{
+			window->close();
+		}
+		if (e.Event::KeyPressed && e.Event::key.code == sf::Keyboard::Escape)
+		{
+			window->close();
+		}
+	}
+}
 
 /********************************************************************************
 Start of simulator
@@ -104,7 +121,12 @@ The threads are:
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
-    printSensorsActions(); // show the agents' capabilities
+	window = new sf::RenderWindow(sf::VideoMode(800, 600), "Game3", sf::Style::Close | sf::Style::Titlebar);
+	window->setFramerateLimit(144);
+	window->setVerticalSyncEnabled(false);
+	window->setPosition(sf::Vector2i(500, sf::VideoMode::getDesktopMode().height / 2 - 320));
+
+    //printSensorsActions(); // show the agents' capabilities
 
     // Simulator parameters are available read-only through the global
     // variable p after paramManager is initialized.
@@ -140,9 +162,10 @@ void simulator(int argc, char **argv)
     {
         randomUint.initialize(); // seed the RNG, each thread has a private instance
 
-        while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
+        while (runMode == RunMode::RUN && generation < p.maxGenerations && window->isOpen()) { // generation loop
             #pragma omp single
             murderCount = 0; // for reporting purposes
+            updatePollEvents();
 
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
 
@@ -182,6 +205,8 @@ void simulator(int argc, char **argv)
     displaySampleGenomes(3); // final report, for debugging
 
     std::cout << "Simulator exit." << std::endl;
+
+    delete window;
 
     // If imageWriter is in its own thread, stop it and wait for it here:
     //imageWriter.abort();

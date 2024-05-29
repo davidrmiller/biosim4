@@ -33,6 +33,8 @@ struct Indiv {
     void printNeuralNet() const;
     void printIGraphEdgeList() const;
     void printGenome() const;
+
+	sf::CircleShape shape;
 };
 
 } // end namespace BS

@@ -170,6 +170,8 @@ bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
 // Synchronous version, always returns true
 bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
 {
+	window->clear();
+
     // We cache a local copy of data from params, grid, and peeps because
     // those objects will change by the main thread at the same time our
     // saveFrameThread() is using it to output a video frame.
@@ -179,12 +181,20 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
     data.indivColors.clear();
     data.barrierLocs.clear();
     data.signalLayers.clear();
+
+    int liveDisplayScale = p.displayScale / 2;
     //todo!!!
     for (uint16_t index = 1; index <= p.population; ++index) {
-        const Indiv &indiv = peeps[index];
+        Indiv &indiv = peeps[index];
         if (indiv.alive) {
             data.indivLocs.push_back(indiv.loc);
             data.indivColors.push_back(makeGeneticColor(indiv.genome));
+
+            indiv.shape.setPosition(
+                static_cast<float>(indiv.loc.x * liveDisplayScale - (liveDisplayScale / 2)), 
+                static_cast<float>(((p.sizeY - indiv.loc.y) - 1) * liveDisplayScale - (liveDisplayScale / 2))
+            );
+            window->draw(indiv.shape);
         }
     }
 
@@ -194,6 +204,8 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
     }
 
     saveOneFrameImmed(data);
+
+    window->display();
     return true;
 }
 

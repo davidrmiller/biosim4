@@ -25,6 +25,9 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
     challengeBits = (unsigned)false; // will be set true when some task gets accomplished
     genome = std::move(genome_);
     createWiringFromGenome();
+
+    this->shape.setRadius(2);
+	this->shape.setFillColor(sf::Color(rand() % 200 + 55, rand() % 200 + 55, rand() % 200 + 55, 255));
 }
 
 } // end namespace BS

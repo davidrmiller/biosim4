@@ -3,7 +3,7 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++ build active file",
-            "command": "cd ${workspaceFolder} && make debug",
+            "command": "make debug",
             "args": [
             ],
             "options": {

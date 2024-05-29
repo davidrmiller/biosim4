@@ -3,6 +3,9 @@
 
 // Main header for the simulator. Also see simulator.cpp.
 
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+
 #include "basicTypes.h"   // types Dir, Coord, Polar and their values
 #include "params.h"       // params from the config file plus some extra stuff
 #include "indiv.h"        // data structure for an individual
@@ -43,6 +46,7 @@ extern const Params &p; // read-only simulator config params
 extern Grid grid;  // 2D arena where the individuals live
 extern Signals signals;  // pheromone layers
 extern Peeps peeps;   // container of all the individuals
+extern sf::RenderWindow* window;
 extern void simulator(int argc, char **argv);
 void simGeneration(unsigned int &murderCount, unsigned int generation);
 void simEndGeneration(unsigned int &murderCount, unsigned int &generation);

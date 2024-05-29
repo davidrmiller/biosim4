@@ -4,10 +4,12 @@
             "name": "C/C++: g++-11 build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [],
+            "program": "${workspaceFolder}/bin/Debug/biosim4",
+            "args": [
+                "${workspaceFolder}/biosim4.ini"
+            ],
+            "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
