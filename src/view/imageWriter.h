@@ -8,9 +8,10 @@
 #include <mutex>
 #include <condition_variable>
 #include <thread>
-#include "indiv.h"
-#include "params.h"
-#include "peeps.h"
+#include <vector>
+#include "../indiv.h"
+#include "../params.h"
+#include "../peeps.h"
 
 namespace BS {
 
@@ -28,14 +29,15 @@ struct ImageFrameData {
 };
 
 
-struct ImageWriter {
+class ImageWriter {
+public:
     ImageWriter();
     void startNewGeneration();
-    bool saveVideoFrame(unsigned simStep, unsigned generation);
     bool saveVideoFrameSync(unsigned simStep, unsigned generation);
     void saveGenerationVideo(unsigned generation);
     void abort();
-    void saveFrameThread(); // runs in a thread
+    void endOfStep(unsigned simStep, unsigned generation);
+    void endOfGeneration(unsigned generation);
     std::atomic<unsigned> droppedFrameCount;
 private:
     std::atomic<bool> busy;
@@ -47,8 +49,6 @@ private:
     bool abortRequested;
     unsigned skippedFrames;
 };
-
-extern ImageWriter imageWriter;
 
 } // end namespace BS
 

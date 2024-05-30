@@ -67,7 +67,7 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
 // Returns number of survivor-reproducers.
 // Must be called in single-thread mode between generations.
 unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
-{
+{    
     unsigned sacrificedCount = 0; // for the altruism challenge
 
     extern void appendEpochLog(unsigned generation, unsigned numberSurvivors, unsigned murderCount);

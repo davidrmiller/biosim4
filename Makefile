@@ -35,7 +35,7 @@ else
   LDFLAGS += -O3 -s
 endif
 
-SOURCE :=  $(wildcard src/*.cpp src/*.h)
+SOURCE :=  $(wildcard src/*.cpp src/*.h src/view/*.cpp src/view/*.h)
 CXXSOURCE :=  $(filter %.cpp, $(SOURCE))
 HEADERS :=  $(filter %.h, $(SOURCE))
 OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
@@ -47,10 +47,12 @@ all: debug release
 before_debug:
 	test -d bin/Debug || mkdir -p bin/Debug
 	test -d obj/Debug/src || mkdir -p obj/Debug/src
+	test -d obj/Debug/src/view || mkdir -p obj/Debug/src/view
 
 before_release:
 	test -d bin/Release || mkdir -p bin/Release
 	test -d obj/Release/src || mkdir -p obj/Release/src
+	test -d obj/Release/src/view || mkdir -p obj/Release/src/view
 
 .PHONY : release debug    
 debug: before_debug

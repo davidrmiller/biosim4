@@ -3,6 +3,8 @@
 
 // Indiv is the structure that represents one individual agent.
 
+#include <SFML/Graphics.hpp>
+
 #include <algorithm>
 #include <cstdint>
 #include <array>

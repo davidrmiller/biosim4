@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cmath>
 #include "simulator.h"
-#include "imageWriter.h"
 
 namespace BS {
 
@@ -78,17 +77,6 @@ void endOfSimStep(unsigned simStep, unsigned generation)
     peeps.drainDeathQueue();
     peeps.drainMoveQueue();
     signals.fade(0); // takes layerNum  todo!!!
-
-    // saveVideoFrameSync() is the synchronous version of saveVideFrame()
-    if (p.saveVideo &&
-                ((generation % p.videoStride) == 0
-                 || generation <= p.videoSaveFirstFrames
-                 || (generation >= p.parameterChangeGenerationNumber
-                     && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
-        if (!imageWriter.saveVideoFrameSync(simStep, generation)) {
-            std::cout << "imageWriter busy" << std::endl;
-        }
-    }
 }
 
 } // end namespace BS

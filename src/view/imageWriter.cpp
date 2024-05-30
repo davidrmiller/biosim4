@@ -7,13 +7,13 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
-#include "simulator.h"
+#include "../simulator.h"
 #include "imageWriter.h"
 #define cimg_use_opencv 1
 #define cimg_display 0
 #include "CImg.h"
 
-#include "ProfilingInstrumentor.h"
+#include "../ProfilingInstrumentor.h"
 
 namespace BS {
 
@@ -110,68 +110,9 @@ uint8_t makeGeneticColor(const Genome &genome)
          | ((genome.back().sourceNum & 1)  << 7));
 }
 
-
-// This is a synchronous gate for giving a job to saveFrameThread().
-// Called from the same thread as the main simulator loop thread during
-// single-thread mode.
-// Returns true if the image writer accepts the job; returns false
-// if the image writer is busy. Always called from a single thread
-// and communicates with a single saveFrameThread(), so no need to make
-// a critical section to safeguard the busy flag. When this function
-// sets the busy flag, the caller will immediate see it, so the caller
-// won't call again until busy is clear. When the thread clears the busy
-// flag, it doesn't matter if it's not immediately visible to this
-// function: there's no consequence other than a harmless frame-drop.
-// The condition variable allows the saveFrameThread() to wait until
-// there's a job to do.
-bool ImageWriter::saveVideoFrame(unsigned simStep, unsigned generation)
-{
-    if (!busy) {
-        busy = true;
-        // queue job for saveFrameThread()
-        // We cache a local copy of data from params, grid, and peeps because
-        // those objects will change by the main thread at the same time our
-        // saveFrameThread() is using it to output a video frame.
-        data.simStep = simStep;
-        data.generation = generation;
-        data.indivLocs.clear();
-        data.indivColors.clear();
-        data.barrierLocs.clear();
-        data.signalLayers.clear();
-        //todo!!!
-        for (uint16_t index = 1; index <= p.population; ++index) {
-            Indiv &indiv = peeps[index];
-            if (indiv.alive) {
-                data.indivLocs.push_back(indiv.loc);
-                data.indivColors.push_back(indiv.makeGeneticColor());
-            }
-        }
-
-        auto const &barrierLocs = grid.getBarrierLocations();
-        for (Coord loc : barrierLocs) {
-            data.barrierLocs.push_back(loc);
-        }
-
-        // tell thread there's a job to do
-        {
-            std::lock_guard<std::mutex> lck(mutex_);
-            dataReady = true;
-        }
-        condVar.notify_one();
-        return true;
-    } else {
-        // image saver thread is busy, drop a frame
-        ++droppedFrameCount;
-        return false;
-    }
-}
-
-
 // Synchronous version, always returns true
 bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
 {
-	window->clear();
-
     // We cache a local copy of data from params, grid, and peeps because
     // those objects will change by the main thread at the same time our
     // saveFrameThread() is using it to output a video frame.
@@ -182,19 +123,12 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
     data.barrierLocs.clear();
     data.signalLayers.clear();
 
-    int liveDisplayScale = p.displayScale / 1.5;
     //todo!!!
     for (uint16_t index = 1; index <= p.population; ++index) {
         Indiv &indiv = peeps[index];
         if (indiv.alive) {
             data.indivLocs.push_back(indiv.loc);
             data.indivColors.push_back(makeGeneticColor(indiv.genome));
-
-            indiv.shape.setPosition(
-                static_cast<float>(indiv.loc.x * liveDisplayScale), 
-                static_cast<float>(((p.sizeY - indiv.loc.y) - 1) * liveDisplayScale)
-            );
-            window->draw(indiv.shape);
         }
     }
 
@@ -203,9 +137,7 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
         data.barrierLocs.push_back(loc);
     }
 
-    //saveOneFrameImmed(data);
-
-    window->display();
+    saveOneFrameImmed(data);
     return true;
 }
 
@@ -213,19 +145,19 @@ bool ImageWriter::saveVideoFrameSync(unsigned simStep, unsigned generation)
 // ToDo: put save_video() in its own thread
 void ImageWriter::saveGenerationVideo(unsigned generation)
 {
-    // if (imageList.size() > 0) {
-    //     std::stringstream videoFilename;
-    //     videoFilename << p.imageDir.c_str() << "/gen-"
-    //                   << std::setfill('0') << std::setw(6) << generation
-    //                   << ".avi";
-    //     cv::setNumThreads(2);
-    //     imageList.save_video(videoFilename.str().c_str(),
-    //                          25,
-    //                          "H264");
-    //     if (skippedFrames > 0) {
-    //         std::cout << "Video skipped " << skippedFrames << " frames" << std::endl;
-    //     }
-    // }
+    if (imageList.size() > 0) {
+        std::stringstream videoFilename;
+        videoFilename << p.imageDir.c_str() << "/gen-"
+                      << std::setfill('0') << std::setw(6) << generation
+                      << ".avi";
+        cv::setNumThreads(2);
+        imageList.save_video(videoFilename.str().c_str(),
+                             25,
+                             "H264");
+        if (skippedFrames > 0) {
+            std::cout << "Video skipped " << skippedFrames << " frames" << std::endl;
+        }
+    }
     startNewGeneration();
 }
 
@@ -242,34 +174,28 @@ void ImageWriter::abort()
 }
 
 
-// Runs in a thread; wakes up when there's a video frame to generate.
-// When this wakes up, local copies of Params and Peeps will have been
-// cached for us to use.
-void ImageWriter::saveFrameThread()
+void ImageWriter::endOfStep(unsigned simStep, unsigned generation)
 {
-    busy = false; // we're ready for business
-    std::cout << "Imagewriter thread started." << std::endl;
-
-    while (true) {
-        // wait for job on queue
-        std::unique_lock<std::mutex> lck(mutex_);
-        condVar.wait(lck, [&]{ return dataReady && busy; });
-        // save frame
-        dataReady = false;
-        busy = false;
-
-        if (abortRequested) {
-            break;
+    if (p.saveVideo &&
+            ((generation % p.videoStride) == 0
+            || generation <= p.videoSaveFirstFrames
+            || (generation >= p.parameterChangeGenerationNumber
+            && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
+        if (!this->saveVideoFrameSync(simStep, generation)) {
+            std::cout << "imageWriter busy" << std::endl;
         }
-
-        // save image frame
-        saveOneFrameImmed(imageWriter.data);
-
-        //std::cout << "Image writer thread waiting..." << std::endl;
-        //std::this_thread::sleep_for(std::chrono::seconds(2));
-
     }
-    std::cout << "Image writer thread exiting." << std::endl;
+}
+
+void ImageWriter::endOfGeneration(unsigned generation)
+{
+    if (p.saveVideo &&
+            ((generation % p.videoStride) == 0
+            || generation <= p.videoSaveFirstFrames
+            || (generation >= p.parameterChangeGenerationNumber
+            && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
+        this->saveGenerationVideo(generation);
+    }
 }
 
 } // end namespace BS
