@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <algorithm>
 #include "simulator.h"
-#include "imageWriter.h"
 
 namespace BS {
 
@@ -15,16 +14,6 @@ namespace BS {
 
 void endOfGeneration(unsigned generation)
 {
-    {
-        if (p.saveVideo &&
-                ((generation % p.videoStride) == 0
-                 || generation <= p.videoSaveFirstFrames
-                 || (generation >= p.parameterChangeGenerationNumber
-                     && generation <= p.parameterChangeGenerationNumber + p.videoSaveFirstFrames))) {
-            imageWriter.saveGenerationVideo(generation);
-        }
-    }
-
     {
         if (p.updateGraphLog && (generation == 1 || ((generation % p.updateGraphLogStride) == 0))) {
 #pragma GCC diagnostic ignored "-Wunused-result"

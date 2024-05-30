@@ -15,7 +15,6 @@
 #include <utility>
 #include <algorithm>
 #include "simulator.h"     // the simulator data structures
-#include "imageWriter.h"   // this is for generating the movies
 
 namespace BS {
 
@@ -30,9 +29,8 @@ RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
 Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
-ImageWriter imageWriter; // This is for generating the movies
 
-sf::RenderWindow* window;
+View* view;
 
 // The paramManager maintains a private copy of the parameter values, and a copy
 // is available read-only through global variable p. Although this is not
@@ -73,22 +71,6 @@ void simStepOneIndiv(Indiv &indiv, unsigned simStep)
     executeActions(indiv, actionLevels);
 }
 
-void updatePollEvents()
-{
-	sf::Event e;
-	while (window->pollEvent(e))
-	{
-		if (e.Event::type == sf::Event::Closed)
-		{
-			window->close();
-		}
-		if (e.Event::KeyPressed && e.Event::key.code == sf::Keyboard::Escape)
-		{
-			window->close();
-		}
-	}
-}
-
 /********************************************************************************
 Start of simulator
 
@@ -116,15 +98,10 @@ The important simulator-wide variables are:
 The threads are:
     main thread - simulator
     simStepOneIndiv() - child threads created by the main simulator thread
-    imageWriter - saves image frames used to make a movie (possibly not threaded
-        due to unresolved bugs when threaded)
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
-	window = new sf::RenderWindow(sf::VideoMode(800, 700), "Game3", sf::Style::Close | sf::Style::Titlebar);
-	window->setFramerateLimit(144);
-	window->setVerticalSyncEnabled(false);
-	window->setPosition(sf::Vector2i(500, sf::VideoMode::getDesktopMode().height / 2 - 320));
+    view = new View(true, false);
 
     //printSensorsActions(); // show the agents' capabilities
 
@@ -144,13 +121,6 @@ void simulator(int argc, char **argv)
     signals.init(p.signalLayers, p.sizeX, p.sizeY);  // where the pheromones waft
     peeps.init(p.population); // the peeps themselves
 
-    // If imageWriter is to be run in its own thread, start it here:
-    //std::thread t(&ImageWriter::saveFrameThread, &imageWriter);
-
-    // Unit tests:
-    //unitTestConnectNeuralNetWiringFromGenome();
-    //unitTestGridVisitNeighborhood();
-
     unsigned generation = 0;
     initializeGeneration0(); // starting population
     runMode = RunMode::RUN;
@@ -162,12 +132,12 @@ void simulator(int argc, char **argv)
     {
         randomUint.initialize(); // seed the RNG, each thread has a private instance
 
-        while (runMode == RunMode::RUN && generation < p.maxGenerations && window->isOpen()) { // generation loop
+        while (runMode == RunMode::RUN && generation < p.maxGenerations && !view->isStopped()) { // generation loop
             #pragma omp single
             murderCount = 0; // for reporting purposes
-            updatePollEvents();
+            view->checkUserInput();
 
-            for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
+            for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !view->isStopped(); ++simStep) {
 
                 // multithreaded loop: index 0 is reserved, start at 1
                 #pragma omp for schedule(auto)
@@ -183,13 +153,15 @@ void simulator(int argc, char **argv)
                 {
                     murderCount += peeps.deathQueueSize();
                     endOfSimStep(simStep, generation);
-                    updatePollEvents();
+                    view->endOfStep(simStep, generation);
+                    view->checkUserInput();
                 }
             }
             
             #pragma omp single
             {
                 endOfGeneration(generation);
+                view->endOfGeneration(generation);
                 paramManager.updateFromConfigFile(generation + 1);
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
                 if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
@@ -207,11 +179,7 @@ void simulator(int argc, char **argv)
 
     std::cout << "Simulator exit." << std::endl;
 
-    delete window;
-
-    // If imageWriter is in its own thread, stop it and wait for it here:
-    //imageWriter.abort();
-    //t.join();
+    delete view;
 }
 
 } // end namespace BS
