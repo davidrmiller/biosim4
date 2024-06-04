@@ -1,16 +1,16 @@
-#include "View.h"
+#include "UserIO.h"
 
 namespace BS {
 
-    View::View(bool windowInit, bool videoSaveInit)
+    UserIO::UserIO(bool windowInit, bool videoSaveInit)
     {
         if (windowInit) 
-            this->sfmlView = new SFMLView();
+            this->sfmlView = new SFMLUserIO();
         if (videoSaveInit) 
             this->imageWriter = new ImageWriter();        
     }
 
-    View::~View()
+    UserIO::~UserIO()
     {
         if (this->sfmlView != nullptr)
             delete this->sfmlView;
@@ -18,20 +18,22 @@ namespace BS {
             delete this->imageWriter;
     }
 
-    bool View::isStopped()
+    bool UserIO::isStopped()
     {
         if (this->sfmlView != nullptr)
             return this->sfmlView->isStopped();
         return false;
     }
 
-    void View::checkUserInput()
+    void UserIO::checkUserInput()
     {
-        if (this->sfmlView != nullptr)
+        if (this->sfmlView != nullptr) {
             this->sfmlView->updatePollEvents();
+            this->sfmlView->updateInput();
+        }
     }
 
-    void View::endOfStep(unsigned simStep, unsigned generation)
+    void UserIO::endOfStep(unsigned simStep, unsigned generation)
     {
         if (this->sfmlView != nullptr)
             this->sfmlView->endOfStep();
@@ -40,12 +42,28 @@ namespace BS {
             this->imageWriter->endOfStep(simStep, generation);
     }
 
-    void View::endOfGeneration(unsigned generation)
+    void UserIO::endOfGeneration(unsigned generation)
     {
         if (this->sfmlView != nullptr)
             this->sfmlView->endOfGeneration(generation);
 
         if (this->imageWriter != nullptr)
             this->imageWriter->endOfGeneration(generation);
+    }
+
+    void UserIO::log(std::string message)
+    {
+        if (this->sfmlView != nullptr)
+            this->sfmlView->log(message);
+        
+        std::cout << message << std::endl;
+    }
+
+    bool UserIO::isPaused()
+    {
+        if (this->sfmlView != nullptr)
+            return this->sfmlView->isPaused();
+
+        return false;
     }
 }

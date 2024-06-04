@@ -174,8 +174,10 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
     for (const std::pair<uint16_t, float> &parent : parents) {
         parentGenomes.push_back(peeps[parent.first].genome);
     }
-
-    std::cout << "Gen " << generation << ", " << parentGenomes.size() << " survivors" << std::endl;
+    
+    std::stringstream ss;
+    ss << "Gen " << generation << ", " << parentGenomes.size() << " survivors";
+    userIO->log(ss.str());
     appendEpochLog(generation, parentGenomes.size(), murderCount);
     //displaySignalUse(); // for debugging only
 

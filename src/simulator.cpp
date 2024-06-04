@@ -30,7 +30,7 @@ Grid grid;        // The 2D world where the creatures live
 Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
 
-View* view;
+UserIO* userIO;
 
 // The paramManager maintains a private copy of the parameter values, and a copy
 // is available read-only through global variable p. Although this is not
@@ -101,7 +101,7 @@ The threads are:
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
-    view = new View(true, false);
+    userIO = new UserIO(true, false);
 
     //printSensorsActions(); // show the agents' capabilities
 
@@ -132,12 +132,18 @@ void simulator(int argc, char **argv)
     {
         randomUint.initialize(); // seed the RNG, each thread has a private instance
 
-        while (runMode == RunMode::RUN && generation < p.maxGenerations && !view->isStopped()) { // generation loop
+        while (runMode == RunMode::RUN && generation < p.maxGenerations && !userIO->isStopped()) { // generation loop
             #pragma omp single
             murderCount = 0; // for reporting purposes
-            view->checkUserInput();
+            userIO->checkUserInput();
 
-            for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !view->isStopped(); ++simStep) {
+            for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped(); ++simStep) {
+
+                // handle pause/unpause
+                while (userIO->isPaused() && !userIO->isStopped() ) {
+                    userIO->endOfStep(simStep, generation);
+                    userIO->checkUserInput();
+                }
 
                 // multithreaded loop: index 0 is reserved, start at 1
                 #pragma omp for schedule(auto)
@@ -153,15 +159,15 @@ void simulator(int argc, char **argv)
                 {
                     murderCount += peeps.deathQueueSize();
                     endOfSimStep(simStep, generation);
-                    view->endOfStep(simStep, generation);
-                    view->checkUserInput();
+                    userIO->endOfStep(simStep, generation);
+                    userIO->checkUserInput();
                 }
             }
             
             #pragma omp single
             {
                 endOfGeneration(generation);
-                view->endOfGeneration(generation);
+                userIO->endOfGeneration(generation);
                 paramManager.updateFromConfigFile(generation + 1);
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
                 if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
@@ -179,7 +185,7 @@ void simulator(int argc, char **argv)
 
     std::cout << "Simulator exit." << std::endl;
 
-    delete view;
+    delete userIO;
 }
 
 } // end namespace BS
