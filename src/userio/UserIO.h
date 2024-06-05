@@ -18,6 +18,7 @@ namespace BS
         void checkUserInput();
         void endOfStep(unsigned simStep, unsigned generation);
         void endOfGeneration(unsigned generation);
+        void startNewGeneration(unsigned generation, unsigned stepsPerGeneration);
 
         void log(std::string message);
         bool isPaused();

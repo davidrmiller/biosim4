@@ -135,6 +135,8 @@ void simulator(int argc, char **argv)
         while (runMode == RunMode::RUN && generation < p.maxGenerations && !userIO->isStopped()) { // generation loop
             #pragma omp single
             murderCount = 0; // for reporting purposes
+
+            userIO->startNewGeneration(generation, p.stepsPerGeneration);
             userIO->checkUserInput();
 
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped(); ++simStep) {

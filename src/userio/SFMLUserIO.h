@@ -6,9 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-// #include "../simulator.h"
-// #include "../indiv.h"
-// #include "../params.h"
+#include "./sfmlComponents/ViewComponent.h"
+#include "./sfmlComponents/RightPanelComponent.h"
 
 namespace BS
 {
@@ -19,11 +18,13 @@ namespace BS
         ~SFMLUserIO();
 
         bool isStopped();
-        void updatePollEvents();
-        void endOfStep();
-        void endOfGeneration(unsigned generation);
-        void updateInput();
         bool isPaused();
+        void pauseResume(bool paused);
+
+        void updatePollEvents();
+        void startNewGeneration(unsigned generation, unsigned stepsPerGeneration);
+        void endOfStep(unsigned simStep);
+        void endOfGeneration(unsigned generation);
 
         void log(std::string message);
     private:
@@ -32,18 +33,11 @@ namespace BS
         sf::RenderWindow* window;
 
         sf::View* view;
+        ViewComponent* viewComponent;
+        
         tgui::Gui gui;
-
-        tgui::TextArea::Ptr console;
-        std::vector<tgui::String> logMessages;
-
-        tgui::Picture::Ptr pausePicture;
+        RightPanelComponent* rightPanelComponent;
         bool paused = false;
-        void pauseResume();
-
-        bool viewIsMoving = false;
-        sf::Vector2f oldViewPos;
-        double accumZoom = 1;
     };
 }
 

@@ -29,14 +29,20 @@ namespace BS {
     {
         if (this->sfmlView != nullptr) {
             this->sfmlView->updatePollEvents();
-            this->sfmlView->updateInput();
+        }
+    }
+
+    void UserIO::startNewGeneration(unsigned generation, unsigned stepsPerGeneration)
+    {
+        if (this->sfmlView != nullptr) {
+            this->sfmlView->startNewGeneration(generation, stepsPerGeneration);
         }
     }
 
     void UserIO::endOfStep(unsigned simStep, unsigned generation)
     {
         if (this->sfmlView != nullptr)
-            this->sfmlView->endOfStep();
+            this->sfmlView->endOfStep(simStep);
 
         if (this->imageWriter != nullptr)
             this->imageWriter->endOfStep(simStep, generation);
