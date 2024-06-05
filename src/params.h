@@ -77,11 +77,16 @@ public:
     void registerConfigFile(const char *filename);
     void updateFromConfigFile(unsigned generationNumber);
     void checkParameters();
+
+    void changeFromUi(std::string name, std::string val);
+    void updateFromUi();
 private:
     Params privParams;
     std::string configFilename;
     time_t lastModTime; // when config file was last read
     void ingestParameter(std::string name, std::string val);
+
+    std::vector<std::pair<std::string, std::string>> paramsFromUI;
 };
 
 // Returns a copy of params with default values overridden by the values

@@ -30,6 +30,11 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
     this->fillColor();
 }
 
+/**
+ * Generates a genetic color based on the properties of the Indiv's genome.
+ *
+ * @return A uint8_t representing the genetic color.
+ */
 uint8_t Indiv::makeGeneticColor()
 {
     return ((this->genome.size() & 1)
@@ -52,8 +57,8 @@ void Indiv::fillColor()
     auto rgbToLuma = [](uint8_t r, uint8_t g, uint8_t b) { return (r+r+r+b+g+g+g+g) / 8; };
 
     color[0] = (rawColor);                  // R: 0..255
-    color[1] = ((rawColor & 0x1f) << 3);    // G: 0..255
-    color[2] = ((rawColor & 7)    << 5);    // B: 0..255
+    color[1] = ((rawColor & 0x1f) << 3);    // G: 0..255    & 00011111 << 3
+    color[2] = ((rawColor & 7)    << 5);    // B: 0..255    & 00000111 << 5
 
     // Prevent color mappings to very bright colors (hard to see):
     if (rgbToLuma(color[0], color[1], color[2]) < minLumaVal) {

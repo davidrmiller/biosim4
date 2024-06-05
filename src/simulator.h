@@ -14,7 +14,7 @@
 #include "peeps.h"        // the 2D world where the peeps live
 #include "random.h"
 #include "ProfilingInstrumentor.h"
-#include "./view/View.h"
+#include "./userio/UserIO.h"
 
 namespace BS {
 
@@ -47,7 +47,7 @@ extern const Params &p; // read-only simulator config params
 extern Grid grid;  // 2D arena where the individuals live
 extern Signals signals;  // pheromone layers
 extern Peeps peeps;   // container of all the individuals
-extern View* view;
+extern UserIO* userIO;
 extern void simulator(int argc, char **argv);
 void simGeneration(unsigned int &murderCount, unsigned int generation);
 void simEndGeneration(unsigned int &murderCount, unsigned int &generation);

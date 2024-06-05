@@ -265,6 +265,19 @@ void ParamManager::ingestParameter(std::string name, std::string val)
     } while (0);
 }
 
+void ParamManager::updateFromUi()
+{
+    for (long unsigned int i = 0; i < this->paramsFromUI.size(); ++i)
+    {
+        ingestParameter(this->paramsFromUI[i].first, this->paramsFromUI[i].second);
+    }
+    this->paramsFromUI.clear();
+}
+
+void ParamManager::changeFromUi(std::string name, std::string val)
+{
+    this->paramsFromUI.push_back(std::make_pair(name, val));
+}
 
 void ParamManager::updateFromConfigFile(unsigned generationNumber)
 {

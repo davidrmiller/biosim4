@@ -22,7 +22,8 @@ LDFLAGS += \
   -fopenmp \
   -lsfml-graphics \
   -lsfml-window \
-  -lsfml-system
+  -lsfml-system \
+  -ltgui
 
 ifeq ($(BUILD),debug)
   OUT_DIR = bin/Debug/
@@ -35,7 +36,7 @@ else
   LDFLAGS += -O3 -s
 endif
 
-SOURCE :=  $(wildcard src/*.cpp src/*.h src/view/*.cpp src/view/*.h)
+SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h src/userio/sfmlComponents/*.cpp src/userio/sfmlComponents/*.h)
 CXXSOURCE :=  $(filter %.cpp, $(SOURCE))
 HEADERS :=  $(filter %.h, $(SOURCE))
 OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
@@ -47,12 +48,14 @@ all: debug release
 before_debug:
 	test -d bin/Debug || mkdir -p bin/Debug
 	test -d obj/Debug/src || mkdir -p obj/Debug/src
-	test -d obj/Debug/src/view || mkdir -p obj/Debug/src/view
+	test -d obj/Debug/src/userio || mkdir -p obj/Debug/src/userio
+	test -d obj/Debug/src/userio/sfmlComponents || mkdir -p obj/Debug/src/userio/sfmlComponents
 
 before_release:
 	test -d bin/Release || mkdir -p bin/Release
 	test -d obj/Release/src || mkdir -p obj/Release/src
-	test -d obj/Release/src/view || mkdir -p obj/Release/src/view
+	test -d obj/Release/src/userio || mkdir -p obj/Release/src/userio
+	test -d obj/Release/src/userio/sfmlComponents || mkdir -p obj/Release/src/userio/sfmlComponents
 
 .PHONY : release debug    
 debug: before_debug
