@@ -101,8 +101,6 @@ The threads are:
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
-    userIO = new UserIO(true, false);
-
     //printSensorsActions(); // show the agents' capabilities
 
     // Simulator parameters are available read-only through the global
@@ -114,6 +112,9 @@ void simulator(int argc, char **argv)
     paramManager.checkParameters(); // check and report any problems
 
     randomUint.initialize(); // seed the RNG for main-thread use
+
+    // UI must be initialized after parameters
+    userIO = new UserIO(true, false);
 
     // Allocate container space. Once allocated, these container elements
     // will be reused in each new generation.
@@ -170,7 +171,10 @@ void simulator(int argc, char **argv)
             {
                 endOfGeneration(generation);
                 userIO->endOfGeneration(generation);
-                paramManager.updateFromConfigFile(generation + 1);
+
+                //ToDo: make it work alongside with updateFromUi
+                //paramManager.updateFromConfigFile(generation + 1);
+                paramManager.updateFromUi();
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
                 if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
                     //displaySampleGenomes(p.displaySampleGenomes);

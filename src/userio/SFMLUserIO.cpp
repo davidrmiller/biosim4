@@ -18,6 +18,12 @@ namespace BS
 
         // setup left panel
         this->rightPanelComponent = new RightPanelComponent(this->window->getSize(), [this](bool paused) {this->pauseResume(paused); });
+
+        ChallengeBoxComponent* challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val) {
+            this->settingsChanged(name, val);
+        });
+        this->rightPanelComponent->addToPanel(challengeBoxComponent->getChallengeBox());
+
         this->gui.add(this->rightPanelComponent->getPanel());        
 
         // setup view
@@ -103,5 +109,11 @@ namespace BS
     bool SFMLUserIO::isPaused()
     {
         return this->paused;
+    }
+
+    void SFMLUserIO::settingsChanged(std::string name, std::string val)
+    {
+        paramManager.changeFromUi(name, val);
+        std::cout << "Got settings: " << name << " value: " << val << std::endl;
     }
 }

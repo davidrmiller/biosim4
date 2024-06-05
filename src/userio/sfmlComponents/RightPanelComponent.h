@@ -17,6 +17,9 @@ namespace BS
 
         void startNewGeneration(unsigned generation, unsigned stepsPerGeneration);
         void endOfStep(unsigned simStep);
+
+        void addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName = "");
+
     private:
         tgui::Panel::Ptr panel;
 

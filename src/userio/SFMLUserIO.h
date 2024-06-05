@@ -8,6 +8,7 @@
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
+#include "./sfmlComponents/ChallengeBoxComponent.h"
 
 namespace BS
 {
@@ -25,6 +26,8 @@ namespace BS
         void startNewGeneration(unsigned generation, unsigned stepsPerGeneration);
         void endOfStep(unsigned simStep);
         void endOfGeneration(unsigned generation);
+
+        void settingsChanged(std::string name, std::string val);
 
         void log(std::string message);
     private:
