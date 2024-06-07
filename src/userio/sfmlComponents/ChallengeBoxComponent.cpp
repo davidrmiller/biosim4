@@ -32,7 +32,6 @@ namespace BS
 
         // setup edit box
         this->challengeBox = tgui::ComboBox::create();
-        this->challengeBox->setPosition("20%", 150);
         for (long unsigned int i = 0; i < this->items.size(); ++i)
         {
             this->challengeBox->addItem(this->items[i].text);

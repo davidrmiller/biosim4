@@ -41,6 +41,12 @@ namespace BS
         tgui::Gui gui;
         RightPanelComponent* rightPanelComponent;
         bool paused = false;
+
+        int speedThreshold = 0;
+        int increaseSpeedCounter = 0;
+        int slowSpeedCounter = 0;
+
+        void speedChanged(float value);
     };
 }
 

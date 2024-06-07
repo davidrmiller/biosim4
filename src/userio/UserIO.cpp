@@ -25,13 +25,6 @@ namespace BS {
         return false;
     }
 
-    void UserIO::checkUserInput()
-    {
-        if (this->sfmlView != nullptr) {
-            this->sfmlView->updatePollEvents();
-        }
-    }
-
     void UserIO::startNewGeneration(unsigned generation, unsigned stepsPerGeneration)
     {
         if (this->sfmlView != nullptr) {
@@ -39,10 +32,16 @@ namespace BS {
         }
     }
 
-    void UserIO::endOfStep(unsigned simStep, unsigned generation)
+    void UserIO::handleStep(unsigned simStep, unsigned generation)
     {
         if (this->sfmlView != nullptr)
+        {
+            // handle pause/unpause
+            while (this->isPaused() && !this->isStopped() ) {
+                this->sfmlView->endOfStep(simStep);
+            }
             this->sfmlView->endOfStep(simStep);
+        }
 
         if (this->imageWriter != nullptr)
             this->imageWriter->endOfStep(simStep, generation);
