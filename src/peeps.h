@@ -6,7 +6,7 @@
 #include "basicTypes.h"
 #include "grid.h"
 #include "params.h"
-#include "indiv.h"
+#include "./ai/indiv.h"
 
 namespace BS {
 

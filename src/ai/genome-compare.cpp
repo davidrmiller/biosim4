@@ -1,9 +1,13 @@
 // genome-compare.cpp -- compute similarity of two genomes
 
 #include <cassert>
-#include "simulator.h"
+#include "../simulator.h"
+#include "genome-neurons.h"
+#include "../peeps.h"
 
 namespace BS {
+
+extern Peeps peeps; 
 
 // Approximate gene match: Has to match same source, sink, with similar weight
 //

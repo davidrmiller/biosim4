@@ -6,8 +6,10 @@
 #include <iostream>
 #include <cassert>
 #include <string>
-#include "simulator.h"
-#include "./utils/random.h"
+#include "../simulator.h"
+#include "../utils/random.h"
+#include "genome-neurons.h"
+#include "./indiv.h"
 
 namespace BS {
 

@@ -2,9 +2,18 @@
 
 #include <iostream>
 #include <cassert>
-#include "simulator.h"
+#include <string.h>
+#include <iomanip>
+#include <cstdint>
+#include <cstring>
+
+#include "../simulator.h"
+#include "indiv.h"
+#include "../grid.h"
 
 namespace BS {
+
+extern Grid grid;
 
 // This is called when any individual is spawned.
 // The responsiveness parameter will be initialized here to maximum value

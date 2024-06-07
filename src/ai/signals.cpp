@@ -2,7 +2,8 @@
 // Manages layers of pheremones
 
 #include <cstdint>
-#include "simulator.h"
+#include "signals.h"
+#include "../simulator.h"
 
 namespace BS {
 

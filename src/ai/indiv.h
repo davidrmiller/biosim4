@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <cstdint>
 #include <array>
-#include "basicTypes.h"
-#include "genome-neurons.h"
+#include "../basicTypes.h"
+#include "./genome-neurons.h"
 
 namespace BS {
 

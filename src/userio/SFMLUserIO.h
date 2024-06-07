@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "../indiv.h"
+#include "../ai/indiv.h"
 #include "../params.h"
 #include "../peeps.h"
 

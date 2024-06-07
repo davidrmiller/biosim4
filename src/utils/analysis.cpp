@@ -7,10 +7,10 @@
 #include <cstring>
 #include <string>
 #include "../simulator.h"
-#include "../sensors-actions.h"
+#include "../ai/sensors-actions.h"
 #include "../peeps.h"
 #include "../params.h"
-#include "../signals.h"
+#include "../ai/signals.h"
 
 namespace BS {
 

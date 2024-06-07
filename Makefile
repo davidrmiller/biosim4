@@ -37,7 +37,7 @@ else
 endif
 
 SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h src/userio/sfmlComponents/*.cpp \
-  src/userio/sfmlComponents/*.h src/utils/*.cpp src/utils/*.h)
+  src/userio/sfmlComponents/*.h src/utils/*.cpp src/utils/*.h src/ai/*.cpp src/ai/*.h)
 CXXSOURCE :=  $(filter %.cpp, $(SOURCE))
 HEADERS :=  $(filter %.h, $(SOURCE))
 OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
@@ -52,6 +52,7 @@ before_debug:
 	test -d obj/Debug/src/userio || mkdir -p obj/Debug/src/userio
 	test -d obj/Debug/src/userio/sfmlComponents || mkdir -p obj/Debug/src/userio/sfmlComponents
 	test -d obj/Debug/src/utils || mkdir -p obj/Debug/src/utils
+	test -d obj/Debug/src/ai || mkdir -p obj/Debug/src/ai
 
 before_release:
 	test -d bin/Release || mkdir -p bin/Release
@@ -59,6 +60,7 @@ before_release:
 	test -d obj/Release/src/userio || mkdir -p obj/Release/src/userio
 	test -d obj/Release/src/userio/sfmlComponents || mkdir -p obj/Release/src/userio/sfmlComponents
 	test -d obj/Release/src/utils || mkdir -p obj/Release/src/utils
+	test -d obj/Release/src/ai || mkdir -p obj/Release/src/ai
 
 .PHONY : release debug    
 debug: before_debug
