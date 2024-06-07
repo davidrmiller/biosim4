@@ -6,36 +6,44 @@
 #include <cassert>
 #include <cstring>
 #include <string>
-#include "simulator.h"
+#include "../simulator.h"
+#include "../sensors-actions.h"
+#include "../peeps.h"
+#include "../params.h"
+#include "../signals.h"
 
 namespace BS {
+
+extern Peeps peeps; 
+extern const Params &p;
+extern Signals signals;
 
 // This converts sensor numbers to descriptive strings.
 std::string sensorName(Sensor sensor)
 {
     switch(sensor) {
-    case AGE: return "age"; break;
-    case BOUNDARY_DIST: return "boundary dist"; break;
-    case BOUNDARY_DIST_X: return "boundary dist X"; break;
-    case BOUNDARY_DIST_Y: return "boundary dist Y"; break;
-    case LAST_MOVE_DIR_X: return "last move dir X"; break;
-    case LAST_MOVE_DIR_Y: return "last move dir Y"; break;
-    case LOC_X: return "loc X"; break;
-    case LOC_Y: return "loc Y"; break;
-    case LONGPROBE_POP_FWD: return "long probe population fwd"; break;
-    case LONGPROBE_BAR_FWD: return "long probe barrier fwd"; break;
-    case BARRIER_FWD: return "short probe barrier fwd-rev"; break;
-    case BARRIER_LR: return "short probe barrier left-right"; break;
-    case OSC1: return "osc1"; break;
-    case POPULATION: return "population"; break;
-    case POPULATION_FWD: return "population fwd"; break;
-    case POPULATION_LR: return "population LR"; break;
-    case RANDOM: return "random"; break;
-    case SIGNAL0: return "signal 0"; break;
-    case SIGNAL0_FWD: return "signal 0 fwd"; break;
-    case SIGNAL0_LR: return "signal 0 LR"; break;
-    case GENETIC_SIM_FWD: return "genetic similarity fwd"; break;
-    default: assert(false); break;
+        case AGE: return "age"; break;
+        case BOUNDARY_DIST: return "boundary dist"; break;
+        case BOUNDARY_DIST_X: return "boundary dist X"; break;
+        case BOUNDARY_DIST_Y: return "boundary dist Y"; break;
+        case LAST_MOVE_DIR_X: return "last move dir X"; break;
+        case LAST_MOVE_DIR_Y: return "last move dir Y"; break;
+        case LOC_X: return "loc X"; break;
+        case LOC_Y: return "loc Y"; break;
+        case LONGPROBE_POP_FWD: return "long probe population fwd"; break;
+        case LONGPROBE_BAR_FWD: return "long probe barrier fwd"; break;
+        case BARRIER_FWD: return "short probe barrier fwd-rev"; break;
+        case BARRIER_LR: return "short probe barrier left-right"; break;
+        case OSC1: return "osc1"; break;
+        case POPULATION: return "population"; break;
+        case POPULATION_FWD: return "population fwd"; break;
+        case POPULATION_LR: return "population LR"; break;
+        case RANDOM: return "random"; break;
+        case SIGNAL0: return "signal 0"; break;
+        case SIGNAL0_FWD: return "signal 0 fwd"; break;
+        case SIGNAL0_LR: return "signal 0 LR"; break;
+        case GENETIC_SIM_FWD: return "genetic similarity fwd"; break;
+        default: assert(false); break;
     }
 }
 
@@ -44,24 +52,24 @@ std::string sensorName(Sensor sensor)
 std::string actionName(Action action)
 {
     switch(action) {
-    case MOVE_EAST: return "move east"; break;
-    case MOVE_WEST: return "move west"; break;
-    case MOVE_NORTH: return "move north"; break;
-    case MOVE_SOUTH: return "move south"; break;
-    case MOVE_FORWARD: return "move fwd"; break;
-    case MOVE_X: return "move X"; break;
-    case MOVE_Y: return "move Y"; break;
-    case SET_RESPONSIVENESS: return "set inv-responsiveness"; break;
-    case SET_OSCILLATOR_PERIOD: return "set osc1"; break;
-    case EMIT_SIGNAL0: return "emit signal 0"; break;
-    case KILL_FORWARD: return "kill fwd"; break;
-    case MOVE_REVERSE: return "move reverse"; break;
-    case MOVE_LEFT: return "move left"; break;
-    case MOVE_RIGHT: return "move right"; break;
-    case MOVE_RL: return "move R-L"; break;
-    case MOVE_RANDOM: return "move random"; break;
-    case SET_LONGPROBE_DIST: return "set longprobe dist"; break;
-    default: assert(false); break;
+        case MOVE_EAST: return "move east"; break;
+        case MOVE_WEST: return "move west"; break;
+        case MOVE_NORTH: return "move north"; break;
+        case MOVE_SOUTH: return "move south"; break;
+        case MOVE_FORWARD: return "move fwd"; break;
+        case MOVE_X: return "move X"; break;
+        case MOVE_Y: return "move Y"; break;
+        case SET_RESPONSIVENESS: return "set inv-responsiveness"; break;
+        case SET_OSCILLATOR_PERIOD: return "set osc1"; break;
+        case EMIT_SIGNAL0: return "emit signal 0"; break;
+        case KILL_FORWARD: return "kill fwd"; break;
+        case MOVE_REVERSE: return "move reverse"; break;
+        case MOVE_LEFT: return "move left"; break;
+        case MOVE_RIGHT: return "move right"; break;
+        case MOVE_RL: return "move R-L"; break;
+        case MOVE_RANDOM: return "move random"; break;
+        case SET_LONGPROBE_DIST: return "set longprobe dist"; break;
+        default: assert(false); break;
     }
 }
 
@@ -71,28 +79,28 @@ std::string actionName(Action action)
 std::string sensorShortName(Sensor sensor)
 {
     switch(sensor) {
-    case AGE: return "Age"; break;
-    case BOUNDARY_DIST: return "ED"; break;
-    case BOUNDARY_DIST_X: return "EDx"; break;
-    case BOUNDARY_DIST_Y: return "EDy"; break;
-    case LAST_MOVE_DIR_X: return "LMx"; break;
-    case LAST_MOVE_DIR_Y: return "LMy"; break;
-    case LOC_X: return "Lx"; break;
-    case LOC_Y: return "Ly"; break;
-    case LONGPROBE_POP_FWD: return "LPf"; break;
-    case LONGPROBE_BAR_FWD: return "LPb"; break;
-    case BARRIER_FWD: return "Bfd"; break;
-    case BARRIER_LR: return "Blr"; break;
-    case OSC1: return "Osc"; break;
-    case POPULATION: return "Pop"; break;
-    case POPULATION_FWD: return "Pfd"; break;
-    case POPULATION_LR: return "Plr"; break;
-    case RANDOM: return "Rnd"; break;
-    case SIGNAL0: return "Sg"; break;
-    case SIGNAL0_FWD: return "Sfd"; break;
-    case SIGNAL0_LR: return "Slr"; break;
-    case GENETIC_SIM_FWD: return "Gen"; break;
-    default: assert(false); break;
+        case AGE: return "Age"; break;
+        case BOUNDARY_DIST: return "ED"; break;
+        case BOUNDARY_DIST_X: return "EDx"; break;
+        case BOUNDARY_DIST_Y: return "EDy"; break;
+        case LAST_MOVE_DIR_X: return "LMx"; break;
+        case LAST_MOVE_DIR_Y: return "LMy"; break;
+        case LOC_X: return "Lx"; break;
+        case LOC_Y: return "Ly"; break;
+        case LONGPROBE_POP_FWD: return "LPf"; break;
+        case LONGPROBE_BAR_FWD: return "LPb"; break;
+        case BARRIER_FWD: return "Bfd"; break;
+        case BARRIER_LR: return "Blr"; break;
+        case OSC1: return "Osc"; break;
+        case POPULATION: return "Pop"; break;
+        case POPULATION_FWD: return "Pfd"; break;
+        case POPULATION_LR: return "Plr"; break;
+        case RANDOM: return "Rnd"; break;
+        case SIGNAL0: return "Sg"; break;
+        case SIGNAL0_FWD: return "Sfd"; break;
+        case SIGNAL0_LR: return "Slr"; break;
+        case GENETIC_SIM_FWD: return "Gen"; break;
+        default: assert(false); break;
     }
 }
 
@@ -102,24 +110,24 @@ std::string sensorShortName(Sensor sensor)
 std::string actionShortName(Action action)
 {
     switch(action) {
-    case MOVE_EAST: return "MvE"; break;
-    case MOVE_WEST: return "MvW"; break;
-    case MOVE_NORTH: return "MvN"; break;
-    case MOVE_SOUTH: return "MvS"; break;
-    case MOVE_X: return "MvX"; break;
-    case MOVE_Y: return "MvY"; break;
-    case MOVE_FORWARD: return "Mfd"; break;
-    case SET_RESPONSIVENESS: return "Res"; break;
-    case SET_OSCILLATOR_PERIOD: return "OSC"; break;
-    case EMIT_SIGNAL0: return "SG"; break;
-    case KILL_FORWARD: return "Klf"; break;
-    case MOVE_REVERSE: return "Mrv"; break;
-    case MOVE_LEFT: return "MvL"; break;
-    case MOVE_RIGHT: return "MvR"; break;
-    case MOVE_RL: return "MRL"; break;
-    case MOVE_RANDOM: return "Mrn"; break;
-    case SET_LONGPROBE_DIST: return "LPD"; break;
-    default: assert(false); break;
+        case MOVE_EAST: return "MvE"; break;
+        case MOVE_WEST: return "MvW"; break;
+        case MOVE_NORTH: return "MvN"; break;
+        case MOVE_SOUTH: return "MvS"; break;
+        case MOVE_X: return "MvX"; break;
+        case MOVE_Y: return "MvY"; break;
+        case MOVE_FORWARD: return "Mfd"; break;
+        case SET_RESPONSIVENESS: return "Res"; break;
+        case SET_OSCILLATOR_PERIOD: return "OSC"; break;
+        case EMIT_SIGNAL0: return "SG"; break;
+        case KILL_FORWARD: return "Klf"; break;
+        case MOVE_REVERSE: return "Mrv"; break;
+        case MOVE_LEFT: return "MvL"; break;
+        case MOVE_RIGHT: return "MvR"; break;
+        case MOVE_RL: return "MRL"; break;
+        case MOVE_RANDOM: return "Mrn"; break;
+        case SET_LONGPROBE_DIST: return "LPD"; break;
+        default: assert(false); break;
     }
 }
 
@@ -140,30 +148,6 @@ void printSensorsActions()
     }
     std::cout << std::endl;
 }
-
-
-// Format: 32-bit hex strings, one per gene
-void Indiv::printGenome() const
-{
-    constexpr unsigned genesPerLine = 8;
-    unsigned count = 0;
-    for (Gene gene : genome) {
-        if (count == genesPerLine) {
-            std::cout << std::endl;
-            count = 0;
-        } else if (count != 0) {
-            std::cout << " ";
-        }
-
-        assert(sizeof(Gene) == 4);
-        uint32_t n;
-        std::memcpy(&n, &gene, sizeof(n));
-        std::cout << std::hex << std::setfill('0') << std::setw(8) << n;
-        ++count;
-    }
-    std::cout << std::dec << std::endl;
-}
-
 
 ///*
 //Example format:
@@ -227,29 +211,6 @@ void Indiv::printGenome() const
 //}
 //
 
-
-// This prints a neural net in a form that can be processed with
-// graph-nnet.py to produce a graphic illustration of the net.
-void Indiv::printIGraphEdgeList() const
-{
-    for (auto & conn : nnet.connections) {
-        if (conn.sourceType == SENSOR) {
-            std::cout << sensorShortName((Sensor)(conn.sourceNum));
-        } else {
-            std::cout << "N" << std::to_string(conn.sourceNum);
-        }
-
-        std::cout << " ";
-
-        if (conn.sinkType == ACTION) {
-            std::cout << actionShortName((Action)(conn.sinkNum));
-        } else {
-            std::cout << "N" << std::to_string(conn.sinkNum);
-        }
-
-        std::cout << " " << std::to_string(conn.weight) << std::endl;
-    }
-}
 
 
 float averageGenomeLength()

@@ -12,8 +12,8 @@
 #include "grid.h"         // the 2D world where the peeps live
 #include "signals.h"      // a 2D array of pheromones that overlay the world grid
 #include "peeps.h"        // the 2D world where the peeps live
-#include "random.h"
-#include "ProfilingInstrumentor.h"
+#include "./utils/random.h"
+#include "./utils/ProfilingInstrumentor.h"
 #include "./userio/UserIO.h"
 
 namespace BS {

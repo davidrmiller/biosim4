@@ -6,12 +6,20 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "../indiv.h"
+#include "../params.h"
+#include "../peeps.h"
+
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
 #include "./sfmlComponents/ChallengeBoxComponent.h"
 
 namespace BS
 {
+    extern Peeps peeps;
+    extern const Params &p;
+    extern ParamManager paramManager;
+    
     class SFMLUserIO
     {
     public:

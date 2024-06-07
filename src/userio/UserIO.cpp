@@ -54,6 +54,10 @@ namespace BS {
 
         if (this->imageWriter != nullptr)
             this->imageWriter->endOfGeneration(generation);
+        
+        if (p.updateGraphLog && (generation == 1 || ((generation % p.updateGraphLogStride) == 0))) {
+            std::system(p.graphLogUpdateCommand.c_str());
+        }
     }
 
     void UserIO::log(std::string message)

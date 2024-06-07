@@ -1,7 +1,4 @@
 #include "SFMLUserIO.h"
-#include "../simulator.h"
-#include "../indiv.h"
-#include "../params.h"
 
 namespace BS
 {

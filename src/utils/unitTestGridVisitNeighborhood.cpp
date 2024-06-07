@@ -1,7 +1,7 @@
 // unitTestGridVisitNeighborhood
 
 #include <iostream>
-#include "simulator.h"
+#include "../simulator.h"
 
 namespace BS {
 

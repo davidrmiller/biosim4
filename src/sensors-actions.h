@@ -9,6 +9,7 @@
 
 namespace BS {
 
+
 // Neuron Sources (Sensors) and Sinks (Actions)
 
 // These sensor, neuron, and action value ranges are here for documentation

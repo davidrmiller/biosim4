@@ -23,7 +23,6 @@ extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount);
 extern void displaySampleGenomes(unsigned count);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
 extern void endOfSimStep(unsigned simStep, unsigned generation);
-extern void endOfGeneration(unsigned generation);
 
 RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
@@ -167,7 +166,6 @@ void simulator(int argc, char **argv)
             
             #pragma omp single
             {
-                endOfGeneration(generation);
                 userIO->endOfGeneration(generation);
 
                 //ToDo: make it work alongside with updateFromUi

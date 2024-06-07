@@ -8,6 +8,8 @@
 
 namespace BS
 {
+    extern const Params &p;
+    
     class UserIO
     {
     public:

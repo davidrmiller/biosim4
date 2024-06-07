@@ -5,9 +5,11 @@
 
 #include <cstdint>
 #include <climits>
+#include "../params.h"
 
 namespace BS {
 
+extern const Params &p;
 
 struct RandomUintGenerator{
 private:
