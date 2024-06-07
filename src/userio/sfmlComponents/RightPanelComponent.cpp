@@ -3,62 +3,14 @@
 
 namespace BS
 {
-    struct challengeBoxItem
-    {
-        int index;
-        unsigned value;
-        std::string text;
-        challengeBoxItem(int index, unsigned value, std::string text) : index(index), value(value), text(text) {}
-    };
-
-    struct ChallengeBoxValueContainer {
-        challengeBoxItem challengeBoxValues[20] = {
-            challengeBoxItem(0, CHALLENGE_CIRCLE, "Circle"),
-            challengeBoxItem(1, CHALLENGE_RIGHT_HALF, "Right half"),
-            challengeBoxItem(2, CHALLENGE_RIGHT_QUARTER, "Right quarter"),
-            challengeBoxItem(3, CHALLENGE_STRING, "String"),
-            challengeBoxItem(4, CHALLENGE_CENTER_WEIGHTED, "Center weighted"),
-            challengeBoxItem(5, CHALLENGE_CENTER_UNWEIGHTED, "Center unweighted"),
-            challengeBoxItem(6, CHALLENGE_CORNER, "Corner"),
-            challengeBoxItem(7, CHALLENGE_CORNER_WEIGHTED, "Corner weighted"),
-            challengeBoxItem(8, CHALLENGE_MIGRATE_DISTANCE, "Migrate distance"),
-            challengeBoxItem(9, CHALLENGE_CENTER_SPARSE, "Center sparse"),
-            challengeBoxItem(10, CHALLENGE_LEFT_EIGHTH, "Left eight"),
-            challengeBoxItem(11, CHALLENGE_RADIOACTIVE_WALLS, "Radioactive walls"),
-            challengeBoxItem(12, CHALLENGE_AGAINST_ANY_WALL, "Against any wall"),
-            challengeBoxItem(13, CHALLENGE_TOUCH_ANY_WALL, "Touch any wall"),
-            challengeBoxItem(14, CHALLENGE_EAST_WEST_EIGHTHS, "East west eights"),
-            challengeBoxItem(15, CHALLENGE_NEAR_BARRIER, "Near barrier"),
-            challengeBoxItem(16, CHALLENGE_PAIRS, "Pairs"),
-            challengeBoxItem(17, CHALLENGE_LOCATION_SEQUENCE, "Location sequence"),
-            challengeBoxItem(18, CHALLENGE_ALTRUISM, "Alruism"),
-            challengeBoxItem(19, CHALLENGE_ALTRUISM_SACRIFICE, "Alruism sacrifice"),
-        };
-
-        int findIndexByValue(unsigned value) {
-            for (int i = 0; i < 20; ++i) {
-                if (challengeBoxValues[i].value == value) {
-                    return challengeBoxValues[i].index;
-                }
-            }
-            return challengeBoxValues[0].index;
-        }
-
-        unsigned findValueByIndex(int index) {
-            for (int i = 0; i < 20; ++i) {
-                if (challengeBoxValues[i].index == index) {
-                    return challengeBoxValues[i].value;
-                }
-            }
-            return challengeBoxValues[0].value;
-        }
-    };
-
-    ChallengeBoxValueContainer challengeBoxValueContainer;
-
-    RightPanelComponent::RightPanelComponent(sf::Vector2u windowSize, std::function<void(bool)> pauseCallback)
+    RightPanelComponent::RightPanelComponent(
+        sf::Vector2u windowSize, 
+        std::function<void(bool)> pauseCallback,
+        std::function<void(std::string name, std::string val)> changeSettingsCallback
+    )
     {
         this->pauseCallback = pauseCallback;
+        this->changeSettingsCallback = changeSettingsCallback;
 
         // create panel
         this->panel = tgui::Panel::create();
@@ -79,31 +31,72 @@ namespace BS
         this->panel->add(this->pausePicture, "Picture");
 
         // setup pause button
-        tgui::Button::Ptr button = tgui::Button::create("Pause/Resume");
-        button->setPosition({bindRight(this->pausePicture) + 5.f, bindTop(this->pausePicture) + 6.f});
-        button->onPress([this]()
-                        { this->pauseResume(); });
-        this->panel->add(button, "Pause/Resume");
+        tgui::Button::Ptr pauseResumeButton = tgui::Button::create("Pause/Resume");
+        pauseResumeButton->setPosition({bindRight(this->pausePicture) + 5.f, bindTop(this->pausePicture) + 6.f});
+        pauseResumeButton->onPress([this]()
+                        { this->pauseResume(); }
+        );
+        this->panel->add(pauseResumeButton, "Pause/Resume");
 
-        // setup edit box
-        tgui::ComboBox::Ptr challengeBox = tgui::ComboBox::create();
-        challengeBox->setPosition("20%", 150);
-        int size_of_array = sizeof(challengeBoxValueContainer.challengeBoxValues) / sizeof(challengeBoxItem);
-        for (int i = 0; i < size_of_array; ++i)
-        {
-            challengeBox->addItem(challengeBoxValueContainer.challengeBoxValues[i].text);
-        }
-        challengeBox->setSelectedItemByIndex(challengeBoxValueContainer.findIndexByValue(p.challenge));
-        challengeBox->onItemSelect([this](int index) {
-            std::cout << "Selected: " << challengeBoxValueContainer.findValueByIndex(index) << std::endl;
+        // setup challenge box
+        ChallengeBoxComponent* challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val) {
+            this->changeSettingsCallback(name, val);
         });
-        this->panel->add(challengeBox, "MyEditBox");
+        tgui::ComboBox::Ptr challengeBox = challengeBoxComponent->getChallengeBox();
+        challengeBox->setPosition("5%", "10%");
+        this->panel->add(challengeBox, "ChallengeBox");
+        this->createLabel(challengeBox, "Challenge");
+
+        // setup mutation rate
+        this->mutationRateEditBox = tgui::EditBox::create();
+        this->mutationRateEditBox->setPosition({bindLeft(challengeBox), bindBottom(challengeBox) + this->controlOffset});
+        this->mutationRateEditBox->setText(tgui::String(p.pointMutationRate));
+        this->panel->add(this->mutationRateEditBox);
+        this->createLabel(this->mutationRateEditBox, "Mutation Rate");
+
+        tgui::Button::Ptr mutationButton = tgui::Button::create("Ok");
+        mutationButton->setPosition({bindRight(this->mutationRateEditBox) + 2.f, bindTop(this->mutationRateEditBox)});
+        mutationButton->onPress([this]()
+                        { this->changeSettingsCallback("pointmutationrate", this->mutationRateEditBox->getText().toStdString()); }
+        );
+        mutationButton->setHeight(this->mutationRateEditBox->getSize().y);
+        this->panel->add(mutationButton, "MutationButton");
 
         // setup generation progress bar
         this->generationProgressBar = tgui::ProgressBar::create();
         this->generationProgressBar->setMinimum(0);
         this->generationProgressBar->setPosition({bindLeft(pausePicture) + 5.f, bindBottom(pausePicture) + 12.f});
         this->panel->add(this->generationProgressBar, "GenerationProgressBar");
+    }
+
+    void RightPanelComponent::initSpeedControls(int min, int max, int initValue, std::function<void(float value)> changeSpeedCallback)
+    {
+        // setup speed controls
+        tgui::SpinControl::Ptr speedControls = tgui::SpinControl::create();
+        speedControls->setMinimum(min);
+        speedControls->setMaximum(max);
+        speedControls->setStep(1);
+        speedControls->setValue(0);
+
+        speedControls->setPosition({bindLeft(this->mutationRateEditBox), bindBottom(this->mutationRateEditBox) + this->controlOffset});
+        speedControls->setHeight(this->mutationRateEditBox->getSize().y);
+
+        speedControls->onValueChange([changeSpeedCallback](float value)
+        {
+            changeSpeedCallback(value);
+        });
+
+        this->panel->add(speedControls, "SpeedControls");
+
+
+        this->createLabel(speedControls, "Speed");
+    }
+
+    void RightPanelComponent::createLabel(tgui::Widget::Ptr widget, const tgui::String &text)
+    {
+        tgui::Label::Ptr label = tgui::Label::create(text);
+        label->setPosition({bindLeft(widget), bindTop(widget) - this->labelOffset});
+        this->panel->add(label);        
     }
 
     RightPanelComponent::~RightPanelComponent()

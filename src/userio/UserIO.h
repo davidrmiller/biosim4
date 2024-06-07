@@ -15,12 +15,12 @@ namespace BS
         ~UserIO();
 
         bool isStopped();
-        void checkUserInput();
-        void endOfStep(unsigned simStep, unsigned generation);
+        void handleStep(unsigned simStep, unsigned generation);
         void endOfGeneration(unsigned generation);
         void startNewGeneration(unsigned generation, unsigned stepsPerGeneration);
 
         void log(std::string message);
+
         bool isPaused();
     private:
         ImageWriter* imageWriter = nullptr;

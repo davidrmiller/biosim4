@@ -17,14 +17,20 @@ namespace BS
         tgui::Theme::setDefault("./Resources/Black.txt");
 
         // setup left panel
-        this->rightPanelComponent = new RightPanelComponent(this->window->getSize(), [this](bool paused) {this->pauseResume(paused); });
+        this->rightPanelComponent = new RightPanelComponent(
+            this->window->getSize(),
+            [this](bool paused)
+            {
+                this->pauseResume(paused);
+            },
+            [this](std::string name, std::string val)
+            {
+                this->settingsChanged(name, val);
+            });
 
-        ChallengeBoxComponent* challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val) {
-            this->settingsChanged(name, val);
-        });
-        this->rightPanelComponent->addToPanel(challengeBoxComponent->getChallengeBox());
+        this->rightPanelComponent->initSpeedControls(-5, 1, 0, [this](float value) { this->speedChanged(value); });
 
-        this->gui.add(this->rightPanelComponent->getPanel());        
+        this->gui.add(this->rightPanelComponent->getPanel());
 
         // setup view
         this->viewComponent = new ViewComponent(this->window->getSize());
@@ -65,31 +71,54 @@ namespace BS
     void SFMLUserIO::startNewGeneration(unsigned generation, unsigned stepsPerGeneration)
     {
         this->rightPanelComponent->startNewGeneration(generation, stepsPerGeneration);
+        this->updatePollEvents();
     }
 
     void SFMLUserIO::endOfStep(unsigned simStep)
     {
-        this->rightPanelComponent->endOfStep(simStep);
-        this->window->setView(*this->view);
-
-        this->window->clear();
-
-        int liveDisplayScale = p.displayScale / 1.5;
-        for (uint16_t index = 1; index <= p.population; ++index)
+        // #region handle increase speed by skipping frames
+        // no significant effect on performance wint 144 frame limit
+        // but incredibly useful with frame limit of 30
+        if (this->increaseSpeedCounter < this->speedThreshold)
         {
-            Indiv &indiv = peeps[index];
-            if (indiv.alive)
-            {
-                indiv.shape.setPosition(
-                    static_cast<float>(indiv.loc.x * liveDisplayScale),
-                    static_cast<float>(((p.sizeY - indiv.loc.y) - 1) * liveDisplayScale));
-                this->window->draw(indiv.shape);
-            }
+            this->increaseSpeedCounter++;
+            return;
         }
+        this->increaseSpeedCounter = 0;
+        // #endregion
 
-        this->gui.draw();
+        do 
+        {
+            this->updatePollEvents();
 
-        this->window->display();
+            this->rightPanelComponent->endOfStep(simStep);
+            this->window->setView(*this->view);
+
+            this->window->clear();
+
+            //display population
+            int liveDisplayScale = p.displayScale / 1.5;
+            for (uint16_t index = 1; index <= p.population; ++index)
+            {
+                Indiv &indiv = peeps[index];
+                if (indiv.alive)
+                {
+                    indiv.shape.setPosition(
+                        static_cast<float>(indiv.loc.x * liveDisplayScale),
+                        static_cast<float>(((p.sizeY - indiv.loc.y) - 1) * liveDisplayScale));
+                    this->window->draw(indiv.shape);
+                }
+            }
+
+            this->gui.draw();
+
+            this->window->display();
+
+            //handle slow time by drawing speedThreshold unchanged frames
+            this->slowSpeedCounter--;
+
+        } while (this->slowSpeedCounter >= this->speedThreshold);
+        this->slowSpeedCounter = 0;
     }
 
     void SFMLUserIO::endOfGeneration(unsigned generation)
@@ -114,6 +143,10 @@ namespace BS
     void SFMLUserIO::settingsChanged(std::string name, std::string val)
     {
         paramManager.changeFromUi(name, val);
-        std::cout << "Got settings: " << name << " value: " << val << std::endl;
+    }
+
+    void SFMLUserIO::speedChanged(float value)
+    {
+        this->speedThreshold = value;
     }
 }

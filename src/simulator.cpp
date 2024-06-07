@@ -127,6 +127,8 @@ void simulator(int argc, char **argv)
     runMode = RunMode::RUN;
     unsigned murderCount;
 
+    ProfilingInstrumentor::Instrumentor::getInstance().beginSession("Profile");
+
     // Inside the parallel region, be sure that shared data is not modified. Do the
     // modifications in the single-thread regions.
     #pragma omp parallel num_threads(p.numThreads) default(shared)
@@ -138,16 +140,9 @@ void simulator(int argc, char **argv)
             murderCount = 0; // for reporting purposes
 
             userIO->startNewGeneration(generation, p.stepsPerGeneration);
-            userIO->checkUserInput();
 
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped(); ++simStep) {
-
-                // handle pause/unpause
-                while (userIO->isPaused() && !userIO->isStopped() ) {
-                    userIO->endOfStep(simStep, generation);
-                    userIO->checkUserInput();
-                }
-
+                //ProfilingInstrumentor::Timer timer("sim step");
                 // multithreaded loop: index 0 is reserved, start at 1
                 #pragma omp for schedule(auto)
                 for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
@@ -155,6 +150,7 @@ void simulator(int argc, char **argv)
                         simStepOneIndiv(peeps[indivIndex], simStep);
                     }
                 }
+                //timer.stop();
 
                 // In single-thread mode: this executes deferred, queued deaths and movements,
                 // updates signal layers (pheromone), etc.
@@ -162,8 +158,10 @@ void simulator(int argc, char **argv)
                 {
                     murderCount += peeps.deathQueueSize();
                     endOfSimStep(simStep, generation);
-                    userIO->endOfStep(simStep, generation);
-                    userIO->checkUserInput();
+
+                    //ProfilingInstrumentor::Timer timer2("userIO->endOfStep");
+                    userIO->handleStep(simStep, generation);
+                    //timer2.stop();
                 }
             }
             
@@ -189,6 +187,7 @@ void simulator(int argc, char **argv)
     }
     //displaySampleGenomes(3); // final report, for debugging
 
+    ProfilingInstrumentor::Instrumentor::getInstance().endSession();
     std::cout << "Simulator exit." << std::endl;
 
     delete userIO;
