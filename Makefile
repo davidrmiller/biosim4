@@ -19,11 +19,11 @@ LDFLAGS += \
   -lopencv_videoio \
   -lgomp \
   -lpthread \
-  -fopenmp \
   -lsfml-graphics \
   -lsfml-window \
   -lsfml-system \
-  -ltgui
+  -ltgui \
+  -fopenmp
 
 ifeq ($(BUILD),debug)
   OUT_DIR = bin/Debug/

@@ -135,13 +135,14 @@ void simulator(int argc, char **argv)
         randomUint.initialize(); // seed the RNG, each thread has a private instance
 
         while (runMode == RunMode::RUN && generation < p.maxGenerations && !userIO->isStopped()) { // generation loop
-            #pragma omp single
-            murderCount = 0; // for reporting purposes
-
-            userIO->startNewGeneration(generation, p.stepsPerGeneration);
+            #pragma omp master 
+            {
+                murderCount = 0; // for reporting purposes
+                userIO->startNewGeneration(generation, p.stepsPerGeneration);
+            }
 
             for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped(); ++simStep) {
-                //ProfilingInstrumentor::Timer timer("sim step");
+                //ProfilingInstrumentor::Timer timer("sim step " + std::to_string(omp_get_thread_num()));
                 // multithreaded loop: index 0 is reserved, start at 1
                 #pragma omp for schedule(auto)
                 for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
@@ -150,26 +151,30 @@ void simulator(int argc, char **argv)
                     }
                 }
                 //timer.stop();
-
+                
                 // In single-thread mode: this executes deferred, queued deaths and movements,
                 // updates signal layers (pheromone), etc.
-                #pragma omp single
+                // UPDATED: rendering must be done in the master thread
+                #pragma omp master
                 {
                     murderCount += peeps.deathQueueSize();
                     endOfSimStep(simStep, generation);
 
-                    //ProfilingInstrumentor::Timer timer2("userIO->endOfStep");
+                    //ProfilingInstrumentor::Timer timer2("userIO->endOfStep" + std::to_string(omp_get_thread_num()));
                     userIO->handleStep(simStep, generation);
                     //timer2.stop();
                 }
+
+                #pragma omp barrier
             }
             
-            #pragma omp single
+            #pragma omp master
             {
                 userIO->endOfGeneration(generation);
 
                 //ToDo: make it work alongside with updateFromUi
                 //paramManager.updateFromConfigFile(generation + 1);
+
                 paramManager.updateFromUi();
                 unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
                 if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
@@ -181,6 +186,7 @@ void simulator(int argc, char **argv)
                     ++generation;
                 }
             }
+            #pragma omp barrier
         }
     }
     //displaySampleGenomes(3); // final report, for debugging
