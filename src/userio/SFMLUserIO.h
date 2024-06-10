@@ -6,12 +6,20 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "../ai/indiv.h"
+#include "../params.h"
+#include "../peeps.h"
+
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
 #include "./sfmlComponents/ChallengeBoxComponent.h"
 
 namespace BS
 {
+    extern Peeps peeps;
+    extern const Params &p;
+    extern ParamManager paramManager;
+    
     class SFMLUserIO
     {
     public:
@@ -31,6 +39,9 @@ namespace BS
 
         void log(std::string message);
     private:
+        static int const SPEED_SLOW_MAX = -5;
+        static int const SPEED_FAST_MAX = 5;
+
         int windowHeight = 900;
         int windowWidth = 1200;
         sf::RenderWindow* window;

@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <vector>
 #include <cmath>
-#include "sensors-actions.h"
-#include "random.h"
+#include "./sensors-actions.h"
+#include "../utils/random.h"
 
 namespace BS {
 

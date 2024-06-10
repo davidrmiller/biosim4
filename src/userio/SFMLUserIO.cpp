@@ -1,7 +1,4 @@
 #include "SFMLUserIO.h"
-#include "../simulator.h"
-#include "../indiv.h"
-#include "../params.h"
 
 namespace BS
 {
@@ -28,7 +25,7 @@ namespace BS
                 this->settingsChanged(name, val);
             });
 
-        this->rightPanelComponent->initSpeedControls(-5, 1, 0, [this](float value) { this->speedChanged(value); });
+        this->rightPanelComponent->initSpeedControls(SPEED_SLOW_MAX, SPEED_FAST_MAX, 0, [this](float value) { this->speedChanged(value); });
 
         this->gui.add(this->rightPanelComponent->getPanel());
 

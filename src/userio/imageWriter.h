@@ -9,7 +9,7 @@
 #include <condition_variable>
 #include <thread>
 #include <vector>
-#include "../indiv.h"
+#include "../ai/indiv.h"
 #include "../params.h"
 #include "../peeps.h"
 

@@ -5,10 +5,13 @@
 #include <cmath>
 #include <array>
 #include <cassert>
-#include "simulator.h"
+#include "../simulator.h"
+#include "../utils/random.h"
 #include "omp.h"
 
 namespace BS {
+
+extern RandomUintGenerator randomUint;
 
 // Given a factor in the range 0.0..1.0, return a bool with the
 // probability of it being true proportional to factor. For example, if

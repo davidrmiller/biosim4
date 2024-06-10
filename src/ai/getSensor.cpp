@@ -3,9 +3,18 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
-#include "simulator.h"
+#include "../simulator.h"
+#include "../basicTypes.h"
+#include "../grid.h"
+#include "./signals.h"
+#include "./indiv.h"
+#include "../peeps.h"
 
 namespace BS {
+
+extern Grid grid;
+extern Signals signals;
+extern Peeps peeps;
 
 float getPopulationDensityAlongAxis(Coord loc, Dir dir)
 {

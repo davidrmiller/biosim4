@@ -69,27 +69,62 @@ namespace BS
         this->panel->add(this->generationProgressBar, "GenerationProgressBar");
     }
 
+    /**
+     * Initializes the speed controls for the right panel component.
+     *
+     * @param min The minimum value for the speed controls.
+     * @param max The maximum value for the speed controls.
+     * @param initValue The initial value for the speed controls.
+     * @param changeSpeedCallback A callback function that is called when the value of the speed controls changes.
+     *
+     * @throws None.
+     */
     void RightPanelComponent::initSpeedControls(int min, int max, int initValue, std::function<void(float value)> changeSpeedCallback)
     {
-        // setup speed controls
+        // create SpinControl
         tgui::SpinControl::Ptr speedControls = tgui::SpinControl::create();
+
+        // create MIN button
+        tgui::Button::Ptr minButton = tgui::Button::create("MIN");
+        minButton->setPosition({bindLeft(this->mutationRateEditBox), bindBottom(this->mutationRateEditBox) + this->controlOffset});
+        minButton->onPress([changeSpeedCallback, min, speedControls]()
+        {
+            changeSpeedCallback(min);
+            speedControls->setValue(min);
+        });
+        minButton->setHeight(this->mutationRateEditBox->getSize().y);
+        minButton->setWidth("15%");
+        this->panel->add(minButton, "SpeedMinControls");
+
+        // config SpinControl
         speedControls->setMinimum(min);
         speedControls->setMaximum(max);
         speedControls->setStep(1);
-        speedControls->setValue(0);
+        speedControls->setValue(initValue);
 
-        speedControls->setPosition({bindLeft(this->mutationRateEditBox), bindBottom(this->mutationRateEditBox) + this->controlOffset});
+        speedControls->setPosition({bindRight(minButton) + 5.f, bindBottom(this->mutationRateEditBox) + this->controlOffset});
         speedControls->setHeight(this->mutationRateEditBox->getSize().y);
+        speedControls->setWidth("25%");
 
         speedControls->onValueChange([changeSpeedCallback](float value)
         {
             changeSpeedCallback(value);
         });
-
         this->panel->add(speedControls, "SpeedControls");
 
+        // create MAX button
+        tgui::Button::Ptr maxButton = tgui::Button::create("MAX");
+        maxButton->setPosition({bindRight(speedControls) + 5.f, bindBottom(this->mutationRateEditBox) + this->controlOffset});
+        maxButton->onPress([changeSpeedCallback, max, speedControls]()
+        {
+            changeSpeedCallback(max);
+            speedControls->setValue(max);
+        });
+        maxButton->setHeight(this->mutationRateEditBox->getSize().y);
+        maxButton->setWidth("15%");
+        this->panel->add(maxButton, "SpeedMaxControls");
 
-        this->createLabel(speedControls, "Speed");
+        this->createLabel(minButton, "Speed");
     }
 
     void RightPanelComponent::createLabel(tgui::Widget::Ptr widget, const tgui::String &text)

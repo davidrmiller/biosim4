@@ -52,7 +52,7 @@ Arithmetic
 #include <cstdint>
 #include <cmath>
 #include <algorithm>
-#include "random.h"
+#include "./utils/random.h"
 
 namespace BS {
 

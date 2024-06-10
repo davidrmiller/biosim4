@@ -10,7 +10,6 @@
 #include <cstdint>
 #include <map>
 #include "params.h"
-#include "ProfilingInstrumentor.h"
 
 // To add a new parameter:
 //    1. Add a member to struct Params in params.h.

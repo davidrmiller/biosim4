@@ -15,8 +15,9 @@
 #include <random>
 #include <chrono>
 #include <climits>
-#include "simulator.h"
+#include "../simulator.h"
 #include "omp.h"
+#include "random.h"
 
 
 namespace BS {

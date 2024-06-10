@@ -3,7 +3,8 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
-#include "simulator.h"
+#include <array>
+#include "../simulator.h"
 
 namespace BS {
 

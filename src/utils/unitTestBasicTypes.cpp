@@ -4,7 +4,8 @@
 
 #include <cassert>
 #include <cmath>
-#include "basicTypes.h"
+#include <iostream>
+#include "../basicTypes.h"
 
 namespace BS {
 

@@ -2,9 +2,18 @@
 
 #include <iostream>
 #include <cassert>
-#include "simulator.h"
+#include <string.h>
+#include <iomanip>
+#include <cstdint>
+#include <cstring>
+
+#include "../simulator.h"
+#include "indiv.h"
+#include "../grid.h"
 
 namespace BS {
+
+extern Grid grid;
 
 // This is called when any individual is spawned.
 // The responsiveness parameter will be initialized here to maximum value
@@ -68,6 +77,54 @@ void Indiv::fillColor()
     }
 
 	this->shape.setFillColor(sf::Color(color[0], color[1], color[2], 255));
+}
+
+
+
+// This prints a neural net in a form that can be processed with
+// graph-nnet.py to produce a graphic illustration of the net.
+void Indiv::printIGraphEdgeList() const
+{
+    // for (auto & conn : nnet.connections) {
+    //     if (conn.sourceType == SENSOR) {
+    //         std::cout << sensorShortName((Sensor)(conn.sourceNum));
+    //     } else {
+    //         std::cout << "N" << std::to_string(conn.sourceNum);
+    //     }
+
+    //     std::cout << " ";
+
+    //     if (conn.sinkType == ACTION) {
+    //         std::cout << actionShortName((Action)(conn.sinkNum));
+    //     } else {
+    //         std::cout << "N" << std::to_string(conn.sinkNum);
+    //     }
+
+    //     std::cout << " " << std::to_string(conn.weight) << std::endl;
+    // }
+}
+
+
+// Format: 32-bit hex strings, one per gene
+void Indiv::printGenome() const
+{
+    constexpr unsigned genesPerLine = 8;
+    unsigned count = 0;
+    for (Gene gene : genome) {
+        if (count == genesPerLine) {
+            std::cout << std::endl;
+            count = 0;
+        } else if (count != 0) {
+            std::cout << " ";
+        }
+
+        assert(sizeof(Gene) == 4);
+        uint32_t n;
+        std::memcpy(&n, &gene, sizeof(n));
+        std::cout << std::hex << std::setfill('0') << std::setw(8) << n;
+        ++count;
+    }
+    std::cout << std::dec << std::endl;
 }
 
 } // end namespace BS

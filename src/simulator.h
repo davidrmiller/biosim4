@@ -5,15 +5,16 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <omp.h>
 
 #include "basicTypes.h"   // types Dir, Coord, Polar and their values
 #include "params.h"       // params from the config file plus some extra stuff
-#include "indiv.h"        // data structure for an individual
+#include "./ai/indiv.h"        // data structure for an individual
 #include "grid.h"         // the 2D world where the peeps live
-#include "signals.h"      // a 2D array of pheromones that overlay the world grid
+#include "./ai/signals.h"      // a 2D array of pheromones that overlay the world grid
 #include "peeps.h"        // the 2D world where the peeps live
-#include "random.h"
-#include "ProfilingInstrumentor.h"
+#include "./utils/random.h"
+#include "./utils/ProfilingInstrumentor.h"
 #include "./userio/UserIO.h"
 
 namespace BS {
