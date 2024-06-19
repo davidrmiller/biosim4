@@ -2,6 +2,18 @@
 
 Fork of https://github.com/davidrmiller/biosim4
 
+### What has bein done
+
+- heavy refactoring (still in progress)
+- add a new output via SFML wich renders individuals in real-time
+- add UI to watch and control simulation with TGUI
+- add logic to save and load simulations
+
+### Plans
+- expand UI functionality to controll simulation
+- implement recording of simulation, add ability to play it with time scipping, ability to go back (etc.)
+- hopefuly add more behaviour, events, resources to simulation
+
 ## What is this?
 
 This pile of code was used to simulate biological creatures that evolve through natural selection.
