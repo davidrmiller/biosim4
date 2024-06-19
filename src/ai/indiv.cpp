@@ -23,16 +23,22 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
 {
     index = index_;
     loc = loc_;
+    genome = std::move(genome_);
+    this->initVariables();
+}
+
+void Indiv::initVariables()
+{
     //birthLoc = loc_;
-    grid.set(loc_, index_);
+    grid.set(this->loc, this->index);
+
     age = 0;
     oscPeriod = 34; // ToDo !!! define a constant
     alive = true;
     lastMoveDir = Dir::random8();
     responsiveness = 0.5; // range 0.0..1.0
     longProbeDist = p.longProbeDistance;
-    challengeBits = (unsigned)false; // will be set true when some task gets accomplished
-    genome = std::move(genome_);
+    challengeBits = (unsigned)false; // will be set true when some task gets accomplished    
     createWiringFromGenome();
 
     this->shape.setRadius(2);

@@ -26,12 +26,89 @@ namespace BS
             });
 
         this->rightPanelComponent->initSpeedControls(SPEED_SLOW_MAX, SPEED_FAST_MAX, 0, [this](float value) { this->speedChanged(value); });
+        this->rightPanelComponent->initSaveLoadButtons(
+            [this](void)
+            {
+                if (this->isFileDialogShowing)
+                {
+                    return;
+                }
+                
+                if (this->saveFileDialog == nullptr) 
+                {
+                    this->saveFileDialog = tgui::FileDialog::create("Save file", "Save");
+                    this->saveFileDialog->setMultiSelect(false);
+                    this->saveFileDialog->setFileMustExist(false);
+                    this->saveFileDialog->setPath("Output/Saves");
+                    this->saveFileDialog->setFilename("simulation.json");
+                    //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
+                    this->saveFileDialog->setPosition("5%", "5%");
+
+                    this->saveFileDialog->onFileSelect([this](const tgui::String& filePath){                        
+                        Peeps::save(peeps, filePath.toStdString());                        
+                        this->fileDialogToggled(false);
+                    });
+
+                    this->saveFileDialog->onCancel([this]{
+                        this->fileDialogToggled(false);
+                    });
+                }
+                this->saveFileDialog->setPath("Output/Saves"); // update files list
+                this->fileDialogToggled(true);
+                this->gui.add(this->saveFileDialog);
+            },
+            [this]()
+            {
+                if (this->isFileDialogShowing)
+                {
+                    return;
+                }
+
+                if (this->loadFileDialog == nullptr) {
+                    this->loadFileDialog = tgui::FileDialog::create("Open file", "Open");
+                    this->loadFileDialog->setMultiSelect(false);
+                    this->loadFileDialog->setFileMustExist(true);
+                    this->loadFileDialog->setPath("Output/Saves");
+                    this->loadFileDialog->setFilename("simulation.json");
+                    //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
+                    this->loadFileDialog->setPosition("5%", "5%");
+
+                    this->loadFileDialog->onFileSelect([this](const tgui::String& filePath){
+                        this->loadFileSelected = true;
+                        this->loadFilename = filePath.toStdString();
+                        this->fileDialogToggled(false);
+                    });
+                    this->loadFileDialog->onCancel([this]{
+                        std::cerr << "No file selected.\n";
+                        this->fileDialogToggled(false);
+                    });    
+                }
+
+                this->loadFileDialog->setPath("Output/Saves"); // update files list
+                this->fileDialogToggled(true);
+                this->gui.add(this->loadFileDialog);
+            }
+        );
 
         this->gui.add(this->rightPanelComponent->getPanel());
 
         // setup view
         this->viewComponent = new ViewComponent(this->window->getSize());
         this->view = this->viewComponent->getView();
+    }
+
+    void SFMLUserIO::fileDialogToggled(bool shown)
+    {
+        if (shown)
+        {
+            this->viewComponent->lock();
+        }
+        else 
+        {
+            this->viewComponent->unlock();
+        }
+        this->rightPanelComponent->pauseExternal(shown);
+        this->isFileDialogShowing = shown;
     }
 
     SFMLUserIO::~SFMLUserIO()
@@ -73,16 +150,13 @@ namespace BS
 
     void SFMLUserIO::endOfStep(unsigned simStep)
     {
-        // #region handle increase speed by skipping frames
-        // no significant effect on performance wint 144 frame limit
-        // but incredibly useful with frame limit of 30
+        // handle increase speed by skipping frames
         if (this->increaseSpeedCounter < this->speedThreshold)
         {
             this->increaseSpeedCounter++;
             return;
         }
         this->increaseSpeedCounter = 0;
-        // #endregion
 
         do 
         {

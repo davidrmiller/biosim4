@@ -9,10 +9,10 @@
 
 #include "basicTypes.h"   // types Dir, Coord, Polar and their values
 #include "params.h"       // params from the config file plus some extra stuff
-#include "./ai/indiv.h"        // data structure for an individual
 #include "grid.h"         // the 2D world where the peeps live
-#include "./ai/signals.h"      // a 2D array of pheromones that overlay the world grid
 #include "peeps.h"        // the 2D world where the peeps live
+#include "./ai/indiv.h"        // data structure for an individual
+#include "./ai/signals.h"      // a 2D array of pheromones that overlay the world grid
 #include "./utils/random.h"
 #include "./utils/ProfilingInstrumentor.h"
 #include "./userio/UserIO.h"

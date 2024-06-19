@@ -16,6 +16,9 @@ namespace BS
         ~ViewComponent();
         sf::View* getView() { return this->view; }
         void updateInput(sf::Event e, sf::Vector2i mousePosition);
+
+        void lock();
+        void unlock();
     private:
         sf::View* view;
 
@@ -24,6 +27,8 @@ namespace BS
         bool viewIsMoving = false;
         sf::Vector2f oldViewPos;
         double accumZoom = 1;
+
+        bool isLocked = false;
     };
 }
 

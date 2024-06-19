@@ -117,6 +117,10 @@ bool getBoolVal(const std::string &s)
         return false;
 }
 
+void ParamManager::setPopulation(unsigned population)
+{
+    privParams.population = population;
+}
 
 void ParamManager::ingestParameter(std::string name, std::string val)
 {

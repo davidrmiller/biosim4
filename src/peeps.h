@@ -7,6 +7,7 @@
 #include "grid.h"
 #include "params.h"
 #include "./ai/indiv.h"
+#include <cereal/access.hpp>
 
 namespace BS {
 
@@ -32,6 +33,7 @@ class Peeps {
 public:
     Peeps(); // makes zero individuals
     void init(unsigned population);
+    void initFromSave();
     void queueForDeath(const Indiv &);
     void drainDeathQueue();
     void queueForMove(const Indiv &, Coord newLoc);
@@ -43,10 +45,23 @@ public:
     // Direct access:
     Indiv & operator[](uint16_t index) { return individuals[index]; }
     Indiv const & operator[](uint16_t index) const { return individuals[index]; }
+
+
+    static void save(Peeps peeps_, std::string fileName = "Output/Saves/peeps.json");
+    static Peeps load(std::string fileName = "Output/Saves/peeps.json");
 private:
+    unsigned population;
     std::vector<Indiv> individuals; // Index value 0 is reserved
     std::vector<uint16_t> deathQueue;
-    std::vector<std::pair<uint16_t, Coord>> moveQueue;
+    std::vector<std::pair<uint16_t, Coord>> moveQueue;       
+            
+    friend class cereal::access;
+
+    template <class Archive>
+    void serialize(Archive &ar)
+    {
+        ar(population, individuals);
+    }
 };
 
 } // end namespace BS

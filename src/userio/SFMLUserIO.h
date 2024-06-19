@@ -12,7 +12,6 @@
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
-#include "./sfmlComponents/ChallengeBoxComponent.h"
 
 namespace BS
 {
@@ -38,6 +37,9 @@ namespace BS
         void settingsChanged(std::string name, std::string val);
 
         void log(std::string message);
+
+        bool loadFileSelected = false;
+        std::string loadFilename;
     private:
         static int const SPEED_SLOW_MAX = -5;
         static int const SPEED_FAST_MAX = 5;
@@ -58,6 +60,11 @@ namespace BS
         int slowSpeedCounter = 0;
 
         void speedChanged(float value);
+
+        bool isFileDialogShowing = false;
+        tgui::FileDialog::Ptr loadFileDialog;
+        tgui::FileDialog::Ptr saveFileDialog;
+        void fileDialogToggled(bool shown);
     };
 }
 

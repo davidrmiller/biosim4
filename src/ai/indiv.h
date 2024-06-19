@@ -10,6 +10,8 @@
 #include <array>
 #include "../basicTypes.h"
 #include "./genome-neurons.h"
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace BS {
 
@@ -39,6 +41,13 @@ struct Indiv {
 	sf::CircleShape shape;
     uint8_t makeGeneticColor();
     void fillColor();
+    void initVariables();
+
+    template <class Archive>
+    void serialize(Archive &ar)
+    {
+        ar(index, CEREAL_NVP(loc), CEREAL_NVP(genome));
+    }
 };
 
 } // end namespace BS

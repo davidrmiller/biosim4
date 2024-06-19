@@ -7,6 +7,7 @@
 #include "./sensors-actions.h"
 #include "../utils/random.h"
 
+
 namespace BS {
 
 // Each gene specifies one synaptic connection in a neural net. Each
@@ -32,6 +33,25 @@ struct Gene { //__attribute__((packed)) Gene {
     //float weightAsFloat() { return std::pow(weight / f1, 3.0) / f2; }
     float weightAsFloat() const { return weight / 8192.0; }
     static int16_t makeRandomWeight() { return randomUint(0, 0xffff) - 0x8000; }
+
+    template <class Archive>
+    void save(Archive &ar) const
+    {
+        ar(uint16_t(sourceType), uint16_t(sourceNum), uint16_t(sinkType), uint16_t(sinkNum), int16_t(weight));
+    }
+
+    template <class Archive>
+    void load(Archive &ar)
+    {
+        uint16_t sourceType_l, sourceNum_l, sinkType_l, sinkNum_l;
+        int16_t weight_l;
+        ar(sourceType_l, sourceNum_l, sinkType_l, sinkNum_l, weight_l);
+        sourceType = sourceType_l;
+        sourceNum = sourceNum_l;
+        sinkType = sinkType_l;
+        sinkNum = sinkNum_l;
+        weight = weight_l;
+    }
 };
 
 

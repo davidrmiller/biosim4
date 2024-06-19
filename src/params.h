@@ -14,7 +14,7 @@
 
 namespace BS {
 
-enum class RunMode { STOP, RUN, PAUSE, ABORT };
+enum class RunMode { STOP, RUN, PAUSE, ABORT, LOAD };
 extern RunMode runMode;
 
 // A private copy of Params is initialized by ParamManager::init(), then modified by
@@ -78,6 +78,7 @@ public:
     void updateFromConfigFile(unsigned generationNumber);
     void checkParameters();
 
+    void setPopulation(unsigned population);
     void changeFromUi(std::string name, std::string val);
     void updateFromUi();
 private:

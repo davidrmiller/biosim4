@@ -19,6 +19,7 @@
 namespace BS {
 
 extern void initializeGeneration0();
+extern void initializeFromSave();
 extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount);
 extern void displaySampleGenomes(unsigned count);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
@@ -70,6 +71,92 @@ void simStepOneIndiv(Indiv &indiv, unsigned simStep)
     executeActions(indiv, actionLevels);
 }
 
+void simulate(unsigned generation)
+{
+    unsigned murderCount;
+
+    // Inside the parallel region, be sure that shared data is not modified. Do the
+    // modifications in the single-thread regions.
+    #pragma omp parallel num_threads(p.numThreads) default(shared)
+    {
+        randomUint.initialize(); // seed the RNG, each thread has a private instance
+
+        while (runMode == RunMode::RUN && generation < p.maxGenerations && !userIO->isStopped())
+        { // generation loop
+            #pragma omp master
+            {
+                murderCount = 0; // for reporting purposes
+                userIO->startNewGeneration(generation, p.stepsPerGeneration);
+            }
+            #pragma omp barrier
+
+            for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped() && runMode == RunMode::RUN; ++simStep)
+            {
+                // multithreaded loop: index 0 is reserved, start at 1
+                #pragma omp for schedule(auto)
+                for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex)
+                {
+                    if (peeps[indivIndex].alive)
+                    {
+                        simStepOneIndiv(peeps[indivIndex], simStep);
+                    }
+                }
+
+                // In single-thread mode: this executes deferred, queued deaths and movements,
+                // updates signal layers (pheromone), etc.
+                // UPDATED: rendering must be done in the master thread
+                #pragma omp master
+                {
+                    murderCount += peeps.deathQueueSize();
+                    endOfSimStep(simStep, generation);
+
+                    userIO->handleStep(simStep, generation);
+
+                    if (userIO->getLoadFileSelected())
+                    {
+                        runMode = RunMode::LOAD;
+                    }
+                }
+
+                #pragma omp barrier
+            }
+
+            #pragma omp master
+            {
+                if (runMode == RunMode::RUN) {
+                    userIO->endOfGeneration(generation);
+
+                    // ToDo: make it work alongside with updateFromUi
+                    // paramManager.updateFromConfigFile(generation + 1);
+
+                    paramManager.updateFromUi();
+                    unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
+                    if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0))
+                    {
+                        // displaySampleGenomes(p.displaySampleGenomes);
+                    }
+                    if (numberSurvivors == 0)
+                    {
+                        generation = 0; // start over
+                    }
+                    else
+                    {
+                        ++generation;
+                    }
+                }
+            }
+            #pragma omp barrier
+        }
+    }
+
+    if (runMode == RunMode::RUN) {
+        runMode = RunMode::STOP;
+    }
+    // displaySampleGenomes(3); // final report, for debugging
+
+    std::cout << "Simulator exit." << std::endl;
+}
+
 /********************************************************************************
 Start of simulator
 
@@ -113,86 +200,44 @@ void simulator(int argc, char **argv)
     randomUint.initialize(); // seed the RNG for main-thread use
 
     // UI must be initialized after parameters
-    userIO = new UserIO(true, false);
-
-    // Allocate container space. Once allocated, these container elements
-    // will be reused in each new generation.
-    grid.init(p.sizeX, p.sizeY); // the land on which the peeps live
-    signals.init(p.signalLayers, p.sizeX, p.sizeY);  // where the pheromones waft
-    peeps.init(p.population); // the peeps themselves
-
-    unsigned generation = 0;
-    initializeGeneration0(); // starting population
+    userIO = new UserIO(true, false, true);
+    
     runMode = RunMode::RUN;
-    unsigned murderCount;
+    unsigned generation = 0;
 
-    ProfilingInstrumentor::Instrumentor::getInstance().beginSession("Profile");
+    while (runMode != RunMode::STOP) {
+        switch (runMode)
+        {
+        case RunMode::RUN:
+            // Allocate container space. Once allocated, these container elements
+            // will be reused in each new generation.
+            grid.init(p.sizeX, p.sizeY);                    // the land on which the peeps live
+            signals.init(p.signalLayers, p.sizeX, p.sizeY); // where the pheromones waft
+            peeps.init(p.population);                       // the peeps themselves
 
-    // Inside the parallel region, be sure that shared data is not modified. Do the
-    // modifications in the single-thread regions.
-    #pragma omp parallel num_threads(p.numThreads) default(shared)
-    {
-        randomUint.initialize(); // seed the RNG, each thread has a private instance
-
-        while (runMode == RunMode::RUN && generation < p.maxGenerations && !userIO->isStopped()) { // generation loop
-            #pragma omp master 
-            {
-                murderCount = 0; // for reporting purposes
-                userIO->startNewGeneration(generation, p.stepsPerGeneration);
-            }
-
-            for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped(); ++simStep) {
-                //ProfilingInstrumentor::Timer timer("sim step " + std::to_string(omp_get_thread_num()));
-                // multithreaded loop: index 0 is reserved, start at 1
-                #pragma omp for schedule(auto)
-                for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
-                    if (peeps[indivIndex].alive) {
-                        simStepOneIndiv(peeps[indivIndex], simStep);
-                    }
-                }
-                //timer.stop();
-                
-                // In single-thread mode: this executes deferred, queued deaths and movements,
-                // updates signal layers (pheromone), etc.
-                // UPDATED: rendering must be done in the master thread
-                #pragma omp master
-                {
-                    murderCount += peeps.deathQueueSize();
-                    endOfSimStep(simStep, generation);
-
-                    //ProfilingInstrumentor::Timer timer2("userIO->endOfStep" + std::to_string(omp_get_thread_num()));
-                    userIO->handleStep(simStep, generation);
-                    //timer2.stop();
-                }
-
-                #pragma omp barrier
-            }
+            generation = 0;
             
-            #pragma omp master
-            {
-                userIO->endOfGeneration(generation);
+            initializeGeneration0(); // starting population
+            simulate(generation);
+            break;
+        case RunMode::LOAD:
+            grid.init(p.sizeX, p.sizeY);
+            signals.init(p.signalLayers, p.sizeX, p.sizeY);
 
-                //ToDo: make it work alongside with updateFromUi
-                //paramManager.updateFromConfigFile(generation + 1);
+            generation = 0;
 
-                paramManager.updateFromUi();
-                unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
-                if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
-                    //displaySampleGenomes(p.displaySampleGenomes);
-                }
-                if (numberSurvivors == 0) {
-                    generation = 0;  // start over
-                } else {
-                    ++generation;
-                }
-            }
-            #pragma omp barrier
-        }
+            peeps = Peeps::load(userIO->getLoadFilename());
+            peeps.initFromSave();
+            initializeFromSave();
+            userIO->cleanLoadSelection();
+            
+            runMode = RunMode::RUN;
+            simulate(generation);
+            break;
+        default:
+            break;
+        }        
     }
-    //displaySampleGenomes(3); // final report, for debugging
-
-    ProfilingInstrumentor::Instrumentor::getInstance().endSession();
-    std::cout << "Simulator exit." << std::endl;
 
     delete userIO;
 }

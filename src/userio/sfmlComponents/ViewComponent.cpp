@@ -16,6 +16,11 @@ namespace BS
 
     void ViewComponent::updateInput(sf::Event e, sf::Vector2i mousePosition)
     {
+        if (this->isLocked)
+        {
+            return;
+        }
+        
         // View keyboard zoom
         if (e.Event::type == e.Event::KeyReleased)
         {
@@ -120,5 +125,15 @@ namespace BS
         {
             this->view->move(sf::Vector2f(0, viewSpeed));
         }
+    }
+
+    void ViewComponent::lock()
+    {
+        this->isLocked = true;
+    }
+
+    void ViewComponent::unlock()
+    {
+        this->isLocked = false;
     }
 }

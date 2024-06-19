@@ -11,6 +11,7 @@ CXXFLAGS += \
   -std=c++17 \
   -fexceptions \
   -fopenmp \
+  -I./src/include \
   $(shell pkg-config --cflags opencv4)
 
 LDFLAGS += \
@@ -41,6 +42,8 @@ SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h src/user
 CXXSOURCE :=  $(filter %.cpp, $(SOURCE))
 HEADERS :=  $(filter %.h, $(SOURCE))
 OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
+INCLUDES = -I./src/include
+LIBS = -L/path/to/cereal/lib -lcereal
 
 
 all: debug release
