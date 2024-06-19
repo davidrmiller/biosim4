@@ -16,6 +16,7 @@
 #include "./utils/random.h"
 #include "./utils/ProfilingInstrumentor.h"
 #include "./userio/UserIO.h"
+#include "./utils/Save.h"
 
 namespace BS {
 

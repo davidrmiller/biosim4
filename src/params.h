@@ -56,6 +56,7 @@ struct Params {
     unsigned barrierType; // >= 0
     bool deterministic;
     unsigned RNGSeed; // >= 0
+    bool autoSave;
 
     // These must not change after initialization
     uint16_t sizeX; // 2..0x10000
@@ -68,6 +69,12 @@ struct Params {
 
     // These are updated automatically and not set via the parameter file
     unsigned parameterChangeGenerationNumber; // the most recent generation number that an automatic parameter change occured at
+
+    template <class Archive>
+    void serialize(Archive &ar)
+    {
+        ar(challenge, pointMutationRate);
+    }
 };
 
 class ParamManager {
@@ -81,6 +88,8 @@ public:
     void setPopulation(unsigned population);
     void changeFromUi(std::string name, std::string val);
     void updateFromUi();
+
+    void updateFromSave(Params params_);
 private:
     Params privParams;
     std::string configFilename;

@@ -33,11 +33,14 @@ namespace BS
 
         void pauseExternal(bool paused);
 
+        void setFromParams();
+
     private:
         const float labelOffset = 15.f;
         const float controlOffset = 20.f;
 
         tgui::Panel::Ptr panel;
+        ChallengeBoxComponent *challengeBoxComponent;
 
         tgui::TextArea::Ptr console;
         std::vector<tgui::String> logMessages;

@@ -40,12 +40,12 @@ namespace BS
                     this->saveFileDialog->setMultiSelect(false);
                     this->saveFileDialog->setFileMustExist(false);
                     this->saveFileDialog->setPath("Output/Saves");
-                    this->saveFileDialog->setFilename("simulation.json");
+                    this->saveFileDialog->setFilename("simulation.bin");
                     //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
                     this->saveFileDialog->setPosition("5%", "5%");
 
-                    this->saveFileDialog->onFileSelect([this](const tgui::String& filePath){                        
-                        Peeps::save(peeps, filePath.toStdString());                        
+                    this->saveFileDialog->onFileSelect([this](const tgui::String& filePath){
+                        Save::save(filePath.toStdString());
                         this->fileDialogToggled(false);
                     });
 
@@ -69,7 +69,7 @@ namespace BS
                     this->loadFileDialog->setMultiSelect(false);
                     this->loadFileDialog->setFileMustExist(true);
                     this->loadFileDialog->setPath("Output/Saves");
-                    this->loadFileDialog->setFilename("simulation.json");
+                    this->loadFileDialog->setFilename("simulation.bin");
                     //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
                     this->loadFileDialog->setPosition("5%", "5%");
 
@@ -95,6 +95,11 @@ namespace BS
         // setup view
         this->viewComponent = new ViewComponent(this->window->getSize());
         this->view = this->viewComponent->getView();
+    }
+
+    void SFMLUserIO::setFromParams()
+    {
+        this->rightPanelComponent->setFromParams();
     }
 
     void SFMLUserIO::fileDialogToggled(bool shown)

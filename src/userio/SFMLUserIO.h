@@ -9,6 +9,7 @@
 #include "../ai/indiv.h"
 #include "../params.h"
 #include "../peeps.h"
+#include "../utils/Save.h"
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
@@ -40,6 +41,8 @@ namespace BS
 
         bool loadFileSelected = false;
         std::string loadFilename;
+
+        void setFromParams();
     private:
         static int const SPEED_SLOW_MAX = -5;
         static int const SPEED_FAST_MAX = 5;

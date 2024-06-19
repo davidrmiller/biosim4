@@ -36,10 +36,15 @@ namespace BS
         {
             this->challengeBox->addItem(this->items[i].text);
         }
-        this->challengeBox->setSelectedItemByIndex(this->findIndexByValue(p.challenge));
+        this->setFromParams();
         this->challengeBox->onItemSelect([this](int index) {
             this->settingsChangeCallback("challenge", std::to_string(this->findValueByIndex(index)));
         });
+    }
+
+    void ChallengeBoxComponent::setFromParams()
+    {
+        this->challengeBox->setSelectedItemByIndex(this->findIndexByValue(p.challenge));
     }
 
     ChallengeBoxComponent::~ChallengeBoxComponent()
