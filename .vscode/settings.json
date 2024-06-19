@@ -70,6 +70,8 @@
         "optional": "cpp",
         "regex": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "forward_list": "cpp",
+        "valarray": "cpp"
     }
 }

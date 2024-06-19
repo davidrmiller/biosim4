@@ -13,8 +13,8 @@
 // in namespace BS (for "biosim").
 namespace BS {
     void simulator(int argc, char **argv);
+    void simulate();
 }
-
 
 int main(int argc, char **argv)
 {

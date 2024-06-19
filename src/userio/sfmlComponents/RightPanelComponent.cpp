@@ -4,10 +4,9 @@
 namespace BS
 {
     RightPanelComponent::RightPanelComponent(
-        sf::Vector2u windowSize, 
+        sf::Vector2u windowSize,
         std::function<void(bool)> pauseCallback,
-        std::function<void(std::string name, std::string val)> changeSettingsCallback
-    )
+        std::function<void(std::string name, std::string val)> changeSettingsCallback)
     {
         this->pauseCallback = pauseCallback;
         this->changeSettingsCallback = changeSettingsCallback;
@@ -24,9 +23,10 @@ namespace BS
         this->console->setPosition("0%", "50%");
         this->panel->add(this->console);
 
+        // setup pause picture
         this->pausePicture = tgui::Picture::create("Resources/Pictures/play.png");
         this->pausePicture->onClick([this]()
-                              { this->pauseResume(); });
+                                    { this->pauseResume(); });
         this->pausePicture->setPosition("0%", 0);
         this->panel->add(this->pausePicture, "Picture");
 
@@ -34,14 +34,18 @@ namespace BS
         tgui::Button::Ptr pauseResumeButton = tgui::Button::create("Pause/Resume");
         pauseResumeButton->setPosition({bindRight(this->pausePicture) + 5.f, bindTop(this->pausePicture) + 6.f});
         pauseResumeButton->onPress([this]()
-                        { this->pauseResume(); }
-        );
+                                   { this->pauseResume(); });
         this->panel->add(pauseResumeButton, "Pause/Resume");
 
+        // setup generation progress bar
+        this->generationProgressBar = tgui::ProgressBar::create();
+        this->generationProgressBar->setMinimum(0);
+        this->generationProgressBar->setPosition({bindLeft(pausePicture) + 5.f, bindBottom(pausePicture) + 12.f});
+        this->panel->add(this->generationProgressBar, "GenerationProgressBar");
+
         // setup challenge box
-        ChallengeBoxComponent* challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val) {
-            this->changeSettingsCallback(name, val);
-        });
+        ChallengeBoxComponent *challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val)
+                                                                                 { this->changeSettingsCallback(name, val); });
         tgui::ComboBox::Ptr challengeBox = challengeBoxComponent->getChallengeBox();
         challengeBox->setPosition("5%", "10%");
         this->panel->add(challengeBox, "ChallengeBox");
@@ -57,16 +61,27 @@ namespace BS
         tgui::Button::Ptr mutationButton = tgui::Button::create("Ok");
         mutationButton->setPosition({bindRight(this->mutationRateEditBox) + 2.f, bindTop(this->mutationRateEditBox)});
         mutationButton->onPress([this]()
-                        { this->changeSettingsCallback("pointmutationrate", this->mutationRateEditBox->getText().toStdString()); }
-        );
+                                { this->changeSettingsCallback("pointmutationrate", this->mutationRateEditBox->getText().toStdString()); });
         mutationButton->setHeight(this->mutationRateEditBox->getSize().y);
         this->panel->add(mutationButton, "MutationButton");
+    }
 
-        // setup generation progress bar
-        this->generationProgressBar = tgui::ProgressBar::create();
-        this->generationProgressBar->setMinimum(0);
-        this->generationProgressBar->setPosition({bindLeft(pausePicture) + 5.f, bindBottom(pausePicture) + 12.f});
-        this->panel->add(this->generationProgressBar, "GenerationProgressBar");
+    void RightPanelComponent::initSaveLoadButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback)
+    {
+        float height = this->mutationRateEditBox->getSize().y;
+        tgui::Button::Ptr saveButton = tgui::Button::create("Save");
+        saveButton->setPosition({bindLeft(this->console) + 10.f, bindTop(this->console) - height - 10.f});
+        saveButton->onPress([saveCallback]()
+                            { saveCallback(); });
+        saveButton->setHeight(height);
+        this->panel->add(saveButton, "SaveButton");
+
+        tgui::Button::Ptr loadButton = tgui::Button::create("Load");
+        loadButton->setPosition({bindRight(saveButton) + 5.f, bindTop(saveButton)});
+        loadButton->onPress([loadCallback]()
+                            { loadCallback(); });
+        loadButton->setHeight(height);
+        this->panel->add(loadButton, "LoadButton");
     }
 
     /**
@@ -81,57 +96,16 @@ namespace BS
      */
     void RightPanelComponent::initSpeedControls(int min, int max, int initValue, std::function<void(float value)> changeSpeedCallback)
     {
-        // create SpinControl
-        tgui::SpinControl::Ptr speedControls = tgui::SpinControl::create();
-
-        // create MIN button
-        tgui::Button::Ptr minButton = tgui::Button::create("MIN");
-        minButton->setPosition({bindLeft(this->mutationRateEditBox), bindBottom(this->mutationRateEditBox) + this->controlOffset});
-        minButton->onPress([changeSpeedCallback, min, speedControls]()
-        {
-            changeSpeedCallback(min);
-            speedControls->setValue(min);
-        });
-        minButton->setHeight(this->mutationRateEditBox->getSize().y);
-        minButton->setWidth("15%");
-        this->panel->add(minButton, "SpeedMinControls");
-
-        // config SpinControl
-        speedControls->setMinimum(min);
-        speedControls->setMaximum(max);
-        speedControls->setStep(1);
-        speedControls->setValue(initValue);
-
-        speedControls->setPosition({bindRight(minButton) + 5.f, bindBottom(this->mutationRateEditBox) + this->controlOffset});
-        speedControls->setHeight(this->mutationRateEditBox->getSize().y);
-        speedControls->setWidth("25%");
-
-        speedControls->onValueChange([changeSpeedCallback](float value)
-        {
-            changeSpeedCallback(value);
-        });
-        this->panel->add(speedControls, "SpeedControls");
-
-        // create MAX button
-        tgui::Button::Ptr maxButton = tgui::Button::create("MAX");
-        maxButton->setPosition({bindRight(speedControls) + 5.f, bindBottom(this->mutationRateEditBox) + this->controlOffset});
-        maxButton->onPress([changeSpeedCallback, max, speedControls]()
-        {
-            changeSpeedCallback(max);
-            speedControls->setValue(max);
-        });
-        maxButton->setHeight(this->mutationRateEditBox->getSize().y);
-        maxButton->setWidth("15%");
-        this->panel->add(maxButton, "SpeedMaxControls");
-
-        this->createLabel(minButton, "Speed");
+        SpeedControlsComponent *speedControlsComponent = new SpeedControlsComponent(this->mutationRateEditBox, this->panel, this->controlOffset);
+        speedControlsComponent->init(min, max, initValue, changeSpeedCallback);
+        this->createLabel(speedControlsComponent->getLabelReferenceWidget(), "Speed");
     }
 
     void RightPanelComponent::createLabel(tgui::Widget::Ptr widget, const tgui::String &text)
     {
         tgui::Label::Ptr label = tgui::Label::create(text);
         label->setPosition({bindLeft(widget), bindTop(widget) - this->labelOffset});
-        this->panel->add(label);        
+        this->panel->add(label);
     }
 
     RightPanelComponent::~RightPanelComponent()
@@ -140,14 +114,25 @@ namespace BS
 
     void RightPanelComponent::pauseResume()
     {
-        this->paused = !this->paused;
+        this->pauseResume(!this->paused);
+    }
 
-        if (this->paused)
+    void RightPanelComponent::pauseResume(bool paused)
+    {
+        this->paused = paused;
+
+        if (this->paused || this->externalPause)
             this->pausePicture->getRenderer()->setTexture("Resources/Pictures/pause.png");
         else
             this->pausePicture->getRenderer()->setTexture("Resources/Pictures/play.png");
 
-        this->pauseCallback(this->paused);
+        this->pauseCallback(this->paused || this->externalPause);
+    }
+
+    void RightPanelComponent::pauseExternal(bool paused)
+    {
+        this->externalPause = paused;
+        this->pauseResume(this->paused);
     }
 
     void RightPanelComponent::log(std::string message)

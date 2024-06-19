@@ -8,6 +8,9 @@
 #include <utility>
 #include "simulator.h"
 
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
+
 namespace BS {
 
 
@@ -18,10 +21,15 @@ Peeps::Peeps()
 
 void Peeps::init(unsigned population)
 {
+    this->population = population;
     // Index 0 is reserved, so add one:
     individuals.resize(population + 1);
 }
 
+void Peeps::initFromSave()
+{
+    this->init(this->population);
+}
 
 // Safe to call during multithread mode.
 // Indiv will remain alive and in-world until end of sim step when
@@ -89,6 +97,37 @@ void Peeps::drainMoveQueue()
         }
     }
     moveQueue.clear();
+}    
+
+/**
+ * Static function that saves the Peeps object to a JSON file.
+ *
+ * @param peeps_ the Peeps object to be saved
+ * @return void
+ * @throws None
+ */
+void Peeps::save(Peeps peeps_, std::string fileName)
+{        
+    // ToDo: flip to binary
+    std::ofstream file(fileName);
+    cereal::JSONOutputArchive archive(file);
+    archive(peeps_);
+}
+
+/**
+ * Static function that loads a Peeps object from a JSON file.
+ *
+ * @return Peeps the loaded Peeps object
+ * @throws None
+ */
+Peeps Peeps::load(std::string fileName)
+{
+    // ToDo: flip to binary
+    std::ifstream file(fileName);
+    cereal::JSONInputArchive archive(file);
+    Peeps newPeeps;
+    archive(newPeeps);
+    return newPeeps;
 }
 
 } // end namespace BS

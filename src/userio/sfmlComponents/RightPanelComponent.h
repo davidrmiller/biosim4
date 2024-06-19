@@ -3,6 +3,8 @@
 
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
+#include "ChallengeBoxComponent.h"
+#include "SpeedControlsComponent.h"
 
 namespace BS
 {
@@ -25,6 +27,12 @@ namespace BS
         void addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName = "");
         void initSpeedControls(int min, int max, int initValue, std::function<void(float value)> changeSpeedCallback);
 
+        void initSaveLoadButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback);
+        void pauseResume();
+        void pauseResume(bool paused);
+
+        void pauseExternal(bool paused);
+
     private:
         const float labelOffset = 15.f;
         const float controlOffset = 20.f;
@@ -37,7 +45,7 @@ namespace BS
         tgui::Picture::Ptr pausePicture;
         std::function<void(bool)> pauseCallback;
         bool paused = false;
-        void pauseResume();
+        bool externalPause = false;
 
         tgui::ProgressBar::Ptr generationProgressBar;
 

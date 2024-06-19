@@ -14,7 +14,8 @@
                 "/usr/include/SFML",
                 "/usr/lib/x86_64-linux-gnu",
                 "/usr/include",
-                "/usr/include/opencv4"
+                "/usr/include/opencv4",
+                "${workspaceFolder}/src/include"
             ],
             "defines": [],
             "cStandard": "c17",

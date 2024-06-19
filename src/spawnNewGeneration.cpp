@@ -33,6 +33,23 @@ void initializeGeneration0()
     }
 }
 
+void initializeFromSave()
+{
+    // The grid has already been allocated, just clear and reuse it
+    grid.zeroFill();
+    grid.createBarrier(p.barrierType);
+
+    // The signal layers have already been allocated, so just reuse them
+    signals.zeroFill();
+
+    // Spawn the population. The peeps container has already been allocated,
+    // just clear and reuse it
+    for (uint16_t index = 1; index <= p.population; ++index) {
+        peeps[index].initVariables();
+    }
+    
+}
+
 
 // Requires a container with one or more parent genomes to choose from.
 // Called from spawnNewGeneration(). This requires that the grid, signals, and
