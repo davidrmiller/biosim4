@@ -2,14 +2,13 @@
 
 namespace BS {
 
-    UserIO::UserIO(bool windowInit, bool videoSaveInit, bool saveGenerations_)
+    UserIO::UserIO(bool windowInit, bool videoSaveInit)
     {
         if (windowInit) 
             this->sfmlView = new SFMLUserIO();
         if (videoSaveInit) 
             this->imageWriter = new ImageWriter();     
         
-        this->saveGenerations = saveGenerations_;
     }
 
     UserIO::~UserIO()
@@ -32,13 +31,14 @@ namespace BS {
         if (this->sfmlView != nullptr) {
             this->sfmlView->startNewGeneration(generation, stepsPerGeneration);
         }
-        if (this->saveGenerations) 
+        if (p.autoSave) 
         {
             std::stringstream filename;
             filename << "Output/Saves/peeps-"
                         << std::setfill('0') << std::setw(6) << generation
-                        << ".json";
-            Peeps::save(peeps, filename.str());
+                        << ".bin";
+            
+            Save::save(filename.str());
         }
     }
 
@@ -92,6 +92,7 @@ namespace BS {
         {
             return this->sfmlView->loadFileSelected;
         }
+        return false;
     }
 
     std::string UserIO::getLoadFilename()
@@ -100,6 +101,7 @@ namespace BS {
         {
             return this->sfmlView->loadFilename;
         }
+        return "";
     }
 
     void UserIO::cleanLoadSelection()
@@ -108,6 +110,14 @@ namespace BS {
         {
             this->sfmlView->loadFilename = "";
             this->sfmlView->loadFileSelected = false;
+        }
+    }
+
+    void UserIO::setFromParams()
+    {
+        if (this->sfmlView != nullptr)
+        {        
+            this->sfmlView->setFromParams();
         }
     }
 }

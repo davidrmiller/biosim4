@@ -23,6 +23,8 @@ namespace BS
         ~ChallengeBoxComponent();
 
         tgui::ComboBox::Ptr getChallengeBox();
+
+        void setFromParams();
     private:
         tgui::ComboBox::Ptr challengeBox;
 

@@ -44,9 +44,9 @@ namespace BS
         this->panel->add(this->generationProgressBar, "GenerationProgressBar");
 
         // setup challenge box
-        ChallengeBoxComponent *challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val)
+        this->challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val)
                                                                                  { this->changeSettingsCallback(name, val); });
-        tgui::ComboBox::Ptr challengeBox = challengeBoxComponent->getChallengeBox();
+        tgui::ComboBox::Ptr challengeBox = this->challengeBoxComponent->getChallengeBox();
         challengeBox->setPosition("5%", "10%");
         this->panel->add(challengeBox, "ChallengeBox");
         this->createLabel(challengeBox, "Challenge");
@@ -64,6 +64,12 @@ namespace BS
                                 { this->changeSettingsCallback("pointmutationrate", this->mutationRateEditBox->getText().toStdString()); });
         mutationButton->setHeight(this->mutationRateEditBox->getSize().y);
         this->panel->add(mutationButton, "MutationButton");
+    }
+
+    void RightPanelComponent::setFromParams()
+    {
+        this->challengeBoxComponent->setFromParams();
+        this->mutationRateEditBox->setText(tgui::String(p.pointMutationRate));
     }
 
     void RightPanelComponent::initSaveLoadButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback)
@@ -98,7 +104,19 @@ namespace BS
     {
         SpeedControlsComponent *speedControlsComponent = new SpeedControlsComponent(this->mutationRateEditBox, this->panel, this->controlOffset);
         speedControlsComponent->init(min, max, initValue, changeSpeedCallback);
-        this->createLabel(speedControlsComponent->getLabelReferenceWidget(), "Speed");
+        tgui::Widget::Ptr referenceWidget = speedControlsComponent->getLabelReferenceWidget();
+        this->createLabel(referenceWidget, "Speed");
+
+
+        // ToDo: put it somewhere else
+        tgui::CheckBox::Ptr autosaveCheckBox = tgui::CheckBox::create("Autosave");
+        autosaveCheckBox->setPosition({bindLeft(referenceWidget), bindBottom(referenceWidget) + 10.f});
+        autosaveCheckBox->setText("Autosave");
+        autosaveCheckBox->setChecked(p.autoSave);
+        autosaveCheckBox->onChange([this](bool checked){
+            this->changeSettingsCallback("autosave", checked ? "1" : "0");
+        });
+        this->panel->add(autosaveCheckBox, "AutosaveCheckBox");
     }
 
     void RightPanelComponent::createLabel(tgui::Widget::Ptr widget, const tgui::String &text)

@@ -122,6 +122,12 @@ void ParamManager::setPopulation(unsigned population)
     privParams.population = population;
 }
 
+void ParamManager::updateFromSave(Params params_)
+{
+    privParams.challenge = params_.challenge;
+    privParams.pointMutationRate = params_.pointMutationRate;
+}
+
 void ParamManager::ingestParameter(std::string name, std::string val)
 {
     std::transform(name.begin(), name.end(), name.begin(),
@@ -261,6 +267,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "rngseed" && isUint) {
             privParams.RNGSeed = uVal; break;
+        }
+        else if (name == "autosave" && isBool) {
+            privParams.autoSave = bVal; break;
         }
         else {
             std::cout << "Invalid param: " << name << " = " << val << std::endl;

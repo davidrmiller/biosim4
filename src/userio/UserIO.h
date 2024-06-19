@@ -6,6 +6,7 @@
 #include "imageWriter.h"
 #include "SFMLUserIO.h"
 #include "../peeps.h"
+#include "../utils/Save.h"
 
 namespace BS
 {
@@ -14,7 +15,7 @@ namespace BS
     class UserIO
     {
     public:
-        UserIO(bool windowInit, bool videoSaveInit, bool saveGenerations_);
+        UserIO(bool windowInit, bool videoSaveInit);
         ~UserIO();
 
         bool isStopped();
@@ -29,11 +30,11 @@ namespace BS
         bool getLoadFileSelected();
         std::string getLoadFilename();
         void cleanLoadSelection();
+
+        void setFromParams();
     private:
         ImageWriter* imageWriter = nullptr;
         SFMLUserIO* sfmlView = nullptr;
-
-        bool saveGenerations;
     };
 }
 

@@ -200,7 +200,7 @@ void simulator(int argc, char **argv)
     randomUint.initialize(); // seed the RNG for main-thread use
 
     // UI must be initialized after parameters
-    userIO = new UserIO(true, false, true);
+    userIO = new UserIO(true, false);
     
     runMode = RunMode::RUN;
     unsigned generation = 0;
@@ -226,11 +226,12 @@ void simulator(int argc, char **argv)
 
             generation = 0;
 
-            peeps = Peeps::load(userIO->getLoadFilename());
+            Save::load(userIO->getLoadFilename());
+            userIO->setFromParams();
             peeps.initFromSave();
             initializeFromSave();
             userIO->cleanLoadSelection();
-            
+
             runMode = RunMode::RUN;
             simulate(generation);
             break;
