@@ -2,10 +2,10 @@
 
 namespace BS
 {
-    SpeedControlsComponent::SpeedControlsComponent(tgui::Widget::Ptr positionReferenceComponent_, tgui::Panel::Ptr panel_, const float controlOffset_)
+    SpeedControlsComponent::SpeedControlsComponent(tgui::Widget::Ptr positionReferenceComponent_, tgui::Container::Ptr container_, const float controlOffset_)
     {
         this->positionReferenceWidget = positionReferenceComponent_;
-        this->panel = panel_;
+        this->container = container_;
         this->controlOffset = controlOffset_;
     }
 
@@ -26,7 +26,7 @@ namespace BS
 
         // create MIN button
         tgui::Button::Ptr minButton = tgui::Button::create("MIN");
-        minButton->setPosition({bindLeft(this->positionReferenceWidget), bindBottom(this->positionReferenceWidget) + this->controlOffset});
+        minButton->setPosition({"5%", bindBottom(this->positionReferenceWidget) + this->controlOffset});
         minButton->onPress([changeSpeedCallback, min, speedControls]()
         {
             changeSpeedCallback(min);
@@ -34,7 +34,7 @@ namespace BS
         });
         minButton->setHeight(this->positionReferenceWidget->getSize().y);
         minButton->setWidth("15%");
-        this->panel->add(minButton, "SpeedMinControls");
+        this->container->add(minButton, "SpeedMinControls");
 
         // config SpinControl
         speedControls->setMinimum(min);
@@ -50,7 +50,7 @@ namespace BS
         {
             changeSpeedCallback(value);
         });
-        this->panel->add(speedControls, "SpeedControls");
+        this->container->add(speedControls, "SpeedControls");
 
         // create MAX button
         tgui::Button::Ptr maxButton = tgui::Button::create("MAX");
@@ -62,7 +62,7 @@ namespace BS
         });
         maxButton->setHeight(this->positionReferenceWidget->getSize().y);
         maxButton->setWidth("15%");
-        this->panel->add(maxButton, "SpeedMaxControls");
+        this->container->add(maxButton, "SpeedMaxControls");
 
         this->labelReferenceWidget = minButton;
     }

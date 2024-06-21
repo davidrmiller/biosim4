@@ -5,7 +5,6 @@ namespace BS
 {
     void Save::save(std::string fileName)
     {
-        // ToDo: flip to binary
         std::ofstream file(fileName);
         cereal::BinaryOutputArchive archive(file);
         Params newParams;
@@ -14,7 +13,6 @@ namespace BS
 
     void Save::load(std::string fileName)
     {
-        // ToDo: flip to binary
         std::ifstream file(fileName);
         cereal::BinaryInputArchive archive(file);        
         Params newParams;
