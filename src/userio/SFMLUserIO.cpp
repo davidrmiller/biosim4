@@ -40,7 +40,7 @@ namespace BS
             }
         );
         
-        this->rightPanelComponent->initSaveLoadButtons(
+        this->rightPanelComponent->initBottomButtons(
             [this](void)
             {
                 if (this->isFileDialogShowing)
@@ -101,6 +101,10 @@ namespace BS
                 this->loadFileDialog->setPath("Output/Saves"); // update files list
                 this->fileDialogToggled(true);
                 this->gui.add(this->loadFileDialog);
+            },
+            [this](bool restart)
+            {
+                this->restartOnEnd = restart;
             }
         );
 
@@ -175,6 +179,8 @@ namespace BS
             this->flowControlComponent->pauseResume(true);
             this->flowControlComponent->flushStopAtSmthButtons();
         }
+
+        this->rightPanelComponent->flushRestartButton();
     }
 
     void SFMLUserIO::endOfStep(unsigned simStep)

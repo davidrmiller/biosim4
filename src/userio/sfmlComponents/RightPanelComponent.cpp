@@ -48,7 +48,7 @@ namespace BS
         this->mutationRateEditBox->setText(tgui::String(p.pointMutationRate));
     }
 
-    void RightPanelComponent::initSaveLoadButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback)
+    void RightPanelComponent::initBottomButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback, std::function<void(bool)> restartCallback)
     {
         // setup divider
         tgui::SeparatorLine::Ptr line = tgui::SeparatorLine::create();
@@ -73,8 +73,16 @@ namespace BS
         loadButton->setHeight(height);
         this->panel->add(loadButton, "LoadButton");
 
+        this->restartButton = tgui::ToggleButton::create("Restart");
+        this->restartButton->setPosition({bindRight(loadButton) + 5.f, bindTop(loadButton)});
+        this->restartButton->onToggle([restartCallback](bool isDown) {
+            restartCallback(isDown);
+        });
+        this->restartButton->setHeight(height);
+        this->panel->add(this->restartButton, "RestartButton");
+
         tgui::CheckBox::Ptr autosaveCheckBox = tgui::CheckBox::create("Autosave");
-        autosaveCheckBox->setPosition({bindRight(loadButton) + 5.f, bindTop(loadButton) + autosaveCheckBox->getSize().y / 2.f});
+        autosaveCheckBox->setPosition({bindLeft(saveButton), bindTop(loadButton) - autosaveCheckBox->getSize().y * 1.5f});
         autosaveCheckBox->setText("Autosave");
         autosaveCheckBox->setChecked(p.autoSave);
         autosaveCheckBox->onChange([this](bool checked){
@@ -97,5 +105,10 @@ namespace BS
     void RightPanelComponent::addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName)
     {
         this->panel->add(widgetPtr, widgetName);
+    }
+
+    void RightPanelComponent::flushRestartButton()
+    {
+        this->restartButton->setDown(false);
     }
 }

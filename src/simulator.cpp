@@ -123,6 +123,9 @@ void simulate(unsigned generation)
 
             #pragma omp master
             {
+                if (userIO->getRestartAtEnd()) {
+                    runMode = RunMode::RESTART;
+                }
                 if (runMode == RunMode::RUN) {
                     userIO->endOfGeneration(generation);
 
@@ -209,6 +212,7 @@ void simulator(int argc, char **argv)
         switch (runMode)
         {
         case RunMode::RUN:
+            userIO->log("Starting simulation...");
             // Allocate container space. Once allocated, these container elements
             // will be reused in each new generation.
             grid.init(p.sizeX, p.sizeY);                    // the land on which the peeps live
@@ -221,6 +225,7 @@ void simulator(int argc, char **argv)
             simulate(generation);
             break;
         case RunMode::LOAD:
+            userIO->log("Loading simulation...");
             grid.init(p.sizeX, p.sizeY);
             signals.init(p.signalLayers, p.sizeX, p.sizeY);
 
@@ -235,6 +240,8 @@ void simulator(int argc, char **argv)
             runMode = RunMode::RUN;
             simulate(generation);
             break;
+        case RunMode::RESTART:
+            runMode = RunMode::RUN;
         default:
             break;
         }        

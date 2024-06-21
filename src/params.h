@@ -14,7 +14,7 @@
 
 namespace BS {
 
-enum class RunMode { STOP, RUN, PAUSE, ABORT, LOAD };
+enum class RunMode { STOP, RUN, PAUSE, ABORT, LOAD, RESTART };
 extern RunMode runMode;
 
 // A private copy of Params is initialized by ParamManager::init(), then modified by

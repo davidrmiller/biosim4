@@ -32,6 +32,8 @@ namespace BS
         void cleanLoadSelection();
 
         void setFromParams();
+
+        bool getRestartAtEnd();
     private:
         ImageWriter* imageWriter = nullptr;
         SFMLUserIO* sfmlView = nullptr;

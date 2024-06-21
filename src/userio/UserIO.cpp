@@ -120,4 +120,13 @@ namespace BS {
             this->sfmlView->setFromParams();
         }
     }
+
+    bool UserIO::getRestartAtEnd()
+    {
+        if (this->sfmlView != nullptr)
+        {        
+            return this->sfmlView->restartOnEnd;
+        }
+        return false;
+    }
 }

@@ -45,6 +45,8 @@ namespace BS
         std::string loadFilename;
 
         void setFromParams();
+
+        bool restartOnEnd = false;
     private:
         static int const SPEED_SLOW_MAX = -5;
         static int const SPEED_FAST_MAX = 5;

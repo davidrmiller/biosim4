@@ -22,7 +22,8 @@ namespace BS
         void addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName = "");
         void initSettingsComponents();
 
-        void initSaveLoadButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback);
+        void initBottomButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback, std::function<void(bool)> restartCallback);
+        void flushRestartButton();
 
         void setFromParams();
 
@@ -34,6 +35,7 @@ namespace BS
 
         ChallengeBoxComponent *challengeBoxComponent;
         tgui::EditBox::Ptr mutationRateEditBox;
+        tgui::ToggleButton::Ptr restartButton;
 
         std::function<void(std::string name, std::string val)> changeSettingsCallback;
 

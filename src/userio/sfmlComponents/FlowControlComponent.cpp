@@ -117,5 +117,5 @@ namespace BS
     {
         this->stopAtStartButton->setDown(false);
         this->stopAtEndButton->setDown(false);
-    }
+    }    
 }
