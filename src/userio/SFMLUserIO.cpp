@@ -16,16 +16,30 @@ namespace BS
         // setup left panel
         this->rightPanelComponent = new RightPanelComponent(
             this->window->getSize(),
-            [this](bool paused)
-            {
-                this->pauseResume(paused);
-            },
             [this](std::string name, std::string val)
             {
                 this->settingsChanged(name, val);
             });
 
-        this->rightPanelComponent->initSpeedControls(SPEED_SLOW_MAX, SPEED_FAST_MAX, 0, [this](float value) { this->speedChanged(value); });
+        this->flowControlComponent = new FlowControlComponent(
+            SPEED_SLOW_MAX,
+            SPEED_FAST_MAX,
+            0,
+            [this](float value)
+            {
+                this->speedChanged(value);
+            },
+            [this](bool paused)
+            {
+                this->pauseResume(paused);
+            },
+            [this](bool stopAtStart, bool stopAtEnd)
+            {
+                this->stopAtEnd = stopAtEnd; 
+                this->stopAtStart = stopAtStart;
+            }
+        );
+        
         this->rightPanelComponent->initSaveLoadButtons(
             [this](void)
             {
@@ -90,7 +104,12 @@ namespace BS
             }
         );
 
-        this->gui.add(this->rightPanelComponent->getPanel());
+        tgui::Panel::Ptr panel = this->rightPanelComponent->getPanel();
+        panel->add(this->flowControlComponent->getGroup());
+        this->gui.add(panel);
+
+        this->console = new ConsoleComponent();
+        this->gui.add(this->console->getConsole());
 
         // setup view
         this->viewComponent = new ViewComponent(this->window->getSize());
@@ -112,7 +131,7 @@ namespace BS
         {
             this->viewComponent->unlock();
         }
-        this->rightPanelComponent->pauseExternal(shown);
+        this->flowControlComponent->pauseExternal(shown);
         this->isFileDialogShowing = shown;
     }
 
@@ -149,12 +168,22 @@ namespace BS
 
     void SFMLUserIO::startNewGeneration(unsigned generation, unsigned stepsPerGeneration)
     {
-        this->rightPanelComponent->startNewGeneration(generation, stepsPerGeneration);
+        this->flowControlComponent->startNewGeneration(generation, stepsPerGeneration);
         this->updatePollEvents();
+        if (this->stopAtStart)
+        {
+            this->flowControlComponent->pauseResume(true);
+            this->flowControlComponent->flushStopAtSmthButtons();
+        }
     }
 
     void SFMLUserIO::endOfStep(unsigned simStep)
     {
+        // initiate stop before last frame
+        if (this->stopAtEnd && simStep == p.stepsPerGeneration - 2) {
+            this->flowControlComponent->pauseResume(true);
+            this->flowControlComponent->flushStopAtSmthButtons();
+        }
         // handle increase speed by skipping frames
         if (this->increaseSpeedCounter < this->speedThreshold)
         {
@@ -167,7 +196,7 @@ namespace BS
         {
             this->updatePollEvents();
 
-            this->rightPanelComponent->endOfStep(simStep);
+            this->flowControlComponent->endOfStep(simStep);
             this->window->setView(*this->view);
 
             this->window->clear();
@@ -203,7 +232,7 @@ namespace BS
 
     void SFMLUserIO::log(std::string message)
     {
-        this->rightPanelComponent->log(message);
+        this->console->log(message);
     }
 
     void SFMLUserIO::pauseResume(bool paused)

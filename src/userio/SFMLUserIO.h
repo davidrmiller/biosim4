@@ -13,6 +13,8 @@
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
+#include "./sfmlComponents/FlowControlComponent.h"
+#include "./sfmlComponents/ConsoleComponent.h"
 
 namespace BS
 {
@@ -56,7 +58,9 @@ namespace BS
         
         tgui::Gui gui;
         RightPanelComponent* rightPanelComponent;
+        FlowControlComponent* flowControlComponent;
         bool paused = false;
+        ConsoleComponent* console;
 
         int speedThreshold = 0;
         int increaseSpeedCounter = 0;
@@ -68,6 +72,9 @@ namespace BS
         tgui::FileDialog::Ptr loadFileDialog;
         tgui::FileDialog::Ptr saveFileDialog;
         void fileDialogToggled(bool shown);
+
+        bool stopAtEnd = false;
+        bool stopAtStart = false;
     };
 }
 
