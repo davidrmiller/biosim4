@@ -77,6 +77,8 @@ namespace BS
 
         bool stopAtEnd = false;
         bool stopAtStart = false;
+
+        std::vector<sf::RectangleShape> barriesrs;
     };
 }
 

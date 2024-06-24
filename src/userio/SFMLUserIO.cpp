@@ -181,6 +181,17 @@ namespace BS
         }
 
         this->rightPanelComponent->flushRestartButton();
+
+
+        int liveDisplayScale = p.displayScale / 1.5;
+        barriesrs.clear();
+        auto const &barrierLocs = grid.getBarrierLocations();
+        for (Coord loc : barrierLocs) {
+            sf::RectangleShape barrier = sf::RectangleShape(sf::Vector2f(1.f*liveDisplayScale, 1.f*liveDisplayScale));
+            barrier.setPosition((loc.x) * liveDisplayScale, ((p.sizeY - (loc.y - 0))) * liveDisplayScale);
+            barrier.setFillColor(sf::Color(136, 136, 136));
+            barriesrs.push_back(barrier);
+        }
     }
 
     void SFMLUserIO::endOfStep(unsigned simStep)
@@ -219,6 +230,10 @@ namespace BS
                         static_cast<float>(((p.sizeY - indiv.loc.y) - 1) * liveDisplayScale));
                     this->window->draw(indiv.shape);
                 }
+            }
+
+            for (sf::RectangleShape &barrier : barriesrs) {
+                this->window->draw(barrier);
             }
 
             this->gui.draw();
