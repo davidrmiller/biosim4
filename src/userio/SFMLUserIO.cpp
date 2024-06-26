@@ -188,7 +188,7 @@ namespace BS
         auto const &barrierLocs = grid.getBarrierLocations();
         for (Coord loc : barrierLocs) {
             sf::RectangleShape barrier = sf::RectangleShape(sf::Vector2f(1.f*liveDisplayScale, 1.f*liveDisplayScale));
-            barrier.setPosition((loc.x) * liveDisplayScale, ((p.sizeY - (loc.y - 0))) * liveDisplayScale);
+            barrier.setPosition((loc.x) * liveDisplayScale, ((p.sizeY - (loc.y + 1.f))) * liveDisplayScale);
             barrier.setFillColor(sf::Color(136, 136, 136));
             barriesrs.push_back(barrier);
         }

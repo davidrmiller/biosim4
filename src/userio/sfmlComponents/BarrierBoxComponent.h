@@ -1,5 +1,5 @@
-#ifndef CHALLENGEBOXCOMPONENT_H_INCLUDED
-#define CHALLENGEBOXCOMPONENT_H_INCLUDED
+#ifndef BARRIERBOXCOMPONENT_H_INCLUDED
+#define BARRIERBOXCOMPONENT_H_INCLUDED
 
 #include "AbstractComboBoxComponent.h"
 #include <TGUI/TGUI.hpp>
@@ -8,10 +8,10 @@
 
 namespace BS
 {
-    class ChallengeBoxComponent : public AbstractComboBoxComponent
+    class BarrierBoxComponent : public AbstractComboBoxComponent
     {
     public:
-        ChallengeBoxComponent(std::function<void(std::string, std::string)> settingsChange);
+        BarrierBoxComponent(std::function<void(std::string, std::string)> settingsChange);
         void setFromParams() override;
     private:
         void initItems() override;
