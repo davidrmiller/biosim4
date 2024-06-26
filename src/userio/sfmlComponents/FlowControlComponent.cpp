@@ -35,7 +35,7 @@ namespace BS
                 this->stopAtEndButton->setDown(false);
             }
             else {
-                this->stopAtSmthCallback(false, false);
+                this->stopAtSmthCallback(false, this->stopAtEndButton->isDown());
             } 
         });
         this->group->add(this->stopAtStartButton, "StopAtStartButton");
@@ -56,7 +56,7 @@ namespace BS
                 this->stopAtStartButton->setDown(false);
             }
             else {
-                this->stopAtSmthCallback(false, false);
+                this->stopAtSmthCallback(this->stopAtEndButton->isDown(), false);
             } 
         });
         this->group->add(this->stopAtEndButton, "StopAtEndButton");

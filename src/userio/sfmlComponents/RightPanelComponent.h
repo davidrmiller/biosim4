@@ -4,6 +4,7 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include "ChallengeBoxComponent.h"
+#include "BarrierBoxComponent.h"
 #include "SpeedControlsComponent.h"
 
 namespace BS
@@ -34,6 +35,7 @@ namespace BS
         tgui::Panel::Ptr panel;
 
         ChallengeBoxComponent *challengeBoxComponent;
+        BarrierBoxComponent *barrierBoxComponent;
         tgui::EditBox::Ptr mutationRateEditBox;
         tgui::ToggleButton::Ptr restartButton;
 

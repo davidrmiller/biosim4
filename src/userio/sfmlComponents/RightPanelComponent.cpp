@@ -22,7 +22,7 @@ namespace BS
         // setup challenge box
         this->challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val)
                                                                                  { this->changeSettingsCallback(name, val); });
-        tgui::ComboBox::Ptr challengeBox = this->challengeBoxComponent->getChallengeBox();
+        tgui::ComboBox::Ptr challengeBox = this->challengeBoxComponent->getComboBox();
         challengeBox->setPosition("5%", "15%");
         this->panel->add(challengeBox, "ChallengeBox");
         this->createLabel(challengeBox, "Challenge");
@@ -40,6 +40,14 @@ namespace BS
                                 { this->changeSettingsCallback("pointmutationrate", this->mutationRateEditBox->getText().toStdString()); });
         mutationButton->setHeight(this->mutationRateEditBox->getSize().y);
         this->panel->add(mutationButton, "MutationButton");
+        
+        // setup barrier box
+        this->barrierBoxComponent = new BarrierBoxComponent([this](std::string name, std::string val)
+                                                                                 { this->changeSettingsCallback(name, val); });
+        tgui::ComboBox::Ptr barrierBox = this->barrierBoxComponent->getComboBox();
+        barrierBox->setPosition({bindLeft(this->mutationRateEditBox), bindBottom(this->mutationRateEditBox) + this->controlOffset});
+        this->panel->add(barrierBox, "BarrierBox");
+        this->createLabel(barrierBox, "Barrier");
     }
 
     void RightPanelComponent::setFromParams()
