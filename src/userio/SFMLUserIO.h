@@ -19,6 +19,7 @@
 namespace BS
 {
     extern Peeps peeps;
+    extern Grid grid;
     extern const Params &p;
     extern ParamManager paramManager;
     
@@ -79,6 +80,9 @@ namespace BS
         bool stopAtStart = false;
 
         std::vector<sf::RectangleShape> barriesrs;
+
+        int getLiveDisplayScale();
+        uint16_t selectedIndex = 0;
     };
 }
 

@@ -23,7 +23,11 @@ namespace BS
         void addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName = "");
         void initSettingsComponents();
 
-        void initBottomButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback, std::function<void(bool)> restartCallback);
+        void initBottomButtons(
+            std::function<void(void)> saveCallback, 
+            std::function<void(void)> loadCallback, 
+            std::function<void(bool)> restartCallback,
+            std::function<void()> saveIndivCallback);
         void flushRestartButton();
 
         void setFromParams();

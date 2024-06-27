@@ -14,7 +14,7 @@ namespace BS
     {
     }
 
-    void ViewComponent::updateInput(sf::Event e, sf::Vector2i mousePosition)
+    void ViewComponent::updateInput(sf::Event e, sf::RenderWindow* window)
     {
         if (this->isLocked)
         {
@@ -39,11 +39,13 @@ namespace BS
         // View mouse navigation trigger
         if (e.Event::type == sf::Event::MouseButtonPressed)
         {
-            if (mousePosition.x > 0 && mousePosition.x < this->windowWidth - (this->windowWidth / 10) * 2)
+            // Mouse button is pressed, get the position and set moving as active
+            if (e.mouseButton.button == 0)
             {
-                // Mouse button is pressed, get the position and set moving as active
-                if (e.mouseButton.button == 0)
+                sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+                if (mousePosition.x > 0 && mousePosition.x < this->windowWidth - (this->windowWidth / 10) * 2)
                 {
+                
                     this->viewIsMoving = true;
                     this->oldViewPos = sf::Vector2f(mousePosition);
                 }
@@ -83,6 +85,7 @@ namespace BS
         // Zoom view functionality
         if (e.Event::type == e.Event::MouseWheelMoved && !this->viewIsMoving)
         {
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
             if (mousePosition.x > 0 && mousePosition.x < this->windowWidth - (this->windowWidth / 10) * 2)
             {
                 // ToDo: make it work with any value
@@ -91,7 +94,7 @@ namespace BS
 
                 float zoom = e.mouseWheel.delta > 0 ? zoomOutFactor : zoomInFactor;
                 float tmpZoom = this->accumZoom * zoom;
-                if (tmpZoom >= 0.125f && tmpZoom <= 2.f)
+                if (tmpZoom >= 0.0625f && tmpZoom <= 2.f)
                 {
                     this->accumZoom *= zoom;
                     this->view->zoom(zoom);

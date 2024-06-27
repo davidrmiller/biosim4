@@ -35,7 +35,7 @@ struct Indiv {
     void initialize(uint16_t index, Coord loc, Genome &&genome);
     void createWiringFromGenome(); // creates .nnet member from .genome member
     void printNeuralNet() const;
-    void printIGraphEdgeList() const;
+    std::stringstream printIGraphEdgeList() const;
     void printGenome() const;
 
 	sf::CircleShape shape;
