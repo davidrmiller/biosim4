@@ -211,6 +211,17 @@ void printSensorsActions()
 //}
 //
 
+void printGenomeLegend()
+{
+    std::cout << "Actions:" << std::endl;
+    for (int action = MOVE_X; action < NUM_ACTIONS; ++action) {
+        std::cout << actionShortName((Action)(action)) << ": " << actionName((Action)(action)) << std::endl;
+    }
+    std::cout << "Sensors:" << std::endl;
+    for (int sensor = LOC_X; sensor < NUM_SENSES; ++sensor) {
+        std::cout << sensorShortName((Sensor)(sensor)) << ": " << sensorName((Sensor)(sensor)) << std::endl;
+    }
+}
 
 
 float averageGenomeLength()
@@ -322,7 +333,7 @@ void displaySampleGenomes(unsigned count)
             std::cout << std::endl;
 
             //peeps[index].printNeuralNet();
-            peeps[index].printIGraphEdgeList();
+            std::cout << peeps[index].printIGraphEdgeList().str();
 
 
             std::cout << "---------------------------" << std::endl;

@@ -105,6 +105,21 @@ namespace BS
             [this](bool restart)
             {
                 this->restartOnEnd = restart;
+            },
+            [this]()
+            {
+                this->flowControlComponent->pauseResume(true);
+                
+                if (this->selectedIndex != 0) {
+                    std::ofstream outFile;
+                    outFile.open("tools/net.txt");   
+                    outFile << peeps[this->selectedIndex].printIGraphEdgeList().rdbuf();
+                    outFile.close();
+                    std::string filename = "Output/Images/indiv-" + std::to_string(this->selectedIndex) + ".svg";
+                    std::string command = "python3 ./tools/graph-nnet.py -o " + filename;
+                    std::system(command.c_str());
+                    this->log("Saved into: " + filename);
+                }
             }
         );
 
@@ -164,7 +179,38 @@ namespace BS
                 this->window->close();
             }
 
-            this->viewComponent->updateInput(e, sf::Mouse::getPosition(*this->window));
+            this->viewComponent->updateInput(e, this->window);
+
+            if (e.Event::type == sf::Event::MouseButtonReleased)
+            {
+                if (e.mouseButton.button == 1)
+                {
+                    // select indiv on mouse position
+                    int liveDisplayScale = this->getLiveDisplayScale();
+                    sf::Vector2f mousePosition = this->window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+                    std::cout << mousePosition.x << " " << mousePosition.y << std::endl;
+
+                    int16_t x = floor(mousePosition.x / liveDisplayScale);
+                    int16_t y = ceil(p.sizeY - 1 - mousePosition.y/liveDisplayScale);
+
+                    if (x >= 0 && x < p.sizeX && y >= 0 && y < p.sizeY)
+                    {
+                        uint16_t index = grid.at(x, y);
+                        if (this->selectedIndex != 0 && this->selectedIndex != index) {
+                            peeps[this->selectedIndex].shape.setOutlineThickness(0.f);
+                            this->selectedIndex = 0;
+                        }
+                        if (index != 0) {
+                            peeps[index].shape.setOutlineColor(sf::Color::White);
+                            peeps[index].shape.setOutlineThickness(1.f);
+                            this->selectedIndex = index;
+                        }
+                    } else if (this->selectedIndex != 0) {
+                        peeps[this->selectedIndex].shape.setOutlineThickness(0.f);
+                        this->selectedIndex = 0;
+                    }
+                }
+            }
 
             this->gui.handleEvent(e);
         }
@@ -219,7 +265,7 @@ namespace BS
             this->window->clear();
 
             //display population
-            int liveDisplayScale = p.displayScale / 1.5;
+            int liveDisplayScale = this->getLiveDisplayScale();
             for (uint16_t index = 1; index <= p.population; ++index)
             {
                 Indiv &indiv = peeps[index];
@@ -245,6 +291,11 @@ namespace BS
 
         } while (this->slowSpeedCounter >= this->speedThreshold);
         this->slowSpeedCounter = 0;
+    }
+
+    int SFMLUserIO::getLiveDisplayScale()
+    {
+        return p.displayScale / 1.5;
     }
 
     void SFMLUserIO::endOfGeneration(unsigned generation)

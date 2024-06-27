@@ -13,6 +13,9 @@
 
 namespace BS {
 
+extern std::string sensorShortName(Sensor sensor);
+extern void printGenomeLegend();
+extern std::string actionShortName(Action action);
 extern Grid grid;
 
 // This is called when any individual is spawned.
@@ -89,25 +92,30 @@ void Indiv::fillColor()
 
 // This prints a neural net in a form that can be processed with
 // graph-nnet.py to produce a graphic illustration of the net.
-void Indiv::printIGraphEdgeList() const
+std::stringstream Indiv::printIGraphEdgeList() const
 {
-    // for (auto & conn : nnet.connections) {
-    //     if (conn.sourceType == SENSOR) {
-    //         std::cout << sensorShortName((Sensor)(conn.sourceNum));
-    //     } else {
-    //         std::cout << "N" << std::to_string(conn.sourceNum);
-    //     }
+    // ToDo: move to more suitable place
+    printGenomeLegend();
 
-    //     std::cout << " ";
+    std::stringstream ss;
+    for (auto & conn : nnet.connections) {
+        if (conn.sourceType == SENSOR) {
+            ss << sensorShortName((Sensor)(conn.sourceNum));
+        } else {
+            ss << "N" << std::to_string(conn.sourceNum);
+        }
 
-    //     if (conn.sinkType == ACTION) {
-    //         std::cout << actionShortName((Action)(conn.sinkNum));
-    //     } else {
-    //         std::cout << "N" << std::to_string(conn.sinkNum);
-    //     }
+        ss << " ";
 
-    //     std::cout << " " << std::to_string(conn.weight) << std::endl;
-    // }
+        if (conn.sinkType == ACTION) {
+            ss << actionShortName((Action)(conn.sinkNum));
+        } else {
+            ss << "N" << std::to_string(conn.sinkNum);
+        }
+
+        ss << " " << std::to_string(conn.weight) << std::endl;
+    }    
+    return ss;
 }
 
 

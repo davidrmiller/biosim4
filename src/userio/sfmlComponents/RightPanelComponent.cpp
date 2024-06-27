@@ -4,8 +4,9 @@
 namespace BS
 {
     RightPanelComponent::RightPanelComponent(
-        sf::Vector2u windowSize,
-        std::function<void(std::string name, std::string val)> changeSettingsCallback_)
+        sf::Vector2u windowSize, 
+        std::function<void(std::string name, std::string val)> changeSettingsCallback_
+    )
     {
         this->changeSettingsCallback = changeSettingsCallback_;
 
@@ -56,7 +57,11 @@ namespace BS
         this->mutationRateEditBox->setText(tgui::String(p.pointMutationRate));
     }
 
-    void RightPanelComponent::initBottomButtons(std::function<void(void)> saveCallback, std::function<void(void)> loadCallback, std::function<void(bool)> restartCallback)
+    void RightPanelComponent::initBottomButtons(
+        std::function<void(void)> saveCallback,
+        std::function<void(void)> loadCallback, 
+        std::function<void(bool)> restartCallback,
+        std::function<void()> saveIndivCallback)
     {
         // setup divider
         tgui::SeparatorLine::Ptr line = tgui::SeparatorLine::create();
@@ -67,14 +72,14 @@ namespace BS
 
         // setup buttons
         float height = this->mutationRateEditBox->getSize().y;
-        tgui::Button::Ptr saveButton = tgui::Button::create("Save");
+        tgui::Button::Ptr saveButton = tgui::Button::create("Save sim");
         saveButton->setPosition({bindLeft(line) + 10.f, bindTop(line) - height - 10.f});
         saveButton->onPress([saveCallback]()
                             { saveCallback(); });
         saveButton->setHeight(height);
         this->panel->add(saveButton, "SaveButton");
 
-        tgui::Button::Ptr loadButton = tgui::Button::create("Load");
+        tgui::Button::Ptr loadButton = tgui::Button::create("Load sim");
         loadButton->setPosition({bindRight(saveButton) + 5.f, bindTop(saveButton)});
         loadButton->onPress([loadCallback]()
                             { loadCallback(); });
@@ -97,6 +102,13 @@ namespace BS
             this->changeSettingsCallback("autosave", checked ? "1" : "0");
         });
         this->panel->add(autosaveCheckBox, "AutosaveCheckBox");
+
+        tgui::Button::Ptr tempBtn = tgui::Button::create("Save indiv");
+        tempBtn->setPosition({bindRight(this->restartButton) - tempBtn->getSize().x, bindTop(this->restartButton) - tempBtn->getSize().y - 10.f});
+        tempBtn->onPress([saveIndivCallback]()
+                         { saveIndivCallback(); });
+        tempBtn->setHeight(height);
+        this->panel->add(tempBtn, "TempButton");
     }
 
     void RightPanelComponent::createLabel(tgui::Widget::Ptr widget, const tgui::String &text)
