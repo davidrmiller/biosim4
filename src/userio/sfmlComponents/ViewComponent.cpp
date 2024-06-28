@@ -88,24 +88,35 @@ namespace BS
             sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
             if (mousePosition.x > 0 && mousePosition.x < this->windowWidth - (this->windowWidth / 10) * 2)
             {
-                // ToDo: make it work with any value
-                float zoomOutFactor = 0.5f;
-                float zoomInFactor = 2.f;
+                float zoomOutFactor = 0.8f;
+                float zoomInFactor = 1.25f;
 
                 float zoom = e.mouseWheel.delta > 0 ? zoomOutFactor : zoomInFactor;
                 float tmpZoom = this->accumZoom * zoom;
                 if (tmpZoom >= 0.0625f && tmpZoom <= 2.f)
                 {
+                    // the idea here is to move center of the view
+                    // to oldPos - newPos, divide it by 2 to get the center, 
+                    // and make it negative (so we move left if we zoom in and right if we zoom out)
+                    // in order to get top left point at the same position as it was before zooming relative to screen
+
+                    // we should also store old and new mouse positions corrected by zoom
+                    // get delta between them, and move the view by that amount
+                    // in order to get mouse position at the same position as it was before zooming relative to screen
+                    
+                    sf::Vector2f oldViewVector = this->view->getSize();
+                    sf::Vector2f oldRelativeMousePos = sf::Vector2f(mousePosition.x * this->accumZoom, mousePosition.y * this->accumZoom);
+
                     this->accumZoom *= zoom;
                     this->view->zoom(zoom);
-
-                    float zoomFactor = this->view->getSize().y / this->windowHeight;
-
-                    sf::Vector2f newpos(this->windowWidth, this->windowHeight);
-                    newpos /= zoomInFactor;
-                    newpos -= sf::Vector2f(mousePosition.x, mousePosition.y);
-                    newpos *= e.mouseWheel.delta > 0 ? zoomFactor : zoomFactor / zoomInFactor;
-                    this->view->move(e.mouseWheel.delta > 0 ? -newpos : newpos);
+                    
+                    sf::Vector2f newViewVector = this->view->getSize();
+                    sf::Vector2f newRelativeMousePos = oldRelativeMousePos*zoom;
+                    
+                    sf::Vector2f moveVectorTopLeft = newViewVector/2.f - oldViewVector/2.f; // simplification of -1*(old/2 - new/2)
+                    this->view->move(moveVectorTopLeft);
+                    sf::Vector2f moveVectorMousePos = oldRelativeMousePos - newRelativeMousePos;
+                    this->view->move(moveVectorMousePos);
                 }
             }
         }
