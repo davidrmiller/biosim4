@@ -238,6 +238,11 @@ namespace BS
             barrier.setFillColor(sf::Color(136, 136, 136));
             barriesrs.push_back(barrier);
         }
+
+        if (this->selectedIndex != 0) {
+            peeps[this->selectedIndex].shape.setOutlineThickness(0.f);
+            this->selectedIndex = 0;
+        }
     }
 
     void SFMLUserIO::endOfStep(unsigned simStep)

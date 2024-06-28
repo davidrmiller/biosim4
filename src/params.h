@@ -73,7 +73,7 @@ struct Params {
     template <class Archive>
     void serialize(Archive &ar)
     {
-        ar(challenge, pointMutationRate);
+        ar(challenge, pointMutationRate, barrierType);
     }
 };
 
