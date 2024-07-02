@@ -15,6 +15,7 @@ Fork of https://github.com/davidrmiller/biosim4
 - add logic to save and load simulations
 
 ### Plans
+- draw challenge criterias
 - expand UI functionality to controll simulation
 - implement recording of simulation, add ability to play it with time scipping, ability to go back (etc.)
 - hopefuly add more behaviour, events, resources to simulation
