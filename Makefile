@@ -37,8 +37,13 @@ else
   LDFLAGS += -O3 -s
 endif
 
-SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h src/userio/sfmlComponents/*.cpp \
-  src/userio/sfmlComponents/*.h src/utils/*.cpp src/utils/*.h src/ai/*.cpp src/ai/*.h)
+SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h \
+  src/userio/sfmlComponents/*.cpp src/userio/sfmlComponents/*.h \
+  src/utils/*.cpp src/utils/*.h \
+  src/ai/*.cpp src/ai/*.h \
+  src/userio/sfmlComponents/flowComponents/*.cpp src/userio/sfmlComponents/flowComponents/*.h \
+  src/userio/sfmlComponents/settingsComponents/*.cpp src/userio/sfmlComponents/settingsComponents/*.h \
+  )
 CXXSOURCE :=  $(filter %.cpp, $(SOURCE))
 HEADERS :=  $(filter %.h, $(SOURCE))
 OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
@@ -54,6 +59,8 @@ before_debug:
 	test -d obj/Debug/src || mkdir -p obj/Debug/src
 	test -d obj/Debug/src/userio || mkdir -p obj/Debug/src/userio
 	test -d obj/Debug/src/userio/sfmlComponents || mkdir -p obj/Debug/src/userio/sfmlComponents
+	test -d obj/Debug/src/userio/sfmlComponents/flowComponents || mkdir -p obj/Debug/src/userio/sfmlComponents/flowComponents
+	test -d obj/Debug/src/userio/sfmlComponents/settingsComponents || mkdir -p obj/Debug/src/userio/sfmlComponents/settingsComponents
 	test -d obj/Debug/src/utils || mkdir -p obj/Debug/src/utils
 	test -d obj/Debug/src/ai || mkdir -p obj/Debug/src/ai
 
@@ -62,6 +69,8 @@ before_release:
 	test -d obj/Release/src || mkdir -p obj/Release/src
 	test -d obj/Release/src/userio || mkdir -p obj/Release/src/userio
 	test -d obj/Release/src/userio/sfmlComponents || mkdir -p obj/Release/src/userio/sfmlComponents
+	test -d obj/Release/src/userio/sfmlComponents/flowComponents || mkdir -p obj/Release/src/userio/sfmlComponents/flowComponents
+	test -d obj/Release/src/userio/sfmlComponents/settingsComponents || mkdir -p obj/Release/src/userio/sfmlComponents/settingsComponents
 	test -d obj/Release/src/utils || mkdir -p obj/Release/src/utils
 	test -d obj/Release/src/ai || mkdir -p obj/Release/src/ai
 

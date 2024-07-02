@@ -40,33 +40,15 @@ namespace BS
             }
         );
         
-        this->rightPanelComponent->initBottomButtons(
+        this->bottomButtonsComponent = new BottomButtonsComponent(
             [this](void)
             {
                 if (this->isFileDialogShowing)
                 {
                     return;
                 }
-                
-                if (this->saveFileDialog == nullptr) 
-                {
-                    this->saveFileDialog = tgui::FileDialog::create("Save file", "Save");
-                    this->saveFileDialog->setMultiSelect(false);
-                    this->saveFileDialog->setFileMustExist(false);
-                    this->saveFileDialog->setPath("Output/Saves");
-                    this->saveFileDialog->setFilename("simulation.bin");
-                    //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
-                    this->saveFileDialog->setPosition("5%", "5%");
+                this->initSaveFileDialog();
 
-                    this->saveFileDialog->onFileSelect([this](const tgui::String& filePath){
-                        Save::save(filePath.toStdString());
-                        this->fileDialogToggled(false);
-                    });
-
-                    this->saveFileDialog->onCancel([this]{
-                        this->fileDialogToggled(false);
-                    });
-                }
                 this->saveFileDialog->setPath("Output/Saves"); // update files list
                 this->fileDialogToggled(true);
                 this->gui.add(this->saveFileDialog);
@@ -78,25 +60,7 @@ namespace BS
                     return;
                 }
 
-                if (this->loadFileDialog == nullptr) {
-                    this->loadFileDialog = tgui::FileDialog::create("Open file", "Open");
-                    this->loadFileDialog->setMultiSelect(false);
-                    this->loadFileDialog->setFileMustExist(true);
-                    this->loadFileDialog->setPath("Output/Saves");
-                    this->loadFileDialog->setFilename("simulation.bin");
-                    //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
-                    this->loadFileDialog->setPosition("5%", "5%");
-
-                    this->loadFileDialog->onFileSelect([this](const tgui::String& filePath){
-                        this->loadFileSelected = true;
-                        this->loadFilename = filePath.toStdString();
-                        this->fileDialogToggled(false);
-                    });
-                    this->loadFileDialog->onCancel([this]{
-                        std::cerr << "No file selected.\n";
-                        this->fileDialogToggled(false);
-                    });    
-                }
+                this->initLoadFileDialog();
 
                 this->loadFileDialog->setPath("Output/Saves"); // update files list
                 this->fileDialogToggled(true);
@@ -111,20 +75,19 @@ namespace BS
                 this->flowControlComponent->pauseResume(true);
                 
                 if (this->selectedIndex != 0) {
-                    std::ofstream outFile;
-                    outFile.open("tools/net.txt");   
-                    outFile << peeps[this->selectedIndex].printIGraphEdgeList().rdbuf();
-                    outFile.close();
-                    std::string filename = "Output/Images/indiv-" + std::to_string(this->selectedIndex) + ".svg";
-                    std::string command = "python3 ./tools/graph-nnet.py -o " + filename;
-                    std::system(command.c_str());
+                    std::string filename = Save::saveNet(this->selectedIndex);
                     this->log("Saved into: " + filename);
                 }
+            },
+            [this](std::string name, std::string val)
+            {
+                this->settingsChanged(name, val);
             }
         );
 
         tgui::Panel::Ptr panel = this->rightPanelComponent->getPanel();
         panel->add(this->flowControlComponent->getGroup());
+        panel->add(this->bottomButtonsComponent->getGroup());
         this->gui.add(panel);
 
         this->console = new ConsoleComponent();
@@ -133,6 +96,52 @@ namespace BS
         // setup view
         this->viewComponent = new ViewComponent(this->window->getSize());
         this->view = this->viewComponent->getView();
+    }
+
+    void SFMLUserIO::initSaveFileDialog()
+    {
+        if (this->saveFileDialog == nullptr) 
+        {
+            this->saveFileDialog = tgui::FileDialog::create("Save file", "Save");
+            this->saveFileDialog->setMultiSelect(false);
+            this->saveFileDialog->setFileMustExist(false);
+            this->saveFileDialog->setPath("Output/Saves");
+            this->saveFileDialog->setFilename("simulation.bin");
+            //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
+            this->saveFileDialog->setPosition("5%", "5%");
+
+            this->saveFileDialog->onFileSelect([this](const tgui::String& filePath){
+                Save::save(filePath.toStdString());
+                this->fileDialogToggled(false);
+            });
+
+            this->saveFileDialog->onCancel([this]{
+                this->fileDialogToggled(false);
+            });
+        }
+    }
+
+    void SFMLUserIO::initLoadFileDialog()
+    {
+        if (this->loadFileDialog == nullptr) {
+            this->loadFileDialog = tgui::FileDialog::create("Open file", "Open");
+            this->loadFileDialog->setMultiSelect(false);
+            this->loadFileDialog->setFileMustExist(true);
+            this->loadFileDialog->setPath("Output/Saves");
+            this->loadFileDialog->setFilename("simulation.bin");
+            //this->saveFileDialog->setFileTypeFilters({ {"All files", {}} }, 1);
+            this->loadFileDialog->setPosition("5%", "5%");
+
+            this->loadFileDialog->onFileSelect([this](const tgui::String& filePath){
+                this->loadFileSelected = true;
+                this->loadFilename = filePath.toStdString();
+                this->fileDialogToggled(false);
+            });
+            this->loadFileDialog->onCancel([this]{
+                std::cerr << "No file selected.\n";
+                this->fileDialogToggled(false);
+            });    
+        }
     }
 
     void SFMLUserIO::setFromParams()
@@ -226,7 +235,7 @@ namespace BS
             this->flowControlComponent->flushStopAtSmthButtons();
         }
 
-        this->rightPanelComponent->flushRestartButton();
+        this->bottomButtonsComponent->flushRestartButton();
 
 
         int liveDisplayScale = p.displayScale / 1.5;

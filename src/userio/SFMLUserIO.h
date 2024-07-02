@@ -13,8 +13,9 @@
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
-#include "./sfmlComponents/FlowControlComponent.h"
+#include "./sfmlComponents/flowComponents/FlowControlComponent.h"
 #include "./sfmlComponents/ConsoleComponent.h"
+#include "./sfmlComponents/BottomButtonsComponent.h"
 
 namespace BS
 {
@@ -62,6 +63,7 @@ namespace BS
         tgui::Gui gui;
         RightPanelComponent* rightPanelComponent;
         FlowControlComponent* flowControlComponent;
+        BottomButtonsComponent* bottomButtonsComponent;
         bool paused = false;
         ConsoleComponent* console;
 
@@ -75,6 +77,8 @@ namespace BS
         tgui::FileDialog::Ptr loadFileDialog;
         tgui::FileDialog::Ptr saveFileDialog;
         void fileDialogToggled(bool shown);
+        void initSaveFileDialog();
+        void initLoadFileDialog();
 
         bool stopAtEnd = false;
         bool stopAtStart = false;

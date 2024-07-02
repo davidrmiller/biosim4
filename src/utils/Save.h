@@ -31,6 +31,7 @@ class Save {
 public:
     static void save(std::string fileName = "Output/Saves/simulation.bin");
     static void load(std::string fileName = "Output/Saves/simulation.bin");
+    static std::string saveNet(int selectedIndex);
 };
 
 } // end namespace BS
