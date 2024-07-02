@@ -165,62 +165,67 @@ void printSensorsActions()
 //        NEURON m
 //    Neuron y ...
 //*/
-//void Indiv::printNeuralNet() const
-//{
-//    for (unsigned action = 0; action < Action::NUM_ACTIONS; ++action) {
-//        bool actionDisplayed = false;
-//        for (auto & conn : nnet.connections) {
-//
-//            assert((conn.sourceType == NEURON && conn.sourceNum < p.maxNumberNeurons)
-//                || (conn.sourceType == SENSOR && conn.sourceNum < Sensor::NUM_SENSES));
-//            assert((conn.sinkType == ACTION && conn.sinkNum < Action::NUM_ACTIONS)
-//                || (conn.sinkType == NEURON && conn.sinkNum < p.maxNumberNeurons));
-//
-//            if (conn.sinkType == ACTION && (conn.sinkNum) == action) {
-//                if (!actionDisplayed) {
-//                    std::cout << "Action " << actionName((Action)action) << " from:" << std::endl;
-//                    actionDisplayed = true;
-//                }
-//                if (conn.sourceType == SENSOR) {
-//                    std::cout << "   " << sensorName((Sensor)(conn.sourceNum));
-//                } else {
-//                    std::cout << "   Neuron " << (conn.sourceNum % nnet.neurons.size());
-//                }
-//                std::cout << " " << conn.weightAsFloat() << std::endl;
-//            }
-//        }
-//    }
-//
-//    for (size_t neuronNum = 0; neuronNum < nnet.neurons.size(); ++neuronNum) {
-//        bool neuronDisplayed = false;
-//        for (auto & conn : nnet.connections) {
-//            if (conn.sinkType == NEURON && (conn.sinkNum) == neuronNum) {
-//                if (!neuronDisplayed) {
-//                    std::cout << "Neuron " << neuronNum << " from:" << std::endl;
-//                    neuronDisplayed = true;
-//                }
-//                if (conn.sourceType == SENSOR) {
-//                    std::cout << "   " << sensorName((Sensor)(conn.sourceNum));
-//                } else {
-//                    std::cout << "   Neuron " << (conn.sourceNum);
-//                }
-//                std::cout << " " << conn.weightAsFloat() << std::endl;
-//            }
-//        }
-//    }
-//}
-//
-
-void printGenomeLegend()
+std::stringstream Indiv::printNeuralNet() const
 {
-    std::cout << "Actions:" << std::endl;
+    std::stringstream ss;
+
+    for (unsigned action = 0; action < Action::NUM_ACTIONS; ++action) {
+        bool actionDisplayed = false;
+        for (auto & conn : nnet.connections) {
+
+            assert((conn.sourceType == NEURON && conn.sourceNum < p.maxNumberNeurons)
+                || (conn.sourceType == SENSOR && conn.sourceNum < Sensor::NUM_SENSES));
+            assert((conn.sinkType == ACTION && conn.sinkNum < Action::NUM_ACTIONS)
+                || (conn.sinkType == NEURON && conn.sinkNum < p.maxNumberNeurons));
+
+            if (conn.sinkType == ACTION && (conn.sinkNum) == action) {
+                if (!actionDisplayed) {
+                    ss << "Action " << actionName((Action)action) << " from:" << std::endl;
+                    actionDisplayed = true;
+                }
+                if (conn.sourceType == SENSOR) {
+                    ss << "   " << sensorName((Sensor)(conn.sourceNum));
+                } else {
+                    ss << "   Neuron " << (conn.sourceNum % nnet.neurons.size());
+                }
+                ss << " " << conn.weightAsFloat() << std::endl;
+            }
+        }
+    }
+
+    for (size_t neuronNum = 0; neuronNum < nnet.neurons.size(); ++neuronNum) {
+        bool neuronDisplayed = false;
+        for (auto & conn : nnet.connections) {
+            if (conn.sinkType == NEURON && (conn.sinkNum) == neuronNum) {
+                if (!neuronDisplayed) {
+                    ss << "Neuron " << neuronNum << " from:" << std::endl;
+                    neuronDisplayed = true;
+                }
+                if (conn.sourceType == SENSOR) {
+                    ss << "   " << sensorName((Sensor)(conn.sourceNum));
+                } else {
+                    ss << "   Neuron " << (conn.sourceNum);
+                }
+                ss << " " << conn.weightAsFloat() << std::endl;
+            }
+        }
+    }
+    return ss;
+}
+
+
+std::stringstream printGenomeLegend()
+{
+    std::stringstream ss;
+    ss << "Actions:" << std::endl;
     for (int action = MOVE_X; action < NUM_ACTIONS; ++action) {
-        std::cout << actionShortName((Action)(action)) << ": " << actionName((Action)(action)) << std::endl;
+        ss << actionShortName((Action)(action)) << ": " << actionName((Action)(action)) << std::endl;
     }
-    std::cout << "Sensors:" << std::endl;
+    ss << "Sensors:" << std::endl;
     for (int sensor = LOC_X; sensor < NUM_SENSES; ++sensor) {
-        std::cout << sensorShortName((Sensor)(sensor)) << ": " << sensorName((Sensor)(sensor)) << std::endl;
+        ss << sensorShortName((Sensor)(sensor)) << ": " << sensorName((Sensor)(sensor)) << std::endl;
     }
+    return ss;
 }
 
 

@@ -34,7 +34,7 @@ struct Indiv {
     float getSensor(Sensor, unsigned simStep) const;
     void initialize(uint16_t index, Coord loc, Genome &&genome);
     void createWiringFromGenome(); // creates .nnet member from .genome member
-    void printNeuralNet() const;
+    std::stringstream printNeuralNet() const;
     std::stringstream printIGraphEdgeList() const;
     void printGenome() const;
 

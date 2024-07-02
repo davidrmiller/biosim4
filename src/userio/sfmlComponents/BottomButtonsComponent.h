@@ -14,7 +14,8 @@ namespace BS
             std::function<void(void)> loadCallback,
             std::function<void(bool)> restartCallback,
             std::function<void()> saveIndivCallback,
-            std::function<void(std::string name, std::string val)> changeSettingsCallback);
+            std::function<void(std::string name, std::string val)> changeSettingsCallback,
+            std::function<void()> indivInfoCallback);
             
         void flushRestartButton();
         tgui::Group::Ptr getGroup();

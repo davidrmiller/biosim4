@@ -7,7 +7,8 @@ namespace BS
         std::function<void(void)> loadCallback,
         std::function<void(bool)> restartCallback,
         std::function<void()> saveIndivCallback,
-        std::function<void(std::string name, std::string val)> changeSettingsCallback)
+        std::function<void(std::string name, std::string val)> changeSettingsCallback,
+        std::function<void()> indivInfoCallback)
     {
         this->group = tgui::Group::create();
 
@@ -19,6 +20,7 @@ namespace BS
         this->group->add(line);
 
         // setup buttons
+        float btnHorizontalMargin = 5.f;
         float height = 27.f;
         tgui::Button::Ptr saveButton = tgui::Button::create("Save sim");
         saveButton->setPosition({bindLeft(line) + 10.f, bindTop(line) - height - 10.f});
@@ -28,14 +30,14 @@ namespace BS
         this->group->add(saveButton, "SaveButton");
 
         tgui::Button::Ptr loadButton = tgui::Button::create("Load sim");
-        loadButton->setPosition({bindRight(saveButton) + 5.f, bindTop(saveButton)});
+        loadButton->setPosition({bindRight(saveButton) + btnHorizontalMargin, bindTop(saveButton)});
         loadButton->onPress([loadCallback]()
                             { loadCallback(); });
         loadButton->setHeight(height);
         this->group->add(loadButton, "LoadButton");
 
         this->restartButton = tgui::ToggleButton::create("Restart");
-        this->restartButton->setPosition({bindRight(loadButton) + 5.f, bindTop(loadButton)});
+        this->restartButton->setPosition({bindRight(loadButton) + btnHorizontalMargin, bindTop(loadButton)});
         this->restartButton->onToggle([restartCallback](bool isDown) {
             restartCallback(isDown);
         });
@@ -51,12 +53,19 @@ namespace BS
         });
         this->group->add(autosaveCheckBox, "AutosaveCheckBox");
 
-        tgui::Button::Ptr tempBtn = tgui::Button::create("Save indiv");
-        tempBtn->setPosition({bindRight(this->restartButton) - tempBtn->getSize().x, bindTop(this->restartButton) - tempBtn->getSize().y - 10.f});
-        tempBtn->onPress([saveIndivCallback]()
+        tgui::Button::Ptr saveIndivBtn = tgui::Button::create("Save indiv");
+        saveIndivBtn->setPosition({bindRight(this->restartButton) - saveIndivBtn->getSize().x, bindTop(this->restartButton) - saveIndivBtn->getSize().y - 10.f});
+        saveIndivBtn->onPress([saveIndivCallback]()
                          { saveIndivCallback(); });
-        tempBtn->setHeight(height);
-        this->group->add(tempBtn, "TempButton");
+        saveIndivBtn->setHeight(height);
+        this->group->add(saveIndivBtn, "SaveIndivBtn");
+
+        tgui::Button::Ptr indivInfoBtn = tgui::Button::create("i");
+        indivInfoBtn->setPosition({bindLeft(saveIndivBtn) - indivInfoBtn->getSize().x - btnHorizontalMargin, bindTop(saveIndivBtn)});
+        indivInfoBtn->onPress([indivInfoCallback]()
+                         { indivInfoCallback(); });
+        indivInfoBtn->setHeight(height);
+        this->group->add(indivInfoBtn, "IndivInfoBtn");
     }    
     
     void BottomButtonsComponent::flushRestartButton()
@@ -64,7 +73,8 @@ namespace BS
         this->restartButton->setDown(false);
     }
 
-    tgui::Group::Ptr BottomButtonsComponent::getGroup() { 
+    tgui::Group::Ptr BottomButtonsComponent::getGroup() 
+    { 
         return this->group; 
     } 
 }

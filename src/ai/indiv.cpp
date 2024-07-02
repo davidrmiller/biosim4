@@ -14,7 +14,6 @@
 namespace BS {
 
 extern std::string sensorShortName(Sensor sensor);
-extern void printGenomeLegend();
 extern std::string actionShortName(Action action);
 extern Grid grid;
 
@@ -94,9 +93,6 @@ void Indiv::fillColor()
 // graph-nnet.py to produce a graphic illustration of the net.
 std::stringstream Indiv::printIGraphEdgeList() const
 {
-    // ToDo: move to more suitable place
-    printGenomeLegend();
-
     std::stringstream ss;
     for (auto & conn : nnet.connections) {
         if (conn.sourceType == SENSOR) {
