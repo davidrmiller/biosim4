@@ -67,7 +67,8 @@ namespace BS
         this->createLabel(referenceWidget, "Speed");
     }
 
-    tgui::Group::Ptr FlowControlComponent::getGroup() { 
+    tgui::Group::Ptr FlowControlComponent::getGroup() 
+    { 
         return this->group; 
     }    
 

@@ -3,9 +3,8 @@
 
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
-#include "ChallengeBoxComponent.h"
-#include "BarrierBoxComponent.h"
-#include "SpeedControlsComponent.h"
+#include "./settingsComponents/ChallengeBoxComponent.h"
+#include "./settingsComponents/BarrierBoxComponent.h"
 
 namespace BS
 {
@@ -23,13 +22,6 @@ namespace BS
         void addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName = "");
         void initSettingsComponents();
 
-        void initBottomButtons(
-            std::function<void(void)> saveCallback, 
-            std::function<void(void)> loadCallback, 
-            std::function<void(bool)> restartCallback,
-            std::function<void()> saveIndivCallback);
-        void flushRestartButton();
-
         void setFromParams();
 
     private:
@@ -41,7 +33,6 @@ namespace BS
         ChallengeBoxComponent *challengeBoxComponent;
         BarrierBoxComponent *barrierBoxComponent;
         tgui::EditBox::Ptr mutationRateEditBox;
-        tgui::ToggleButton::Ptr restartButton;
 
         std::function<void(std::string name, std::string val)> changeSettingsCallback;
 

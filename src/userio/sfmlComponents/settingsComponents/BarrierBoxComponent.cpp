@@ -1,5 +1,5 @@
 #include "BarrierBoxComponent.h"
-#include "../../simulator.h"
+#include "../../../simulator.h"
 
 namespace BS
 {
