@@ -16,6 +16,7 @@
 #include "./sfmlComponents/flowComponents/FlowControlComponent.h"
 #include "./sfmlComponents/ConsoleComponent.h"
 #include "./sfmlComponents/BottomButtonsComponent.h"
+#include "./sfmlComponents/InfoWindowComponent.h"
 
 namespace BS
 {
@@ -23,6 +24,7 @@ namespace BS
     extern Grid grid;
     extern const Params &p;
     extern ParamManager paramManager;
+    extern std::stringstream printGenomeLegend();
     
     class SFMLUserIO
     {
@@ -64,6 +66,8 @@ namespace BS
         RightPanelComponent* rightPanelComponent;
         FlowControlComponent* flowControlComponent;
         BottomButtonsComponent* bottomButtonsComponent;
+        InfoWindowComponent* infoWindowComponent;
+
         bool paused = false;
         ConsoleComponent* console;
 
@@ -73,10 +77,10 @@ namespace BS
 
         void speedChanged(float value);
 
-        bool isFileDialogShowing = false;
+        bool isChildWindowShowing = false;
         tgui::FileDialog::Ptr loadFileDialog;
         tgui::FileDialog::Ptr saveFileDialog;
-        void fileDialogToggled(bool shown);
+        void childWindowToggled(bool shown);
         void initSaveFileDialog();
         void initLoadFileDialog();
 

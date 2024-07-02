@@ -40,22 +40,25 @@ namespace BS
             }
         );
         
+        this->infoWindowComponent = new InfoWindowComponent([this]{
+            this->childWindowToggled(false);
+        });
         this->bottomButtonsComponent = new BottomButtonsComponent(
             [this](void)
             {
-                if (this->isFileDialogShowing)
+                if (this->isChildWindowShowing)
                 {
                     return;
                 }
                 this->initSaveFileDialog();
 
                 this->saveFileDialog->setPath("Output/Saves"); // update files list
-                this->fileDialogToggled(true);
+                this->childWindowToggled(true);
                 this->gui.add(this->saveFileDialog);
             },
             [this]()
             {
-                if (this->isFileDialogShowing)
+                if (this->isChildWindowShowing)
                 {
                     return;
                 }
@@ -63,7 +66,7 @@ namespace BS
                 this->initLoadFileDialog();
 
                 this->loadFileDialog->setPath("Output/Saves"); // update files list
-                this->fileDialogToggled(true);
+                this->childWindowToggled(true);
                 this->gui.add(this->loadFileDialog);
             },
             [this](bool restart)
@@ -75,13 +78,29 @@ namespace BS
                 this->flowControlComponent->pauseResume(true);
                 
                 if (this->selectedIndex != 0) {
-                    std::string filename = Save::saveNet(this->selectedIndex);
+                    std::string filename = Save::saveNet(this->selectedIndex);                    
                     this->log("Saved into: " + filename);
                 }
             },
             [this](std::string name, std::string val)
             {
                 this->settingsChanged(name, val);
+            },
+            [this]()
+            {
+                if (this->isChildWindowShowing)
+                {
+                    return;
+                }
+                std::stringstream legendStream = printGenomeLegend();
+                this->infoWindowComponent->append(legendStream.str());                
+                if (this->selectedIndex != 0) 
+                {
+                    std::stringstream indivStream = peeps[this->selectedIndex].printNeuralNet();
+                    this->infoWindowComponent->append(indivStream.str());   
+                }
+                this->childWindowToggled(true);
+                this->gui.add(this->infoWindowComponent->getChildWindow());
             }
         );
 
@@ -112,11 +131,11 @@ namespace BS
 
             this->saveFileDialog->onFileSelect([this](const tgui::String& filePath){
                 Save::save(filePath.toStdString());
-                this->fileDialogToggled(false);
+                this->childWindowToggled(false);
             });
 
             this->saveFileDialog->onCancel([this]{
-                this->fileDialogToggled(false);
+                this->childWindowToggled(false);
             });
         }
     }
@@ -135,11 +154,11 @@ namespace BS
             this->loadFileDialog->onFileSelect([this](const tgui::String& filePath){
                 this->loadFileSelected = true;
                 this->loadFilename = filePath.toStdString();
-                this->fileDialogToggled(false);
+                this->childWindowToggled(false);
             });
             this->loadFileDialog->onCancel([this]{
                 std::cerr << "No file selected.\n";
-                this->fileDialogToggled(false);
+                this->childWindowToggled(false);
             });    
         }
     }
@@ -149,7 +168,7 @@ namespace BS
         this->rightPanelComponent->setFromParams();
     }
 
-    void SFMLUserIO::fileDialogToggled(bool shown)
+    void SFMLUserIO::childWindowToggled(bool shown)
     {
         if (shown)
         {
@@ -160,7 +179,7 @@ namespace BS
             this->viewComponent->unlock();
         }
         this->flowControlComponent->pauseExternal(shown);
-        this->isFileDialogShowing = shown;
+        this->isChildWindowShowing = shown;
     }
 
     SFMLUserIO::~SFMLUserIO()
