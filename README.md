@@ -17,7 +17,7 @@ Fork of https://github.com/davidrmiller/biosim4
 ### Plans
 - draw challenge criterias
 - expand UI functionality to controll simulation
-- implement recording of simulation, add ability to play it with time scipping, ability to go back (etc.)
+- implement recording of simulation, add ability to play it with time skipping, ability to go back (etc.)
 - hopefuly add more behaviour, events, resources to simulation
 
 ## What is this?
