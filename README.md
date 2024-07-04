@@ -2,7 +2,7 @@
 
 Fork of https://github.com/davidrmiller/biosim4
 
-### What has bein done
+### What has been done
 
 - heavy refactoring (still in progress)
 - add a new output via SFML wich renders individuals in real-time with the ability to drag simulation (LMB), zoom in/out (scroll), select indiv (LMB)
