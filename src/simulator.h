@@ -20,30 +20,6 @@
 
 namespace BS {
 
-// Some of the survival challenges to try. Some are interesting, some
-// not so much. Fine-tune the challenges by tweaking the corresponding code
-// in survival-criteria.cpp.
-constexpr unsigned CHALLENGE_CIRCLE = 0;
-constexpr unsigned CHALLENGE_RIGHT_HALF = 1;
-constexpr unsigned CHALLENGE_RIGHT_QUARTER = 2;
-constexpr unsigned CHALLENGE_STRING = 3;
-constexpr unsigned CHALLENGE_CENTER_WEIGHTED = 4;
-constexpr unsigned CHALLENGE_CENTER_UNWEIGHTED = 40;
-constexpr unsigned CHALLENGE_CORNER = 5;
-constexpr unsigned CHALLENGE_CORNER_WEIGHTED = 6;
-constexpr unsigned CHALLENGE_MIGRATE_DISTANCE = 7;
-constexpr unsigned CHALLENGE_CENTER_SPARSE = 8;
-constexpr unsigned CHALLENGE_LEFT_EIGHTH = 9;
-constexpr unsigned CHALLENGE_RADIOACTIVE_WALLS = 10;
-constexpr unsigned CHALLENGE_AGAINST_ANY_WALL = 11;
-constexpr unsigned CHALLENGE_TOUCH_ANY_WALL = 12;
-constexpr unsigned CHALLENGE_EAST_WEST_EIGHTHS = 13;
-constexpr unsigned CHALLENGE_NEAR_BARRIER = 14;
-constexpr unsigned CHALLENGE_PAIRS = 15;
-constexpr unsigned CHALLENGE_LOCATION_SEQUENCE = 16;
-constexpr unsigned CHALLENGE_ALTRUISM = 17;
-constexpr unsigned CHALLENGE_ALTRUISM_SACRIFICE = 18;
-
 extern ParamManager paramManager; // manages simulator params from the config file plus more
 extern const Params &p; // read-only simulator config params
 extern Grid grid;  // 2D arena where the individuals live

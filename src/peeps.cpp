@@ -97,37 +97,6 @@ void Peeps::drainMoveQueue()
         }
     }
     moveQueue.clear();
-}    
-
-/**
- * Static function that saves the Peeps object to a JSON file.
- *
- * @param peeps_ the Peeps object to be saved
- * @return void
- * @throws None
- */
-void Peeps::save(Peeps peeps_, std::string fileName)
-{        
-    // ToDo: flip to binary
-    std::ofstream file(fileName);
-    cereal::JSONOutputArchive archive(file);
-    archive(peeps_);
-}
-
-/**
- * Static function that loads a Peeps object from a JSON file.
- *
- * @return Peeps the loaded Peeps object
- * @throws None
- */
-Peeps Peeps::load(std::string fileName)
-{
-    // ToDo: flip to binary
-    std::ifstream file(fileName);
-    cereal::JSONInputArchive archive(file);
-    Peeps newPeeps;
-    archive(newPeeps);
-    return newPeeps;
 }
 
 } // end namespace BS

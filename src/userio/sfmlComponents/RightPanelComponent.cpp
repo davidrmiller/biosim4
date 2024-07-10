@@ -5,7 +5,8 @@ namespace BS
 {
     RightPanelComponent::RightPanelComponent(
         sf::Vector2u windowSize, 
-        std::function<void(std::string name, std::string val)> changeSettingsCallback_
+        std::function<void(std::string name, std::string val)> changeSettingsCallback_,
+        std::function<void()> infoCallback
     )
     {
         this->changeSettingsCallback = changeSettingsCallback_;
@@ -15,10 +16,10 @@ namespace BS
         this->panel->setSize("20%", windowSize.y);
         this->panel->setAutoLayout(tgui::AutoLayout::Right);
 
-        this->initSettingsComponents();
+        this->initSettingsComponents(infoCallback);
     }
 
-    void RightPanelComponent::initSettingsComponents()
+    void RightPanelComponent::initSettingsComponents(std::function<void()> infoCallback)
     {
         // setup challenge box
         this->challengeBoxComponent = new ChallengeBoxComponent([this](std::string name, std::string val)
@@ -27,6 +28,13 @@ namespace BS
         challengeBox->setPosition("5%", "15%");
         this->panel->add(challengeBox, "ChallengeBox");
         this->createLabel(challengeBox, "Challenge");
+
+        tgui::Button::Ptr challengeInfoBtn = tgui::Button::create("i");
+        challengeInfoBtn->setPosition({bindRight(challengeBox) + 5.f, bindTop(challengeBox)});
+        challengeInfoBtn->onPress([infoCallback]()
+                         { infoCallback(); });
+        challengeInfoBtn->setHeight(challengeBox->getSize().y);
+        this->panel->add(challengeInfoBtn, "IndivInfoBtn");
 
         // setup mutation rate
         this->mutationRateEditBox = tgui::EditBox::create();

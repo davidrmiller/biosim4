@@ -46,9 +46,6 @@ public:
     Indiv & operator[](uint16_t index) { return individuals[index]; }
     Indiv const & operator[](uint16_t index) const { return individuals[index]; }
 
-
-    static void save(Peeps peeps_, std::string fileName = "Output/Saves/peeps.json");
-    static Peeps load(std::string fileName = "Output/Saves/peeps.json");
 private:
     unsigned population;
     std::vector<Indiv> individuals; // Index value 0 is reserved
