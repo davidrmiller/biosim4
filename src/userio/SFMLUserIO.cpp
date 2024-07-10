@@ -19,6 +19,19 @@ namespace BS
             [this](std::string name, std::string val)
             {
                 this->settingsChanged(name, val);
+            },            
+            [this]()
+            {
+                if (this->isChildWindowShowing)
+                {
+                    return;
+                }
+                for (unsigned i = 0; i < survivalCriteriasVector.size(); ++i)
+                {
+                    this->infoWindowComponent->append(survivalCriteriasVector[i].text + ": \n" + survivalCriteriasVector[i].description + "\n");
+                }
+                this->childWindowToggled(true);
+                this->gui.add(this->infoWindowComponent->getChildWindow());
             });
 
         this->flowControlComponent = new FlowControlComponent(

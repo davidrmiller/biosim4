@@ -368,7 +368,7 @@ Genome generateChildGenome(const std::vector<Genome> &parentGenomes)
     // all the candidate parents with equal preference. If the parameter is
     // true, then we give preference to candidate parents according to their
     // score. Their score was computed by the survival/selection algorithm
-    // in survival-criteria.cpp.
+    // in survivalСriteria.cpp.
     if (p.chooseParentsByFitness && parentGenomes.size() > 1) {
         parent1Idx = randomUint(1, parentGenomes.size() - 1);
         parent2Idx = randomUint(0, parent1Idx - 1);

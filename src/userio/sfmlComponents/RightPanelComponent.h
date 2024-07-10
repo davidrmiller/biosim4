@@ -13,14 +13,15 @@ namespace BS
     public:
         RightPanelComponent(
             sf::Vector2u windowSize, 
-            std::function<void(std::string name, std::string val)> changeSettingsCallback
+            std::function<void(std::string name, std::string val)> changeSettingsCallback,
+            std::function<void()> infoCallback
         );
         ~RightPanelComponent();
 
         tgui::Panel::Ptr getPanel() { return this->panel; }
 
         void addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName = "");
-        void initSettingsComponents();
+        void initSettingsComponents(std::function<void()> infoCallback);
 
         void setFromParams();
 

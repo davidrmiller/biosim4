@@ -1,11 +1,51 @@
-// survival-criteria.cpp
+// survivalСriteria.cpp
 
 #include <cassert>
 #include <utility>
 #include "simulator.h"
+#include "survivalCriteria.h"
 
 namespace BS {
-
+std::vector<SurvivalCriteria> survivalCriteriasVector = {
+        SurvivalCriteria(CHALLENGE_CIRCLE, "Circle", "Survivors are those inside the circular area defined \
+by safeCenter and radius"),
+        SurvivalCriteria(CHALLENGE_RIGHT_HALF, "Right half", "Survivors are all those on the right side of the arena"),
+        SurvivalCriteria(CHALLENGE_RIGHT_QUARTER, "Right quarter", "Survivors are all those on the right quarter of the arena"),
+        SurvivalCriteria(CHALLENGE_STRING, "String", "Survivors are those not touching the border and with exactly the number \
+of neighbors defined by neighbors and radius, where neighbors includes self"),
+        SurvivalCriteria(CHALLENGE_CENTER_WEIGHTED, "Center weighted", "Survivors are those within the specified radius of the center. The score \
+is linearly weighted by distance from the center."),
+        SurvivalCriteria(CHALLENGE_CENTER_UNWEIGHTED, "Center unweighted", "Survivors are those within the specified radius of the center"),
+        SurvivalCriteria(CHALLENGE_CORNER, "Corner", "Survivors are those within the specified radius of any corner. \
+Assumes square arena."),
+        SurvivalCriteria(CHALLENGE_CORNER_WEIGHTED, "Corner weighted", "Survivors are those within the specified radius of any corner. The score \
+is linearly weighted by distance from the corner point."),
+        SurvivalCriteria(CHALLENGE_MIGRATE_DISTANCE, "Migrate distance", "Everybody survives and are candidate parents, but scored by how far \
+they migrated from their birth location."),
+        SurvivalCriteria(CHALLENGE_CENTER_SPARSE, "Center sparse", "Survivors are those within the specified outer radius of the center and with \
+the specified number of neighbors in the specified inner radius. \
+The score is not weighted by distance from the center."),
+        SurvivalCriteria(CHALLENGE_LEFT_EIGHTH, "Left eight", "Survivors are all those on the left eighth of the arena"),
+        SurvivalCriteria(CHALLENGE_RADIOACTIVE_WALLS, "Radioactive walls", "During the first half of the generation, the west wall is radioactive, \
+where X == 0. In the last half of the generation, the east wall is \
+radioactive, where X = the area width - 1. There's an exponential \
+falloff of the danger, falling off to zero at the arena half line."),
+        SurvivalCriteria(CHALLENGE_AGAINST_ANY_WALL, "Against any wall", "Survivors are those touching any wall at the end of the generation"),
+        SurvivalCriteria(CHALLENGE_TOUCH_ANY_WALL, "Touch any wall", "This challenge is partially handled in endOfSimStep(), where individuals \
+that are touching a wall are flagged in their Indiv record. They are \
+allowed to continue living. At the end of the generation, any that \
+never touch a wall will die. All that touched a wall at any time during \
+their life will become parents."),
+        SurvivalCriteria(CHALLENGE_EAST_WEST_EIGHTHS, "East west eights", "Survivors are all those on the left or right eighths of the arena"),
+        SurvivalCriteria(CHALLENGE_NEAR_BARRIER, "Near barrier", "Survivors are those within radius of any barrier center. Weighted by distance"),
+        SurvivalCriteria(CHALLENGE_PAIRS, "Pairs", "Survivors are those not touching a border and with exactly one neighbor which has no other neighbor"),
+        SurvivalCriteria(CHALLENGE_LOCATION_SEQUENCE, "Location sequence", "Survivors are those that contacted one or more specified locations in a sequence, \
+ranked by the number of locations contacted. There will be a bit set in their \
+challengeBits member for each location contacted."),
+        SurvivalCriteria(CHALLENGE_ALTRUISM, "Alruism", "Survivors are those inside the circular area defined by \
+safeCenter and radius"),
+        SurvivalCriteria(CHALLENGE_ALTRUISM_SACRIFICE, "Alruism sacrifice", "Survivors are all those within the specified radius of the NE corner")};
+        
 // Returns true and a score 0.0..1.0 if passed, false if failed
 std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned challenge)
 {
@@ -341,5 +381,4 @@ std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned chal
         assert(false);
     }
 }
-
 } // end namespace BS
