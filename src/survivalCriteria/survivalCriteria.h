@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include "../ai/indiv.h"
+#include "../grid.h"
 
 namespace BS
 {
@@ -30,16 +32,18 @@ namespace BS
     constexpr unsigned CHALLENGE_ALTRUISM = 17;
     constexpr unsigned CHALLENGE_ALTRUISM_SACRIFICE = 18;
 
-    struct SurvivalCriteria
+    class SurvivalCriteria
     {
-        unsigned value;
-        std::string text;
-        std::string description;
+        public:
+            unsigned value;
+            std::string text;
+            std::string description;
 
-        SurvivalCriteria(unsigned value, std::string text, std::string description) : value(value), text(text), description(description) {}
+            virtual std::pair<bool, float> passed(const Indiv &indiv, const Params &p, Grid &grid) = 0;
+            void draw(); //ToDo
+            SurvivalCriteria(unsigned value, std::string text, std::string description) : value(value), text(text), description(description) {}
+            SurvivalCriteria() {}
     };
-
-    extern std::vector<SurvivalCriteria> survivalCriteriasVector;
 }
 
 #endif

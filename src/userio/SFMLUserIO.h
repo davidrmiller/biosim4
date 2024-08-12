@@ -10,6 +10,7 @@
 #include "../params.h"
 #include "../peeps.h"
 #include "../utils/Save.h"
+#include "../survivalCriteria/survivalCriteriaManager.h"
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
@@ -24,6 +25,7 @@ namespace BS
     extern Grid grid;
     extern const Params &p;
     extern ParamManager paramManager;
+    extern SurvivalCriteriaManager survivalCriteriaManager;
     extern std::stringstream printGenomeLegend();
     
     class SFMLUserIO

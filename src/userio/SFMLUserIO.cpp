@@ -26,9 +26,9 @@ namespace BS
                 {
                     return;
                 }
-                for (unsigned i = 0; i < survivalCriteriasVector.size(); ++i)
+                for (unsigned i = 0; i < survivalCriteriaManager.survivalCriteriasVector.size(); ++i)
                 {
-                    this->infoWindowComponent->append(survivalCriteriasVector[i].text + ": \n" + survivalCriteriasVector[i].description + "\n");
+                    this->infoWindowComponent->append(survivalCriteriaManager.survivalCriteriasVector[i]->text + ": \n" + survivalCriteriaManager.survivalCriteriasVector[i]->description + "\n");
                 }
                 this->childWindowToggled(true);
                 this->gui.add(this->infoWindowComponent->getChildWindow());

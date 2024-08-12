@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include "simulator.h"
-#include "survivalCriteria.h"
+#include "./survivalCriteria/survivalCriteria.h"
 
 namespace BS {
 

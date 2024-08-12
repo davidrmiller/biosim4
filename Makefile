@@ -41,6 +41,7 @@ SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h \
   src/userio/sfmlComponents/*.cpp src/userio/sfmlComponents/*.h \
   src/utils/*.cpp src/utils/*.h \
   src/ai/*.cpp src/ai/*.h \
+  src/survivalCriteria/*.cpp src/survivalCriteria/*.h \
   src/userio/sfmlComponents/flowComponents/*.cpp src/userio/sfmlComponents/flowComponents/*.h \
   src/userio/sfmlComponents/settingsComponents/*.cpp src/userio/sfmlComponents/settingsComponents/*.h \
   )
@@ -63,6 +64,7 @@ before_debug:
 	test -d obj/Debug/src/userio/sfmlComponents/settingsComponents || mkdir -p obj/Debug/src/userio/sfmlComponents/settingsComponents
 	test -d obj/Debug/src/utils || mkdir -p obj/Debug/src/utils
 	test -d obj/Debug/src/ai || mkdir -p obj/Debug/src/ai
+	test -d obj/Debug/src/survivalCriteria || mkdir -p obj/Debug/src/survivalCriteria
 
 before_release:
 	test -d bin/Release || mkdir -p bin/Release
@@ -73,6 +75,7 @@ before_release:
 	test -d obj/Release/src/userio/sfmlComponents/settingsComponents || mkdir -p obj/Release/src/userio/sfmlComponents/settingsComponents
 	test -d obj/Release/src/utils || mkdir -p obj/Release/src/utils
 	test -d obj/Release/src/ai || mkdir -p obj/Release/src/ai
+	test -d obj/Release/src/survivalCriteria || mkdir -p obj/Release/src/survivalCriteria
 
 .PHONY : release debug    
 debug: before_debug

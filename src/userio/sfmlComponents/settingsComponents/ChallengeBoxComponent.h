@@ -2,7 +2,7 @@
 #define CHALLENGEBOXCOMPONENT_H_INCLUDED
 
 #include "AbstractComboBoxComponent.h"
-#include "../../../survivalCriteria.h"
+#include "../../../survivalCriteria/survivalCriteria.h"
 #include <TGUI/TGUI.hpp>
 #include <string>
 #include <vector>

@@ -6,12 +6,9 @@
 #include <algorithm>
 #include <cassert>
 #include "simulator.h"
-#include "survivalCriteria.h"
+#include "./survivalCriteria/survivalCriteria.h"
 
 namespace BS {
-
-extern std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned challenge);
-
 
 // Requires that the grid, signals, and peeps containers have been allocated.
 // This will erase the grid and signal layers, then create a new population in
@@ -84,12 +81,11 @@ void initializeNewGeneration(const std::vector<Genome> &parentGenomes, unsigned 
 // nets instead of rebuilding them.
 // Returns number of survivor-reproducers.
 // Must be called in single-thread mode between generations.
-unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
+unsigned spawnNewGeneration(unsigned generation, unsigned murderCount, SurvivalCriteriaManager survivalCriteriaManager)
 {    
     unsigned sacrificedCount = 0; // for the altruism challenge
 
     extern void appendEpochLog(unsigned generation, unsigned numberSurvivors, unsigned murderCount);
-    extern std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, unsigned challenge);
     extern void displaySignalUse();
 
     // This container will hold the indexes and survival scores (0.0..1.0)
@@ -103,7 +99,7 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
         // First, make a list of all the individuals who will become parents; save
         // their scores for later sorting. Indexes start at 1.
         for (uint16_t index = 1; index <= p.population; ++index) {
-            std::pair<bool, float> passed = passedSurvivalCriterion(peeps[index], p.challenge);
+            std::pair<bool, float> passed = survivalCriteriaManager.passedSurvivalCriterion(peeps[index], p, grid);
             // Save the parent genome if it results in valid neural connections
             // ToDo: if the parents no longer need their genome record, we could
             // possibly do a move here instead of copy, although it's doubtful that
@@ -123,12 +119,12 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
 
         for (uint16_t index = 1; index <= p.population; ++index) {
             // This the test for the spawning area:
-            std::pair<bool, float> passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM);
+            std::pair<bool, float> passed = survivalCriteriaManager.passedSurvivalCriterion(peeps[index], p, grid, CHALLENGE_ALTRUISM);
             if (passed.first && !peeps[index].nnet.connections.empty()) {
                 parents.push_back( { index, passed.second } );
             } else {
                 // This is the test for the sacrificial area:
-                passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM_SACRIFICE);
+                passed = survivalCriteriaManager.passedSurvivalCriterion(peeps[index], p, grid, CHALLENGE_ALTRUISM_SACRIFICE);
                 if (passed.first && !peeps[index].nnet.connections.empty()) {
                     if (considerKinship) {
                         sacrificesIndexes.push_back(index);

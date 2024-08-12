@@ -17,6 +17,7 @@
 #include "./utils/ProfilingInstrumentor.h"
 #include "./userio/UserIO.h"
 #include "./utils/Save.h"
+#include "./survivalCriteria/survivalCriteriaManager.h"
 
 namespace BS {
 
@@ -25,6 +26,7 @@ extern const Params &p; // read-only simulator config params
 extern Grid grid;  // 2D arena where the individuals live
 extern Signals signals;  // pheromone layers
 extern Peeps peeps;   // container of all the individuals
+extern SurvivalCriteriaManager survivalCriteriaManager;
 extern UserIO* userIO;
 extern void simulator(int argc, char **argv);
 void simGeneration(unsigned int &murderCount, unsigned int generation);

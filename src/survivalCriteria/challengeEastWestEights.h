@@ -1,0 +1,28 @@
+#ifndef CHALLENGEEASTWESTEIGHTS_H_INCLUDED
+#define CHALLENGEEASTWESTEIGHTS_H_INCLUDED
+
+#include <cassert>
+#include "survivalCriteria.h"
+
+namespace BS
+{
+    class ChallengeEastWestEights : public SurvivalCriteria
+    {
+        public:
+            ChallengeEastWestEights()
+            {
+                this->value = CHALLENGE_EAST_WEST_EIGHTHS;
+                this->text = "East west eights";
+                this->description = "Survivors are all those on the left or right eighths of the arena";
+            }
+
+            std::pair<bool, float> passed(const Indiv &indiv, const Params &p, Grid &grid) override
+            {
+                return indiv.loc.x < p.sizeX / 8 || indiv.loc.x >= (p.sizeX - p.sizeX / 8)?
+                    std::pair<bool, float> { true, 1.0 }
+                    : std::pair<bool, float> { false, 0.0 };
+            }
+    };    
+}
+
+#endif

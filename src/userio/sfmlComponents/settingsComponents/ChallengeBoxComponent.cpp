@@ -11,9 +11,9 @@ namespace BS
 
     void ChallengeBoxComponent::initItems()
     {
-        for (unsigned i = 0; i < survivalCriteriasVector.size(); ++i)
+        for (unsigned i = 0; i < survivalCriteriaManager.survivalCriteriasVector.size(); ++i)
         {
-            this->items.push_back(ComboBoxItem(i, survivalCriteriasVector[i].value, survivalCriteriasVector[i].text));
+            this->items.push_back(ComboBoxItem(i, survivalCriteriaManager.survivalCriteriasVector[i]->value, survivalCriteriaManager.survivalCriteriasVector[i]->text));
         }
     }
 

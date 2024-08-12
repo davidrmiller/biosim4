@@ -20,7 +20,7 @@ namespace BS {
 
 extern void initializeGeneration0();
 extern void initializeFromSave();
-extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount);
+extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount, SurvivalCriteriaManager survivalCriteriaManager);
 extern void displaySampleGenomes(unsigned count);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
 extern void endOfSimStep(unsigned simStep, unsigned generation);
@@ -29,6 +29,7 @@ RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
 Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
+SurvivalCriteriaManager survivalCriteriaManager;
 
 UserIO* userIO;
 
@@ -87,6 +88,7 @@ void simulate(unsigned generation)
             {
                 murderCount = 0; // for reporting purposes
                 userIO->startNewGeneration(generation, p.stepsPerGeneration);
+                survivalCriteriaManager.setChallenge(p.challenge);
             }
             #pragma omp barrier
 
@@ -133,7 +135,7 @@ void simulate(unsigned generation)
                     // paramManager.updateFromConfigFile(generation + 1);
 
                     paramManager.updateFromUi();
-                    unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
+                    unsigned numberSurvivors = spawnNewGeneration(generation, murderCount, survivalCriteriaManager);
                     if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0))
                     {
                         // displaySampleGenomes(p.displaySampleGenomes);
