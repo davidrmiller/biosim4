@@ -51,6 +51,7 @@ namespace BS
             SurvivalCriteria() {}
         protected:
             void createBorder(float size, int liveDisplayScale);
+            void createCircle(float radius, float x, float y);
     };
 }
 

@@ -24,6 +24,17 @@ namespace BS
         this->shapes.clear();
     }
 
+    void SurvivalCriteria::createCircle(float radius, float x, float y)
+    {
+        sf::CircleShape* shape = new sf::CircleShape();
+        shape->setRadius(radius);
+        shape->setPosition(x, y);
+        shape->setOutlineThickness(1);
+        shape->setOutlineColor(sf::Color(255,255,255,127));
+        shape->setFillColor(sf::Color::Transparent);
+        this->shapes.push_back(shape);
+    }
+
     void SurvivalCriteria::createBorder(float size, int liveDisplayScale)
     {
         //create border around grid

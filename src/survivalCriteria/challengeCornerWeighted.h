@@ -14,7 +14,6 @@ namespace BS
             void initShapes(int liveDisplayScale) override;
         private:
             float radiusPart = 4.0;
-            sf::CircleShape* getCircle(float radius);
     };    
 }
 
