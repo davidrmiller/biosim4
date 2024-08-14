@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <SFML/Graphics.hpp>
+
 #include "survivalCriteria.h"
 #include "challengeCircle.h"
 #include "challengeRightHalf.h"
@@ -31,66 +33,22 @@ namespace BS
     {
         public:
             std::vector<SurvivalCriteria*> survivalCriteriasVector;
-            SurvivalCriteria* currentChallenge;
-            SurvivalCriteriaManager() 
-            {
-                this->survivalCriteriasVector = {
-                    new ChallengeCircle(),
-                    new ChallengeRightHalf(),
-                    new ChallengeRightQuarter(),
-                    new ChallengeString(),
-                    new ChallengeCenterWeighted(),
-                    new ChallengeCenterUnweighted(),
-                    new ChallengeCorner(),
-                    new ChallengeCornerWeighted(),
-                    new ChallengeMigrateDistance(),
-                    new ChallengeCenterSparse(),
-                    new ChallengeLeftEight(),
-                    new ChallengeRadioactiveWalls(),
-                    new ChallengeAgainstAnyWall(),
-                    new ChallengeTouchAnyWall(),
-                    new ChallengeEastWestEights(),
-                    new ChallengeNearBarrier(),
-                    new ChallengePairs(),
-                    new ChallengeLocationSequence(),
-                    new ChallengeAltruism(),
-                    new ChallengeAltruismSacrifice()
-                };
-            }
+            SurvivalCriteria* currentChallenge = nullptr;
+            SurvivalCriteriaManager();
 
-            void setChallenge(unsigned id)
-            {
-                this->currentChallenge = this->getById(id);
-            }
+            void startNewGeneration(unsigned challengeId);
+            void initShapes(int liveDisplayScale);
 
             // Returns true and a score 0.0..1.0 if passed, false if failed
-            std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, const Params &p, Grid &grid)
-            {
-                if (!indiv.alive) {
-                    return { false, 0.0 };
-                }
-                return this->currentChallenge->passed(indiv, p, grid);
-            }
+            std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, const Params &p, Grid &grid);
 
             // Returns true and a score 0.0..1.0 if passed, false if failed
-            std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, const Params &p, Grid &grid, unsigned challenge)
-            {
-                if (!indiv.alive) {
-                    return { false, 0.0 };
-                }
-                return this->getById(challenge)->passed(indiv, p, grid);
-            }
+            std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, const Params &p, Grid &grid, unsigned challenge);
+
+            std::vector<sf::Drawable*> getShapes();
 
         private:
-            SurvivalCriteria* getById(unsigned id)
-            {
-                for (auto survivalCriteria : survivalCriteriasVector) {
-                    if (survivalCriteria->value == id) {
-                        return survivalCriteria;
-                    }
-                }
-                return this->survivalCriteriasVector[0];
-            }
+            SurvivalCriteria* getById(unsigned id);
     };    
 }
 

@@ -87,8 +87,8 @@ void simulate(unsigned generation)
             #pragma omp master
             {
                 murderCount = 0; // for reporting purposes
+                survivalCriteriaManager.startNewGeneration(p.challenge);
                 userIO->startNewGeneration(generation, p.stepsPerGeneration);
-                survivalCriteriaManager.setChallenge(p.challenge);
             }
             #pragma omp barrier
 

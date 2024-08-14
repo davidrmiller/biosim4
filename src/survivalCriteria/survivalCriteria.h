@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <SFML/Graphics.hpp>
+
 #include "../ai/indiv.h"
 #include "../grid.h"
 
@@ -39,10 +41,16 @@ namespace BS
             std::string text;
             std::string description;
 
+            std::vector<sf::Drawable*> shapes;
+
             virtual std::pair<bool, float> passed(const Indiv &indiv, const Params &p, Grid &grid) = 0;
-            void draw(); //ToDo
+            virtual void initShapes(int liveDisplayScale);
+            virtual void endOfStep();
+            void deleteShapes();
             SurvivalCriteria(unsigned value, std::string text, std::string description) : value(value), text(text), description(description) {}
             SurvivalCriteria() {}
+        protected:
+            void createBorder(float size, int liveDisplayScale);
     };
 }
 

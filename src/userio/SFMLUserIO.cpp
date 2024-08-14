@@ -220,6 +220,11 @@ namespace BS
                 this->window->close();
             }
 
+            if (e.Event::type == e.Event::KeyPressed && e.Event::key.code == sf::Keyboard::Key::Space)
+            {
+                this->flowControlComponent->pauseResume(!this->paused);
+            }
+
             this->viewComponent->updateInput(e, this->window);
 
             if (e.Event::type == sf::Event::MouseButtonReleased)
@@ -269,7 +274,7 @@ namespace BS
 
         this->bottomButtonsComponent->flushRestartButton();
 
-
+        // init barriers
         int liveDisplayScale = p.displayScale / 1.5;
         barriesrs.clear();
         auto const &barrierLocs = grid.getBarrierLocations();
@@ -279,6 +284,8 @@ namespace BS
             barrier.setFillColor(sf::Color(136, 136, 136));
             barriesrs.push_back(barrier);
         }
+
+        survivalCriteriaManager.initShapes(liveDisplayScale);
 
         if (this->selectedIndex != 0) {
             peeps[this->selectedIndex].shape.setOutlineThickness(0.f);
@@ -326,6 +333,10 @@ namespace BS
 
             for (sf::RectangleShape &barrier : barriesrs) {
                 this->window->draw(barrier);
+            }
+            
+            for (sf::Drawable *shape : survivalCriteriaManager.getShapes()) {
+                this->window->draw(*shape);
             }
 
             this->gui.draw();
