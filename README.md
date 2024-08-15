@@ -5,14 +5,16 @@ Fork of https://github.com/davidrmiller/biosim4
 ### What has been done
 
 - heavy refactoring (still in progress)
-- add a new output via SFML wich renders individuals in real-time with the ability to drag simulation (LMB), zoom in/out (scroll), select indiv (LMB)
-- add UI to watch and control simulation with TGUI:
+- added a new output via SFML wich renders individuals in real-time with the ability to drag simulation (LMB), zoom in/out (scroll), select indiv (LMB)
+- added UI to watch and control simulation with TGUI:
   - pause/resume button, pause at start/end of generation
   - slow or increase speed of simulation
   - change some settings
   - restart simulation
   - save selected indiv's net to svg
-- add logic to save and load simulations
+- added logic to save and load simulations
+
+![alt text](https://github.com/ilyabrilev/biosim4/blob/main/screenshot.png?raw=true)
 
 ### Plans
 - draw challenge criterias
