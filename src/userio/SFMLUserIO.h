@@ -93,6 +93,8 @@ namespace BS
 
         int getLiveDisplayScale();
         uint16_t selectedIndex = 0;
+
+        bool passedSelected = false;
     };
 }
 

@@ -111,9 +111,34 @@ namespace BS
                 {
                     std::stringstream indivStream = peeps[this->selectedIndex].printNeuralNet();
                     this->infoWindowComponent->append(indivStream.str());   
+                    this->infoWindowComponent->append("\nLocation: " + 
+                        std::to_string(peeps[this->selectedIndex].loc.x) + ", " + 
+                        std::to_string(peeps[this->selectedIndex].loc.y));
                 }
                 this->childWindowToggled(true);
                 this->gui.add(this->infoWindowComponent->getChildWindow());
+            },
+            [this](bool select)
+            {
+                if (select) {
+                    this->passedSelected = true;
+                    peeps[this->selectedIndex].shape.setOutlineThickness(0.f);
+                    this->selectedIndex = 0;
+
+                    for (uint16_t index = 1; index <= p.population; ++index) {
+                        std::pair<bool, float> passed = survivalCriteriaManager.passedSurvivalCriterion(peeps[index], p, grid);
+                        if (passed.first) {  
+                            Indiv peep = peeps[index];                      
+                            peeps[index].shape.setOutlineColor(sf::Color::White);
+                            peeps[index].shape.setOutlineThickness(1.f);
+                        }
+                    }
+                } else {
+                    this->passedSelected = false;
+                    for (uint16_t index = 1; index <= p.population; ++index) {
+                        peeps[index].shape.setOutlineThickness(0.f);
+                    }
+                }
             }
         );
 
@@ -229,7 +254,7 @@ namespace BS
 
             if (e.Event::type == sf::Event::MouseButtonReleased)
             {
-                if (e.mouseButton.button == 1)
+                if (e.mouseButton.button == 1 && !this->passedSelected)
                 {
                     // select indiv on mouse position
                     int liveDisplayScale = this->getLiveDisplayScale();

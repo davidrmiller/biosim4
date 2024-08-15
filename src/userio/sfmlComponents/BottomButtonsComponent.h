@@ -15,7 +15,8 @@ namespace BS
             std::function<void(bool)> restartCallback,
             std::function<void()> saveIndivCallback,
             std::function<void(std::string name, std::string val)> changeSettingsCallback,
-            std::function<void()> indivInfoCallback);
+            std::function<void()> indivInfoCallback,            
+            std::function<void(bool)> selectPassedCallback);
             
         void flushRestartButton();
         tgui::Group::Ptr getGroup();
@@ -23,6 +24,8 @@ namespace BS
     private:
         tgui::Group::Ptr group;
         tgui::ToggleButton::Ptr restartButton;
+        tgui::Button::Ptr selectPassedBtn;
+        bool isSelectPassed = false;
     };
 }
 #endif

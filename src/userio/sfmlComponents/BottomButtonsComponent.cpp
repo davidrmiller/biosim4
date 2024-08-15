@@ -8,7 +8,8 @@ namespace BS
         std::function<void(bool)> restartCallback,
         std::function<void()> saveIndivCallback,
         std::function<void(std::string name, std::string val)> changeSettingsCallback,
-        std::function<void()> indivInfoCallback)
+        std::function<void()> indivInfoCallback,
+        std::function<void(bool)> selectPassedCallback)
     {
         this->group = tgui::Group::create();
 
@@ -24,15 +25,13 @@ namespace BS
         float height = 27.f;
         tgui::Button::Ptr saveButton = tgui::Button::create("Save sim");
         saveButton->setPosition({bindLeft(line) + 10.f, bindTop(line) - height - 10.f});
-        saveButton->onPress([saveCallback]()
-                            { saveCallback(); });
+        saveButton->onPress([saveCallback]() { saveCallback(); });
         saveButton->setHeight(height);
         this->group->add(saveButton, "SaveButton");
 
         tgui::Button::Ptr loadButton = tgui::Button::create("Load sim");
         loadButton->setPosition({bindRight(saveButton) + btnHorizontalMargin, bindTop(saveButton)});
-        loadButton->onPress([loadCallback]()
-                            { loadCallback(); });
+        loadButton->onPress([loadCallback]() { loadCallback(); });
         loadButton->setHeight(height);
         this->group->add(loadButton, "LoadButton");
 
@@ -55,17 +54,25 @@ namespace BS
 
         tgui::Button::Ptr saveIndivBtn = tgui::Button::create("Save indiv");
         saveIndivBtn->setPosition({bindRight(this->restartButton) - saveIndivBtn->getSize().x, bindTop(this->restartButton) - saveIndivBtn->getSize().y - 10.f});
-        saveIndivBtn->onPress([saveIndivCallback]()
-                         { saveIndivCallback(); });
+        saveIndivBtn->onPress([saveIndivCallback]() { saveIndivCallback(); });
         saveIndivBtn->setHeight(height);
         this->group->add(saveIndivBtn, "SaveIndivBtn");
 
         tgui::Button::Ptr indivInfoBtn = tgui::Button::create("i");
         indivInfoBtn->setPosition({bindLeft(saveIndivBtn) - indivInfoBtn->getSize().x - btnHorizontalMargin, bindTop(saveIndivBtn)});
-        indivInfoBtn->onPress([indivInfoCallback]()
-                         { indivInfoCallback(); });
+        indivInfoBtn->onPress([indivInfoCallback]() { indivInfoCallback(); });
         indivInfoBtn->setHeight(height);
         this->group->add(indivInfoBtn, "IndivInfoBtn");
+
+        this->selectPassedBtn = tgui::Button::create("Passed");
+        this->selectPassedBtn->setPosition({bindLeft(saveIndivBtn), bindTop(saveIndivBtn) - this->selectPassedBtn->getSize().y - 10.f});
+        this->selectPassedBtn->onPress([this, selectPassedCallback]() { 
+            this->isSelectPassed = !this->isSelectPassed;
+            this->selectPassedBtn->setText(this->isSelectPassed ? "Clear" : "Passed");
+            selectPassedCallback(this->isSelectPassed); 
+        });
+        this->selectPassedBtn->setHeight(height);
+        this->group->add(selectPassedBtn, "SelectPassedBtn");
     }    
     
     void BottomButtonsComponent::flushRestartButton()
