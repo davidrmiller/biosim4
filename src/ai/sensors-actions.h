@@ -83,8 +83,8 @@ enum Action {
     MOVE_LEFT,                // W
     MOVE_RIGHT,               // W
     MOVE_REVERSE,             // W
-    NUM_ACTIONS,       // <<----------------- END OF ACTIVE ACTIONS MARKER
     KILL_FORWARD,             // W
+    NUM_ACTIONS,       // <<----------------- END OF ACTIVE ACTIONS MARKER
 };
 
 extern std::string sensorName(Sensor sensor);

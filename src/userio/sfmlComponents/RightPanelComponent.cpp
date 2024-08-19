@@ -58,6 +58,15 @@ namespace BS
         // setup steps per generation
         this->stepsPerGenerationEditBox = this->createEditBox(this->populationEditBox, tgui::String(p.stepsPerGeneration), "Steps Per Generation");
         this->createConfirmButton(this->stepsPerGenerationEditBox, "stepspergeneration", "StepsPerGenerationButton");
+
+        tgui::CheckBox::Ptr killBox = tgui::CheckBox::create();
+        killBox->setPosition({bindLeft(this->stepsPerGenerationEditBox), bindBottom(this->stepsPerGenerationEditBox) + this->controlOffset});
+        killBox->setText("Kill enabled");
+        killBox->setChecked(p.killEnable);
+        killBox->onChange([this](bool checked) { 
+            this->changeSettingsCallback("killenable", checked ? "true" : "false");
+        });
+        this->panel->add(killBox, "KillBox");
     }
 
     tgui::EditBox::Ptr RightPanelComponent::createEditBox(tgui::Widget::Ptr reference, tgui::String text, std::string name)

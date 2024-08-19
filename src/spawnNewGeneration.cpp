@@ -191,6 +191,9 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount, SurvivalC
     
     std::stringstream ss;
     ss << "Gen " << generation << ", " << parentGenomes.size() << " survivors";
+    if (murderCount > 0) {
+        ss << ", " << murderCount << " kills";
+    }
     userIO->log(ss.str());
     appendEpochLog(generation, parentGenomes.size(), murderCount);
     //displaySignalUse(); // for debugging only
