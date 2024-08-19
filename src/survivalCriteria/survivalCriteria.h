@@ -52,6 +52,9 @@ namespace BS
         protected:
             void createBorder(float size, int liveDisplayScale);
             void createCircle(float radius, float x, float y);
+            void createLine(sf::Vector2f vector, sf::Vector2f vectorTwo);
+
+            sf::Color defaultColor = sf::Color(255,255,255,127);
     };
 }
 

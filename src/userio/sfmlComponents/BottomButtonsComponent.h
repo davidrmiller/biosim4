@@ -20,12 +20,14 @@ namespace BS
             
         void flushRestartButton();
         tgui::Group::Ptr getGroup();
+        void switchPassedSelection(bool selected);
 
     private:
         tgui::Group::Ptr group;
         tgui::ToggleButton::Ptr restartButton;
         tgui::Button::Ptr selectPassedBtn;
         bool isSelectPassed = false;
+        std::function<void(bool)> selectPassedCallback;
     };
 }
 #endif

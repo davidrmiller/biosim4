@@ -312,10 +312,14 @@ namespace BS
 
         survivalCriteriaManager.initShapes(liveDisplayScale);
 
+        // clear manual selection
         if (this->selectedIndex != 0) {
             peeps[this->selectedIndex].shape.setOutlineThickness(0.f);
             this->selectedIndex = 0;
         }
+        
+        // clear survival selection
+        this->bottomButtonsComponent->switchPassedSelection(false);        
     }
 
     void SFMLUserIO::endOfStep(unsigned simStep)

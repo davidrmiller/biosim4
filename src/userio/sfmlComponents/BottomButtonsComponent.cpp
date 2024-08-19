@@ -11,6 +11,8 @@ namespace BS
         std::function<void()> indivInfoCallback,
         std::function<void(bool)> selectPassedCallback)
     {
+        this->selectPassedCallback = selectPassedCallback;
+
         this->group = tgui::Group::create();
 
         // setup divider
@@ -66,15 +68,22 @@ namespace BS
 
         this->selectPassedBtn = tgui::Button::create("Passed");
         this->selectPassedBtn->setPosition({bindLeft(saveIndivBtn), bindTop(saveIndivBtn) - this->selectPassedBtn->getSize().y - 10.f});
-        this->selectPassedBtn->onPress([this, selectPassedCallback]() { 
+        this->selectPassedBtn->onPress([this]() { 
             this->isSelectPassed = !this->isSelectPassed;
             this->selectPassedBtn->setText(this->isSelectPassed ? "Clear" : "Passed");
-            selectPassedCallback(this->isSelectPassed); 
+            this->selectPassedCallback(this->isSelectPassed); 
         });
         this->selectPassedBtn->setHeight(height);
         this->group->add(selectPassedBtn, "SelectPassedBtn");
     }    
     
+    void BottomButtonsComponent::switchPassedSelection(bool selected)
+    {
+        this->isSelectPassed = selected;
+        this->selectPassedBtn->setText(this->isSelectPassed ? "Clear" : "Passed");
+        this->selectPassedCallback(this->isSelectPassed); 
+    }
+
     void BottomButtonsComponent::flushRestartButton()
     {
         this->restartButton->setDown(false);

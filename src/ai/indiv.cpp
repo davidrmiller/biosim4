@@ -25,13 +25,13 @@ void Indiv::initialize(uint16_t index_, Coord loc_, Genome &&genome_)
 {
     index = index_;
     loc = loc_;
+    birthLoc = Coord(loc.x, loc.y);
     genome = std::move(genome_);
     this->initVariables();
 }
 
 void Indiv::initVariables()
 {
-    //birthLoc = loc_;
     grid.set(this->loc, this->index);
 
     age = 0;

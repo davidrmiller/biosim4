@@ -30,7 +30,7 @@ namespace BS
         shape->setRadius(radius);
         shape->setPosition(x, y);
         shape->setOutlineThickness(1);
-        shape->setOutlineColor(sf::Color(255,255,255,127));
+        shape->setOutlineColor(this->defaultColor);
         shape->setFillColor(sf::Color::Transparent);
         this->shapes.push_back(shape);
     }
@@ -62,5 +62,16 @@ namespace BS
         rightRect->setPosition(p.sizeX * liveDisplayScale, 0 - size);
         rightRect->setFillColor(borderColor);
         this->shapes.push_back(rightRect);
+    }
+
+    void SurvivalCriteria::createLine(sf::Vector2f vectorOne, sf::Vector2f vectorTwo)
+    {
+        sf::VertexArray* lineLeft = new sf::VertexArray(sf::LinesStrip, 2);
+        lineLeft->clear();
+        sf::Vertex vertexOne = sf::Vertex(vectorOne, this->defaultColor);
+        lineLeft->append(vertexOne);
+        sf::Vertex vertexTwo = sf::Vertex(vectorTwo, this->defaultColor);
+        lineLeft->append(vertexTwo);
+        this->shapes.push_back(lineLeft);
     }
 }
