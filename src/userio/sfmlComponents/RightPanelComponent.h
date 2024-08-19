@@ -34,10 +34,14 @@ namespace BS
         ChallengeBoxComponent *challengeBoxComponent;
         BarrierBoxComponent *barrierBoxComponent;
         tgui::EditBox::Ptr mutationRateEditBox;
+        tgui::EditBox::Ptr populationEditBox;
+        tgui::EditBox::Ptr stepsPerGenerationEditBox;
 
         std::function<void(std::string name, std::string val)> changeSettingsCallback;
 
+        tgui::EditBox::Ptr createEditBox(tgui::Widget::Ptr reference, tgui::String text, std::string name);
         void createLabel(tgui::Widget::Ptr widget, const tgui::String &text);
+        void createConfirmButton(tgui::EditBox::Ptr editBox, std::string settingsName, std::string name);
     };
 }
 
