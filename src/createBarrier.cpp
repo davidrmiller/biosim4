@@ -25,6 +25,7 @@ void Grid::createBarrier(unsigned barrierType)
             for (int16_t y = minY; y <= maxY; ++y) {
                 grid.set(x, y, BARRIER);
                 barrierLocations.push_back( {x, y} );
+                barrierCenters.push_back( {x, y} );
             }
         }
     };
@@ -35,18 +36,13 @@ void Grid::createBarrier(unsigned barrierType)
 
     // Vertical bar in constant location
     case 1:
-        {
+        {            
             int16_t minX = p.sizeX / 2;
             int16_t maxX = minX + 1;
             int16_t minY = p.sizeY / 4;
             int16_t maxY = minY + p.sizeY / 2;
 
-            for (int16_t x = minX; x <= maxX; ++x) {
-                for (int16_t y = minY; y <= maxY; ++y) {
-                    grid.set(x, y, BARRIER);
-                    barrierLocations.push_back( {x, y} );
-                }
-            }
+            drawBox(minX, minY, maxX, maxY);
         }
         break;
 
@@ -58,12 +54,7 @@ void Grid::createBarrier(unsigned barrierType)
             int16_t minY = randomUint(20, p.sizeY / 2 - 20);
             int16_t maxY = minY + p.sizeY / 2;
 
-            for (int16_t x = minX; x <= maxX; ++x) {
-                for (int16_t y = minY; y <= maxY; ++y) {
-                    grid.set(x, y, BARRIER);
-                    barrierLocations.push_back( {x, y} );
-                }
-            }
+            drawBox(minX, minY, maxX, maxY);
         }
         break;
 
@@ -105,12 +96,7 @@ void Grid::createBarrier(unsigned barrierType)
             int16_t minY = p.sizeY / 2 + p.sizeY / 4;
             int16_t maxY = minY + 2;
 
-            for (int16_t x = minX; x <= maxX; ++x) {
-                for (int16_t y = minY; y <= maxY; ++y) {
-                    grid.set(x, y, BARRIER);
-                    barrierLocations.push_back( {x, y} );
-                }
-            }
+            drawBox(minX, minY, maxX, maxY);
         }
         break;
 
@@ -139,18 +125,15 @@ void Grid::createBarrier(unsigned barrierType)
                 center2 = randomLoc();
             } while ((center0 - center2).length() < margin || (center1 - center2).length() < margin);
 
-            barrierCenters.push_back(center0);
-            //barrierCenters.push_back(center1);
-            //barrierCenters.push_back(center2);
-
             auto f = [&](Coord loc) {
                 grid.set(loc, BARRIER);
                 barrierLocations.push_back(loc);
+                barrierCenters.push_back(loc);
             };
 
             visitNeighborhood(center0, radius, f);
-            //visitNeighborhood(center1, radius, f);
-            //visitNeighborhood(center2, radius, f);
+            visitNeighborhood(center1, radius, f);
+            visitNeighborhood(center2, radius, f);
         }
         break;
 

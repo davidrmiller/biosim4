@@ -7,12 +7,12 @@ namespace BS
 {
     void SurvivalCriteria::initShapes(int liveDisplayScale)
     {
-        std::cout << "initShapes" << std::endl;
+        //std::cout << "initShapes" << std::endl;
     }
 
     void SurvivalCriteria::endOfStep() 
     {
-        std::cout << "endOfStep" << std::endl;
+        //std::cout << "endOfStep" << std::endl;
     }
 
     void SurvivalCriteria::deleteShapes()
