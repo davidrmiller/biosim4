@@ -46,6 +46,8 @@ public:
     Indiv & operator[](uint16_t index) { return individuals[index]; }
     Indiv const & operator[](uint16_t index) const { return individuals[index]; }
 
+    unsigned getPopulation() const { return population; }
+
 private:
     unsigned population;
     std::vector<Indiv> individuals; // Index value 0 is reserved

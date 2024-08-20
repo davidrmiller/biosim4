@@ -156,17 +156,17 @@ float genomeSimilarity(const Genome &g1, const Genome &g2)
 // Samples random pairs of individuals regardless if they are alive or not
 float geneticDiversity()
 {
-    if (p.population < 2) {
+    if (peeps.getPopulation() < 2) {
         return 0.0;
     }
 
     // count limits the number of genomes sampled for performance reasons.
-    unsigned count = std::min(1000U, p.population);    // todo: !!! p.analysisSampleSize;
+    unsigned count = std::min(1000U, peeps.getPopulation());    // todo: !!! p.analysisSampleSize;
     int numSamples = 0;
     float similaritySum = 0.0f;
 
     while (count > 0) {
-        unsigned index0 = randomUint(1, p.population - 1); // skip first and last elements
+        unsigned index0 = randomUint(1, peeps.getPopulation() - 1); // skip first and last elements
         unsigned index1 = index0 + 1;
         similaritySum += genomeSimilarity(peeps[index0].genome, peeps[index1].genome);
         --count;

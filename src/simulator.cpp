@@ -127,6 +127,7 @@ void simulate(unsigned generation)
             {
                 if (userIO->getRestartAtEnd()) {
                     runMode = RunMode::RESTART;
+                    paramManager.updateFromUi();
                 }
                 if (runMode == RunMode::RUN) {
                     userIO->endOfGeneration(generation);
