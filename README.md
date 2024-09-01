@@ -241,7 +241,7 @@ docker build -t biosim4 .
 You can then compile the program with an ephemeral container:
 
 ```sh
-docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
+docker run --rm -ti -v `full-path-in-windows-to-your-biosim4-folder`:/app --name biosim biosim4 make
 ```
 When you exit the container, the files compiled in your container files will persist in `./bin`.
 
