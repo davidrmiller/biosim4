@@ -67,6 +67,30 @@ evaluated multithreadedly.
 
 void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels)
 {
+    auto actionEnergyCost = [](Action action) -> int
+    {
+        switch (action)
+        {
+        case MOVE_X:
+        case MOVE_Y:
+        case MOVE_FORWARD:
+        case MOVE_RL:
+        case MOVE_RANDOM:
+        case MOVE_EAST:
+        case MOVE_WEST:
+        case MOVE_NORTH:
+        case MOVE_SOUTH:
+        case MOVE_LEFT:
+        case MOVE_RIGHT:
+        case MOVE_REVERSE:
+            return p.moveActionEnergyCost;
+        case KILL_FORWARD:
+            return p.killActionEnergyCost;
+        default:
+            return p.otherActionEnergyCost;
+        }
+    };
+
     // Only a subset of all possible actions might be enabled (i.e., compiled in).
     // This returns true if the specified action is enabled. See sensors-actions.h
     // for how to enable sensors and actions during compilation.
@@ -79,6 +103,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
         float level = actionLevels[Action::SET_RESPONSIVENESS]; // default 0.0
         level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
         indiv.responsiveness = level;
+        indiv.energy -= actionEnergyCost(Action::SET_RESPONSIVENESS);
     }
 
     // For the rest of the action outputs, we'll apply an adjusted responsiveness
@@ -94,6 +119,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
         unsigned newPeriod = 1 + (int)(1.5 + std::exp(7.0 * newPeriodf01));
         assert(newPeriod >= 2 && newPeriod <= 2048);
         indiv.oscPeriod = newPeriod;
+        indiv.energy -= actionEnergyCost(Action::SET_OSCILLATOR_PERIOD);
     }
 
     // Set longProbeDistance - convert action level to 1..maxLongProbeDistance.
@@ -105,6 +131,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
         level = (std::tanh(level) + 1.0) / 2.0; // convert to 0.0..1.0
         level = 1 + level * maxLongProbeDistance;
         indiv.longProbeDist = (unsigned)level;
+        indiv.energy -= actionEnergyCost(Action::SET_LONGPROBE_DIST);
     }
 
     // Emit signal0 - if this action value is below a threshold, nothing emitted.
@@ -119,6 +146,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
         level *= responsivenessAdjusted;
         if (level > emitThreshold && prob2bool(level)) {
             signals.increment(0, indiv.loc);
+            indiv.energy -= actionEnergyCost(Action::EMIT_SIGNAL0);
         }
     }
 
@@ -134,8 +162,10 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
             Coord otherLoc = indiv.loc + indiv.lastMoveDir;
             if (grid.isInBounds(otherLoc) && grid.isOccupiedAt(otherLoc)) {
                 Indiv &indiv2 = peeps.getIndiv(otherLoc);
+                
                 assert((indiv.loc - indiv2.loc).length() == 1);
                 peeps.queueForDeath(indiv2);
+                indiv.energy -= actionEnergyCost(Action::KILL_FORWARD);
             }
         }
     }
@@ -230,6 +260,7 @@ void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &action
     Coord newLoc = indiv.loc + movementOffset;
     if (grid.isInBounds(newLoc) && grid.isEmptyAt(newLoc)) {
         peeps.queueForMove(indiv, newLoc);
+        indiv.energy -= p.moveActionEnergyCost;
     }
 }
 
