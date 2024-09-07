@@ -29,7 +29,7 @@ void ParamManager::setDefaults()
     privParams.genomeInitialLengthMin = 24;
     privParams.genomeInitialLengthMax = 24;
     privParams.genomeMaxLength = 300;
-    privParams.logDir = "./logs/";
+    privParams.logDir = "./Output/Logs/";
     privParams.imageDir = "./images/";
     privParams.population = 3000;
     privParams.stepsPerGeneration = 300;

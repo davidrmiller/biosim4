@@ -39,8 +39,10 @@ void saveOneFrameImmed(const ImageFrameData &data)
     color[0] = color[1] = color[2] = 0x88;
     for (Coord loc : data.barrierLocs) {
             image.draw_rectangle(
-                loc.x       * p.displayScale - (p.displayScale / 2), ((p.sizeY - loc.y) - 1)   * p.displayScale - (p.displayScale / 2),
-                (loc.x + 1) * p.displayScale, ((p.sizeY - (loc.y - 0))) * p.displayScale,
+                loc.x       * p.displayScale - (p.displayScale / 2) + p.agentSize / 2, 
+                ((p.sizeY - loc.y) - 1)   * p.displayScale - (p.displayScale / 2) + p.agentSize / 2,
+                (loc.x + 1) * p.displayScale + p.agentSize / 2, 
+                ((p.sizeY - (loc.y - 0))) * p.displayScale + p.agentSize / 2,
                 color,  // rgb
                 1.0);  // alpha
     }
@@ -66,8 +68,8 @@ void saveOneFrameImmed(const ImageFrameData &data)
         }
 
         image.draw_circle(
-                data.indivLocs[i].x * p.displayScale,
-                ((p.sizeY - data.indivLocs[i].y) - 1) * p.displayScale,
+                data.indivLocs[i].x * p.displayScale + p.agentSize,
+                ((p.sizeY - data.indivLocs[i].y) - 1) * p.displayScale + p.agentSize,
                 p.agentSize,
                 color,  // rgb
                 1.0);  // alpha

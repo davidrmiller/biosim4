@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include "simulator.h"
-#include "./survivalCriteria/survivalCriteria.h"
+#include "./survivalCriteria/SurvivalCriteria.h"
 
 namespace BS {
 

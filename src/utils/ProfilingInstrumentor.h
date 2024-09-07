@@ -128,7 +128,7 @@ namespace ProfilingInstrumentor
          *  @param  name  The name of the session.
          *  @param  filepath  filepath to results file
          */
-        void beginSession(const std::string &name, const std::string &filepath = "profiling/results.json")
+        void beginSession(const std::string &name, const std::string &filepath = "Output/Profiling/results.json")
         {
             m_CurrentSession = new Session{name};
             this->filepath = filepath;

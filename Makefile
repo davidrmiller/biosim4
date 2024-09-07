@@ -105,7 +105,7 @@ clean_release:
 	$(RM) -f bin/Release/biosim4
 
 distclean: clean
-	$(RM) -f logs/* images/*
+	$(RM) -f Output/Images/* Output/Videos/* Output/Logs/* Output/Saves/* Output/Profiling/*
 
 .PHONY: all clean distclean
 

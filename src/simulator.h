@@ -17,7 +17,7 @@
 #include "./utils/ProfilingInstrumentor.h"
 #include "./userio/UserIO.h"
 #include "./utils/Save.h"
-#include "./survivalCriteria/survivalCriteriaManager.h"
+#include "./survivalCriteria/SurvivalCriteriaManager.h"
 
 namespace BS {
 

@@ -10,7 +10,7 @@
 #include "../params.h"
 #include "../peeps.h"
 #include "../utils/Save.h"
-#include "../survivalCriteria/survivalCriteriaManager.h"
+#include "../survivalCriteria/SurvivalCriteriaManager.h"
 
 #include "./sfmlComponents/ViewComponent.h"
 #include "./sfmlComponents/RightPanelComponent.h"
