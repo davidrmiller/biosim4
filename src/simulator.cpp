@@ -23,7 +23,6 @@ extern void initializeFromSave();
 extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount, SurvivalCriteriaManager survivalCriteriaManager);
 extern void displaySampleGenomes(unsigned count);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
-extern void endOfSimStep(unsigned simStep, unsigned generation);
 
 RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
@@ -110,7 +109,7 @@ void simulate(unsigned generation)
                 #pragma omp master
                 {
                     murderCount += peeps.deathQueueSize();
-                    endOfSimStep(simStep, generation);
+                    survivalCriteriaManager.endOfStep(simStep, p, grid, peeps, signals);
 
                     userIO->handleStep(simStep, generation);
 

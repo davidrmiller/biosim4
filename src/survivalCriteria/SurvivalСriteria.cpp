@@ -10,7 +10,7 @@ namespace BS
         //std::cout << "initShapes" << std::endl;
     }
 
-    void SurvivalCriteria::endOfStep() 
+    void SurvivalCriteria::endOfStep(unsigned simStep, const Params &p, Grid &grid, Peeps &peeps) 
     {
         //std::cout << "endOfStep" << std::endl;
     }

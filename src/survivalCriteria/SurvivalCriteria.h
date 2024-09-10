@@ -7,6 +7,7 @@
 
 #include "../ai/indiv.h"
 #include "../grid.h"
+#include "../peeps.h"
 
 namespace BS
 {
@@ -46,7 +47,7 @@ namespace BS
 
             virtual std::pair<bool, float> passed(const Indiv &indiv, const Params &p, Grid &grid) = 0;
             virtual void initShapes(int liveDisplayScale);
-            virtual void endOfStep();
+            virtual void endOfStep(unsigned simStep, const Params &p, Grid &grid, Peeps &peeps);
             void deleteShapes();
             SurvivalCriteria(unsigned value, std::string text, std::string description) : value(value), text(text), description(description) {}
             SurvivalCriteria() {}

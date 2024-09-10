@@ -5,6 +5,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+#include "../ai/signals.h"
+
 #include "SurvivalCriteria.h"
 #include "ChallengeCircle.h"
 #include "ChallengeRightHalf.h"
@@ -42,11 +44,10 @@ namespace BS
 
             // Returns true and a score 0.0..1.0 if passed, false if failed
             std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, const Params &p, Grid &grid);
-
-            // Returns true and a score 0.0..1.0 if passed, false if failed
             std::pair<bool, float> passedSurvivalCriterion(const Indiv &indiv, const Params &p, Grid &grid, unsigned challenge);
 
             std::vector<sf::Drawable*> getShapes();
+            void endOfStep(unsigned simStep, const Params &p, Grid &grid, Peeps &peeps, Signals signals);
 
         private:
             SurvivalCriteria* getById(unsigned id);

@@ -78,4 +78,13 @@ namespace BS
     {
         return this->currentChallenge->shapes;
     }
+
+    void SurvivalCriteriaManager::endOfStep(unsigned simStep, const Params &p, Grid &grid, Peeps &peeps, Signals signals)
+    {
+        this->currentChallenge->endOfStep(simStep, p, grid, peeps);
+        
+        peeps.drainDeathQueue();
+        peeps.drainMoveQueue();
+        signals.fade(0); // takes layerNum  todo!!!
+    }
 }

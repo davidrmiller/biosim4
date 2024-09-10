@@ -64,7 +64,7 @@ strong level, we do this:
          peeps.queueForDeath()
 
 The deferred movement and death queues will be emptied by the caller at the end of the
-simulator step by endOfSimStep() in a single thread after all individuals have been
+simulator step by endOfStep() in a single thread after all individuals have been
 evaluated multithreadedly.
 **********************************************************************************/
 
