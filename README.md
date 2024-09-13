@@ -249,13 +249,14 @@ When you exit the container, the files compiled in your container files will per
 
 A `CMakeList.txt` file is provided to allow development, build, test, installation and packaging with the CMake tool chain and all IDE's that support CMake. 
 
-To build with cmake you need to install cmake. Once installed use the procedure below:
+To build with cmake you need to install cmake. 
 
-If using docker, start by opeing its terminal:
+If you're using docker, `cmake` is already installed. So, you can directly open its terminal to use it:
 ```sh
 docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash
 ```
 
+Once cmake is installed use the procedure below:
 ```sh
 mkdir build
 cd build
