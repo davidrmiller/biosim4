@@ -36,6 +36,9 @@ namespace BS
     constexpr unsigned CHALLENGE_ALTRUISM_SACRIFICE = 18;
     constexpr unsigned CHALLENGE_CORNER_RANDOM = 19;
 
+    /**
+     * Base class for survival criteria
+     */
     class SurvivalCriteria
     {
         public:

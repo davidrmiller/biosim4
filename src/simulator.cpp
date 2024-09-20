@@ -71,6 +71,9 @@ void simStepOneIndiv(Indiv &indiv, unsigned simStep)
     executeActions(indiv, actionLevels);
 }
 
+/**
+ * The main simulation loop.
+ */
 void simulate(unsigned generation)
 {
     unsigned murderCount;
@@ -235,7 +238,6 @@ void simulator(int argc, char **argv)
 
             Save::load(userIO->getLoadFilename());
             userIO->setFromParams();
-            peeps.initFromSave();
             initializeFromSave();
             userIO->cleanLoadSelection();
 

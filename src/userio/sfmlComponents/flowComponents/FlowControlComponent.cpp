@@ -74,11 +74,21 @@ namespace BS
 
     FlowControlComponent::~FlowControlComponent() {}
 
+    /**
+     * Pause switch
+     */
     void FlowControlComponent::pauseResume()
     {
         this->pauseResume(!this->paused);
     }
 
+    /**
+     * Pause switch
+     * There are two types of pause: caused by user directly (paused class variable)
+     * and indirectly (externalPause class variable).
+     * externalPause is triggered by the application itself (e.g. showing child window).
+     * This is because the simulation shouldn't unpause if the user triggered it, even if child window is closed
+     */
     void FlowControlComponent::pauseResume(bool paused)
     {
         this->paused = paused;
@@ -91,6 +101,9 @@ namespace BS
         this->pauseCallback(this->paused || this->externalPause);
     }
 
+    /**
+     * Trigger externalPause
+     */
     void FlowControlComponent::pauseExternal(bool paused)
     {
         this->externalPause = paused;

@@ -2,6 +2,11 @@
 
 namespace BS
 {
+    /**
+     * Constructor
+     * Initiates all survival criterias in the vector for displaying in combo box and info window.
+     * Current challenge is picked from this vector
+     */
     SurvivalCriteriaManager::SurvivalCriteriaManager()
     {
         this->survivalCriteriasVector = {

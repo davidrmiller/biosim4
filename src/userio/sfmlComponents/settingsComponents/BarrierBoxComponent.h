@@ -8,6 +8,9 @@
 
 namespace BS
 {
+    /**
+     * Class for displaying barrier type settings
+     */
     class BarrierBoxComponent : public AbstractComboBoxComponent
     {
     public:

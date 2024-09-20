@@ -5,16 +5,26 @@
 
 namespace BS
 {
+    /**
+     * Overridable function for creating shapes of survival criteria
+     */
     void SurvivalCriteria::initShapes(int liveDisplayScale)
     {
-        //std::cout << "initShapes" << std::endl;
     }
 
+    /**
+     * Overridable function that called at the end of each step.
+     * Some criterias like ChallengeRadioactiveWalls has special logic
+     * performed after each step. Most of criterias do nothing.
+     */
     void SurvivalCriteria::endOfStep(unsigned simStep, const Params &p, Grid &grid, Peeps &peeps) 
     {
-        //std::cout << "endOfStep" << std::endl;
     }
 
+    /**
+     * Clears all Drawables of survival criteria
+     * 
+     */
     void SurvivalCriteria::deleteShapes()
     {
         for (sf::Drawable *shape : this->shapes)

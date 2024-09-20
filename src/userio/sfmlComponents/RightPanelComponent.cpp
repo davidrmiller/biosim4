@@ -3,6 +3,12 @@
 
 namespace BS
 {
+    /**
+     * Constructor
+     * @param windowSize Size of the window
+     * @param changeSettingsCallback Callback for changing settings
+     * @param infoCallback Callback for showing informational child window
+     */
     RightPanelComponent::RightPanelComponent(
         sf::Vector2u windowSize, 
         std::function<void(std::string name, std::string val)> changeSettingsCallback_,
@@ -19,6 +25,9 @@ namespace BS
         this->initSettingsComponents(infoCallback);
     }
 
+    /**
+     * Initializes values of settings components and places int on the pannel
+     */
     void RightPanelComponent::initSettingsComponents(std::function<void()> infoCallback)
     {
         // setup challenge box
@@ -69,6 +78,9 @@ namespace BS
         this->panel->add(killBox, "KillBox");
     }
 
+    /**
+     * Creates simple edit box with label
+     */
     tgui::EditBox::Ptr RightPanelComponent::createEditBox(tgui::Widget::Ptr reference, tgui::String text, std::string name)
     {
         tgui::EditBox::Ptr editBox = tgui::EditBox::create();
@@ -79,6 +91,9 @@ namespace BS
         return editBox;
     }
 
+    /**
+     * Creates confirm button
+     */
     void RightPanelComponent::createConfirmButton(tgui::EditBox::Ptr editBox, std::string settingsName, std::string name)
     {
         tgui::Button::Ptr button = tgui::Button::create("Ok");
@@ -90,12 +105,18 @@ namespace BS
         this->panel->add(button, name);
     }
 
+    /**
+     * Updates values of settings components from Params
+     */
     void RightPanelComponent::setFromParams()
     {
         this->challengeBoxComponent->setFromParams();
         this->mutationRateEditBox->setText(tgui::String(p.pointMutationRate));
     }
 
+    /**
+     * Creates label
+     */
     void RightPanelComponent::createLabel(tgui::Widget::Ptr widget, const tgui::String &text)
     {
         tgui::Label::Ptr label = tgui::Label::create(text);
@@ -107,6 +128,9 @@ namespace BS
     {
     }
 
+    /**
+     * Adds externally created widget to pannel
+     */
     void RightPanelComponent::addToPanel(const tgui::Widget::Ptr &widgetPtr, const tgui::String &widgetName)
     {
         this->panel->add(widgetPtr, widgetName);

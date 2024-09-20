@@ -7,6 +7,9 @@
 
 namespace BS
 {
+    /**
+     * Class for displaying console messages, like generation counter, number of survivors, etc.
+     */
     class ConsoleComponent
     {
     public: 

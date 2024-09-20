@@ -3,6 +3,16 @@
 
 namespace BS
 {
+    /**
+     * Constructor
+     * @param saveCallback save simulation callback
+     * @param loadCallback load simulation callback
+     * @param restartCallback restart simulation callback
+     * @param saveIndivCallback save individual's neural network to file callback
+     * @param changeSettingsCallback callback for changing settings
+     * @param indivInfoCallback callback for showing informational child window
+     * @param selectPassedCallback callback for selecting individuals tha passed the survival criteria
+     */
     BottomButtonsComponent::BottomButtonsComponent(std::function<void(void)> saveCallback,
         std::function<void(void)> loadCallback,
         std::function<void(bool)> restartCallback,

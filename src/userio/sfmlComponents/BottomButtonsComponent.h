@@ -7,6 +7,9 @@
 
 namespace BS
 {
+    /**
+     * Class for displaying buttons for interacting with simulation: save, load, restart, etc.
+     */
     class BottomButtonsComponent
     {
     public:

@@ -32,6 +32,10 @@
 
 namespace BS
 {
+    /**
+     * Class for managing survival criteria:
+     * storing current challenge, switching, initiating passing checks, creating criteria shapes, etc.
+     */
     class SurvivalCriteriaManager
     {
         public:

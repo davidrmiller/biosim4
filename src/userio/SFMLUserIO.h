@@ -28,6 +28,11 @@ namespace BS
     extern SurvivalCriteriaManager survivalCriteriaManager;
     extern std::stringstream printGenomeLegend();
     
+    /**
+     * This class displays of a simulation using the SFML library.
+     * Main display loop and event handling are done in this class.
+     * Includes window, view, all custom display components and child dialogs.
+     */
     class SFMLUserIO
     {
     public:
@@ -54,9 +59,6 @@ namespace BS
 
         bool restartOnEnd = false;
     private:
-        static int const SPEED_SLOW_MAX = -5;
-        static int const SPEED_FAST_MAX = 5;
-
         int windowHeight = 900;
         int windowWidth = 1200;
         sf::RenderWindow* window;
@@ -73,10 +75,11 @@ namespace BS
         bool paused = false;
         ConsoleComponent* console;
 
-        int speedThreshold = 0;
-        int increaseSpeedCounter = 0;
-        int slowSpeedCounter = 0;
-
+        static int const SPEED_SLOW_MAX = -5;   // max speed factor
+        static int const SPEED_FAST_MAX = 5;    // min speed factor
+        int speedThreshold = 0;         // how many frames should be skipped (positive value) or drawn again (negative value)
+        int increaseSpeedCounter = 0;   // how many frames were skipped and not drawn
+        int slowSpeedCounter = 0;       // how many times were current frame drawn
         void speedChanged(float value);
 
         bool isChildWindowShowing = false;
@@ -92,7 +95,7 @@ namespace BS
         std::vector<sf::RectangleShape> barriesrs;
 
         int getLiveDisplayScale();
-        uint16_t selectedIndex = 0;
+        uint16_t selectedIndex = 0; // selected individual index
 
         bool passedSelected = false;
     };

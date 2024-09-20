@@ -7,11 +7,14 @@
 
 namespace BS
 {
+    /**
+     * Class represents child window with text message in it
+     * Can be used to display info about challenges and indivs
+     */
     class InfoWindowComponent
     {
     public:
         InfoWindowComponent(std::function<void(void)> closeCallback);
-        //~InfoWindowComponent();
         void append(std::string message);
         void flush();
         tgui::ChildWindow::Ptr getChildWindow() { return this->childWindow; }

@@ -12,6 +12,10 @@ namespace BS
 {
     extern const Params &p;
     
+    /**
+     * UserIO class handles all simulation events that must be displayed 
+     * and passed to imageWriter or SFMLUserIO classes
+     */
     class UserIO
     {
     public:

@@ -4,7 +4,6 @@ namespace BS
 {
     ConsoleComponent::ConsoleComponent()
     {
-        // setup console
         this->console = tgui::TextArea::create();
         this->console->setReadOnly(true);
         this->console->setSize("20%", "25%");
