@@ -7,6 +7,9 @@
 
 namespace BS
 {
+    /**
+     * Class for displaying simulation speed controls
+     */
     class SpeedControlsComponent {
         public:
             SpeedControlsComponent(tgui::Widget::Ptr positionReferenceWidget_, tgui::Container::Ptr container_, const float controlOffset_);

@@ -3,6 +3,10 @@
 
 namespace BS
 {
+    /**
+     * Saves simulation in binary format using cereal library
+     * see void serialize(Archive &ar) function in class Peeps and class Params
+     */
     void Save::save(std::string fileName)
     {
         std::ofstream file(fileName);
@@ -11,6 +15,9 @@ namespace BS
         archive(peeps, p);
     }
 
+    /**
+     * Loads simulation from binary file into peeps and Params
+     */
     void Save::load(std::string fileName)
     {
         std::ifstream file(fileName);
@@ -20,6 +27,10 @@ namespace BS
         paramManager.updateFromSave(newParams);
     }
 
+    /**
+     * Saves neural network image using printIGraphEdgeList of indiv
+     * and graph-nnet.py script
+     */
     std::string Save::saveNet(int selectedIndex)
     {
         std::ofstream outFile;

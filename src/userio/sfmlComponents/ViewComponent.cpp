@@ -14,8 +14,13 @@ namespace BS
     {
     }
 
+    /**
+     * Handles user input for view:
+     * view movement and zoom
+     */
     void ViewComponent::updateInput(sf::Event e, sf::RenderWindow* window)
     {
+        // if view is disabled externally, do nothing
         if (this->isLocked)
         {
             return;
@@ -82,7 +87,8 @@ namespace BS
             this->oldViewPos = newPos; // With move, I don't need to recalculate
         }
 
-        // Zoom view functionality
+        // Zoom like google maps:
+        // zoom in or out, but keep the same mouse position relative to the world
         if (e.Event::type == e.Event::MouseWheelMoved && !this->viewIsMoving)
         {
             sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);

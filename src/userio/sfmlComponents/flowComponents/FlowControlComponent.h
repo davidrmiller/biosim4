@@ -8,6 +8,9 @@
 
 namespace BS
 {
+    /**
+     * Class for displaying elements for simulation flow: pause, resume, change speed, generation progress bar.
+     */
     class FlowControlComponent
     {
     public:

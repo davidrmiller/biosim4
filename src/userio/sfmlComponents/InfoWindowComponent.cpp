@@ -24,14 +24,18 @@ namespace BS
         this->childWindow->add(this->messageArea);
     }
 
+    /**
+     * Appends message to the text area
+     */
     void InfoWindowComponent::append(std::string message)
     {
-        // tgui::String msg = tgui::String(message);
-        //this->messages.push_back(msg);
         this->messages.push_back(tgui::String(message));
         this->messageArea->setText(tgui::String::join(this->messages, "\n"));
     }
 
+    /**
+     * Clears text area
+     */
     void InfoWindowComponent::flush()
     {
         this->messages.clear();

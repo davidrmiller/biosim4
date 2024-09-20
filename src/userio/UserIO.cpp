@@ -19,6 +19,9 @@ namespace BS {
             delete this->imageWriter;
     }
 
+    /**
+     * Check if the simulation should be stopped (e.g. because of closed window)
+     */
     bool UserIO::isStopped()
     {
         if (this->sfmlView != nullptr)
@@ -26,6 +29,9 @@ namespace BS {
         return false;
     }
 
+    /**
+     * Should be called at the end of each generation
+     */
     void UserIO::startNewGeneration(unsigned generation, unsigned stepsPerGeneration)
     {
         if (this->sfmlView != nullptr) {
@@ -36,12 +42,14 @@ namespace BS {
             std::stringstream filename;
             filename << "Output/Saves/peeps-"
                         << std::setfill('0') << std::setw(6) << generation
-                        << ".bin";
-            
+                        << ".bin";            
             Save::save(filename.str());
         }
     }
 
+    /**
+     * Should be called at the end of each step
+     */
     void UserIO::handleStep(unsigned simStep, unsigned generation)
     {
         if (this->sfmlView != nullptr)
@@ -57,6 +65,9 @@ namespace BS {
             this->imageWriter->endOfStep(simStep, generation);
     }
 
+    /**
+     * Should be called at the end of each generation
+     */
     void UserIO::endOfGeneration(unsigned generation)
     {
         if (this->sfmlView != nullptr)
@@ -78,6 +89,9 @@ namespace BS {
         std::cout << message << std::endl;
     }
 
+    /**
+     * Check if the simulation is paused
+     */
     bool UserIO::isPaused()
     {
         if (this->sfmlView != nullptr)
@@ -86,6 +100,9 @@ namespace BS {
         return false;
     }
 
+    /**
+     * Check if a simulation should be switched into "load simulation" mode
+     */
     bool UserIO::getLoadFileSelected()
     {
         if (this->sfmlView != nullptr)
@@ -95,6 +112,9 @@ namespace BS {
         return false;
     }
 
+    /**
+     * Get the filename of the simulation to load
+     */
     std::string UserIO::getLoadFilename()
     {
         if (this->sfmlView != nullptr)
@@ -104,6 +124,9 @@ namespace BS {
         return "";
     }
 
+    /**
+     * Clean loading selection after loading a simulation
+     */
     void UserIO::cleanLoadSelection()
     {
         if (this->sfmlView != nullptr)
@@ -113,6 +136,9 @@ namespace BS {
         }
     }
 
+    /**
+     * Update the view from the parameters
+     */
     void UserIO::setFromParams()
     {
         if (this->sfmlView != nullptr)
@@ -121,6 +147,9 @@ namespace BS {
         }
     }
 
+    /**
+     * Check if the simulation should restart at the end of this generation
+     */
     bool UserIO::getRestartAtEnd()
     {
         if (this->sfmlView != nullptr)

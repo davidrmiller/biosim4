@@ -8,6 +8,9 @@
 
 namespace BS
 {
+    /**
+     * Base class of settings combo box
+     */
     class AbstractComboBoxComponent
     {
     public:

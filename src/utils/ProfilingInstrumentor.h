@@ -1,6 +1,6 @@
 //
 // Basic instrumentation profiler by Cherno
-// Check readme
+// Check readme at https://github.com/ilyabrilev/cpp-profiling-template
 #pragma once
 
 #include <iostream>

@@ -35,8 +35,13 @@ void initializeGeneration0()
     }
 }
 
+/**
+ * Initialization of peeps, grid, signals and indivs during a load from save.
+ */
 void initializeFromSave()
 {
+    peeps.initFromSave();
+
     // The grid has already been allocated, just clear and reuse it
     grid.zeroFill();
     grid.createBarrier(p.barrierType);
@@ -52,8 +57,7 @@ void initializeFromSave()
     // just clear and reuse it
     for (uint16_t index = 1; index <= p.population; ++index) {
         peeps[index].initVariables();
-    }
-    
+    }    
 }
 
 

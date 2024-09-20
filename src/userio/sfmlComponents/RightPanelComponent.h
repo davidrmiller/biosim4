@@ -8,6 +8,11 @@
 
 namespace BS
 {
+    /**
+     * Container to the right of the window.
+     * Directly includes settigs components, 
+     * and indirectly - everything else on the right (via addToPanel function)
+     */
     class RightPanelComponent
     {
     public:

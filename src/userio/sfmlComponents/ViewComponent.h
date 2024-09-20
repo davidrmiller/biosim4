@@ -8,7 +8,7 @@
 namespace BS
 {
     /*
-    * \brief Class for handling view of simulation
+    * Class for handling view of simulation - point of view, zoom in or out
     */
     class ViewComponent
     {

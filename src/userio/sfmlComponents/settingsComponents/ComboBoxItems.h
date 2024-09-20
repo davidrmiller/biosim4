@@ -5,6 +5,9 @@
 #include <string>
 namespace BS
 {
+    /**
+     * An element for combo box to display
+     */
     struct ComboBoxItem
     {
         int index;

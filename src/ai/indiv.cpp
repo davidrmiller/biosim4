@@ -87,8 +87,6 @@ void Indiv::fillColor()
 	this->shape.setFillColor(sf::Color(color[0], color[1], color[2], 255));
 }
 
-
-
 // This prints a neural net in a form that can be processed with
 // graph-nnet.py to produce a graphic illustration of the net.
 std::stringstream Indiv::printIGraphEdgeList() const

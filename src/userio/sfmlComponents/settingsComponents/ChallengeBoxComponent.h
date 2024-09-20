@@ -9,6 +9,9 @@
 
 namespace BS
 {
+    /**
+     * Class for displaying challenge (survival criterias) settings
+     */
     class ChallengeBoxComponent : public AbstractComboBoxComponent
     {
     public:

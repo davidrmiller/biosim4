@@ -2,6 +2,10 @@
 
 namespace BS
 {
+    /**
+     * Initiates all components
+     * Custom components are created using callbacks
+     */
     SFMLUserIO::SFMLUserIO()
     {
         this->window = new sf::RenderWindow(sf::VideoMode(this->windowWidth, this->windowHeight), "biosim4", sf::Style::Close | sf::Style::Titlebar);
@@ -13,14 +17,14 @@ namespace BS
         this->gui.setWindow(*this->window);
         tgui::Theme::setDefault("./Resources/Black.txt");
 
-        // setup left panel
+        // setup right panel component
         this->rightPanelComponent = new RightPanelComponent(
             this->window->getSize(),
-            [this](std::string name, std::string val)
+            [this](std::string name, std::string val) // changeSettingsCallback
             {
                 this->settingsChanged(name, val);
             },            
-            [this]()
+            [this]() // infoCallback
             {
                 if (this->isChildWindowShowing)
                 {
@@ -34,30 +38,34 @@ namespace BS
                 this->gui.add(this->infoWindowComponent->getChildWindow());
             });
 
+        // setup flow control component
         this->flowControlComponent = new FlowControlComponent(
             SPEED_SLOW_MAX,
             SPEED_FAST_MAX,
             0,
-            [this](float value)
+            [this](float value) // changeSpeedCallback
             {
                 this->speedChanged(value);
             },
-            [this](bool paused)
+            [this](bool paused) // pauseCallback_
             {
                 this->pauseResume(paused);
             },
-            [this](bool stopAtStart, bool stopAtEnd)
+            [this](bool stopAtStart, bool stopAtEnd) // stop at start or end callback
             {
                 this->stopAtEnd = stopAtEnd; 
                 this->stopAtStart = stopAtStart;
             }
         );
         
+        // setup info component
         this->infoWindowComponent = new InfoWindowComponent([this]{
             this->childWindowToggled(false);
         });
+
+        // setup bottom buttons component
         this->bottomButtonsComponent = new BottomButtonsComponent(
-            [this](void)
+            [this](void) // saveCallback
             {
                 if (this->isChildWindowShowing)
                 {
@@ -69,7 +77,7 @@ namespace BS
                 this->childWindowToggled(true);
                 this->gui.add(this->saveFileDialog);
             },
-            [this]()
+            [this]() // loadCallback
             {
                 if (this->isChildWindowShowing)
                 {
@@ -82,11 +90,11 @@ namespace BS
                 this->childWindowToggled(true);
                 this->gui.add(this->loadFileDialog);
             },
-            [this](bool restart)
+            [this](bool restart) // restartCallback
             {
                 this->restartOnEnd = restart;
             },
-            [this]()
+            [this]() // saveIndivCallback
             {
                 this->flowControlComponent->pauseResume(true);
                 
@@ -95,11 +103,11 @@ namespace BS
                     this->log("Saved into: " + filename);
                 }
             },
-            [this](std::string name, std::string val)
+            [this](std::string name, std::string val) // changeSettingsCallback
             {
                 this->settingsChanged(name, val);
             },
-            [this]()
+            [this]() // indivInfoCallback
             {
                 if (this->isChildWindowShowing)
                 {
@@ -118,7 +126,7 @@ namespace BS
                 this->childWindowToggled(true);
                 this->gui.add(this->infoWindowComponent->getChildWindow());
             },
-            [this](bool select)
+            [this](bool select) // selectPassedCallback
             {
                 if (select) {
                     this->passedSelected = true;
@@ -142,6 +150,7 @@ namespace BS
             }
         );
 
+        // add everything to gui
         tgui::Panel::Ptr panel = this->rightPanelComponent->getPanel();
         panel->add(this->flowControlComponent->getGroup());
         panel->add(this->bottomButtonsComponent->getGroup());
@@ -155,6 +164,9 @@ namespace BS
         this->view = this->viewComponent->getView();
     }
 
+    /**
+     * Initialize file dialog for saving a simulation
+     */
     void SFMLUserIO::initSaveFileDialog()
     {
         if (this->saveFileDialog == nullptr) 
@@ -178,6 +190,9 @@ namespace BS
         }
     }
 
+    /**
+     * Initialize file dialog for loading a simulation
+     */
     void SFMLUserIO::initLoadFileDialog()
     {
         if (this->loadFileDialog == nullptr) {
@@ -201,11 +216,21 @@ namespace BS
         }
     }
 
+    /**
+     * Update view from parameters
+     */
     void SFMLUserIO::setFromParams()
     {
         this->rightPanelComponent->setFromParams();
     }
 
+    /**
+     * Called when child window is shown or hidden.
+     * If it is shown, view sholdn't respond to user input 
+     * and simulation should be paused (see pauseExternal and pauseResume description of flowControlComponent).
+     * 
+     * @param shown true if shown
+     */
     void SFMLUserIO::childWindowToggled(bool shown)
     {
         if (shown)
@@ -225,11 +250,18 @@ namespace BS
         delete this->window;
     }
 
+    /**
+     * Check if the simulation should be stopped (e.g. because of closed window)
+     */
     bool SFMLUserIO::isStopped()
     {
         return !this->window->isOpen();
     }
 
+    /**
+     * User input handling.
+     * User interaction with view is handled at viewComponent->updateInput
+     */
     void SFMLUserIO::updatePollEvents()
     {
         sf::Event e;
@@ -250,13 +282,14 @@ namespace BS
                 this->flowControlComponent->pauseResume(!this->paused);
             }
 
+            // update view
             this->viewComponent->updateInput(e, this->window);
 
             if (e.Event::type == sf::Event::MouseButtonReleased)
             {
+                // select indiv on mouse position on RMB
                 if (e.mouseButton.button == 1 && !this->passedSelected)
                 {
-                    // select indiv on mouse position
                     int liveDisplayScale = this->getLiveDisplayScale();
                     sf::Vector2f mousePosition = this->window->mapPixelToCoords(sf::Mouse::getPosition(*window));
                     std::cout << mousePosition.x << " " << mousePosition.y << std::endl;
@@ -283,10 +316,14 @@ namespace BS
                 }
             }
 
+            // hanlde tgui events
             this->gui.handleEvent(e);
         }
     }
 
+    /**
+     * Start of a new generation
+     */
     void SFMLUserIO::startNewGeneration(unsigned generation, unsigned stepsPerGeneration)
     {
         this->flowControlComponent->startNewGeneration(generation, stepsPerGeneration);
@@ -322,9 +359,14 @@ namespace BS
         this->bottomButtonsComponent->switchPassedSelection(false);        
     }
 
+    /**
+     * End of a step - main display loop.
+     * Displays all element of the simulation and gui.
+     * Also controlls the speed of the simulation by skipping or redrawing frames
+     */
     void SFMLUserIO::endOfStep(unsigned simStep)
     {
-        // initiate stop before last frame
+        // initiate stop before last frame if stopAtEnd is triggered
         if (this->stopAtEnd && simStep == p.stepsPerGeneration - 2) {
             this->flowControlComponent->pauseResume(true);
             this->flowControlComponent->flushStopAtSmthButtons();
@@ -346,7 +388,7 @@ namespace BS
 
             this->window->clear();
 
-            //display population
+            // display population
             int liveDisplayScale = this->getLiveDisplayScale();
             for (uint16_t index = 1; index <= p.population; ++index)
             {
@@ -360,10 +402,12 @@ namespace BS
                 }
             }
 
+            // display barriers
             for (sf::RectangleShape &barrier : barriesrs) {
                 this->window->draw(barrier);
             }
             
+            // display survival criterias
             for (sf::Drawable *shape : survivalCriteriaManager.getShapes()) {
                 this->window->draw(*shape);
             }
@@ -379,6 +423,10 @@ namespace BS
         this->slowSpeedCounter = 0;
     }
 
+    /**
+     * Get live display scale - how big or small the display should be
+     * compared with the imageWriter display scale
+     */
     int SFMLUserIO::getLiveDisplayScale()
     {
         return p.displayScale / 1.5;
@@ -388,6 +436,9 @@ namespace BS
     {
     }
 
+    /**
+     * Log message into gui console
+     */
     void SFMLUserIO::log(std::string message)
     {
         this->console->log(message);
@@ -403,6 +454,13 @@ namespace BS
         return this->paused;
     }
 
+    /**
+     * Called when user changed settings via gui.
+     * Delegates to paramManager 
+     * 
+     * @param name parameter name
+     * @param val parameter value
+     */
     void SFMLUserIO::settingsChanged(std::string name, std::string val)
     {
         paramManager.changeFromUi(name, val);
