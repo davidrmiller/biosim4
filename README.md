@@ -13,14 +13,19 @@ Fork of https://github.com/davidrmiller/biosim4
   - restart simulation
   - save selected indiv's net to svg
   - show indivs who would pass survival criteria if simulation end now
-- saving and loading simulations
+- saving and loading simulations with "cereal" serialization library
 
-![alt text](https://github.com/ilyabrilev/biosim4/blob/main/screenshot.png?raw=true)
+![screenshot](https://github.com/ilyabrilev/biosim4/blob/main/screenshot.png?raw=true)
 
 ### Plans
 - expand UI functionality to controll simulation
 - implement recording of simulation, add ability to play it with time skipping, ability to go back (etc.)
 - hopefuly add more behaviour, events, resources to simulation
+
+### Requirements
+- sfml https://stackoverflow.com/questions/30696114/how-to-install-sfml-in-ubuntu
+- tgui 1.1 https://tgui.eu/tutorials/latest-stable/
+- cereal (it should work right of the box, but here is a link anyway https://uscilab.github.io/cereal/index.html)
 
 ## What is this?
 
