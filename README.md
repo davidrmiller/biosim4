@@ -36,9 +36,10 @@ The results of the experiments are summarized in this YouTube video:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://www.youtube.com/watch?v=N3tRFayqVtk
 
-This code lacks a friendly interface, so compiling and executing the program may
+This command line program lacks a friendly interface, so compiling and executing the program may
 require attention to details. If you ask questions in the Issues,
-I'll try to help if I can.
+I'll try to help if I can. For a nicer user interface, check out the
+[fork of this project](https://github.com/ilyabrilev/biosim4) hosted by @ilyabrilev.
 
 Document Contents
 -----------------
