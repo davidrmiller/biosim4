@@ -15,22 +15,22 @@
 #include <utility>
 #include <algorithm>
 #include "simulator.h"     // the simulator data structures
-#include "imageWriter.h"   // this is for generating the movies
 
 namespace BS {
 
 extern void initializeGeneration0();
-extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount);
+extern void initializeFromSave();
+extern unsigned spawnNewGeneration(unsigned generation, unsigned murderCount, SurvivalCriteriaManager survivalCriteriaManager);
 extern void displaySampleGenomes(unsigned count);
 extern void executeActions(Indiv &indiv, std::array<float, Action::NUM_ACTIONS> &actionLevels);
-extern void endOfSimStep(unsigned simStep, unsigned generation);
-extern void endOfGeneration(unsigned generation);
 
 RunMode runMode = RunMode::STOP;
 Grid grid;        // The 2D world where the creatures live
 Signals signals;  // A 2D array of pheromones that overlay the world grid
 Peeps peeps;      // The container of all the individuals in the population
-ImageWriter imageWriter; // This is for generating the movies
+SurvivalCriteriaManager survivalCriteriaManager;
+
+UserIO* userIO;
 
 // The paramManager maintains a private copy of the parameter values, and a copy
 // is available read-only through global variable p. Although this is not
@@ -71,6 +71,99 @@ void simStepOneIndiv(Indiv &indiv, unsigned simStep)
     executeActions(indiv, actionLevels);
 }
 
+/**
+ * The main simulation loop.
+ */
+void simulate(unsigned generation)
+{
+    unsigned murderCount;
+
+    // Inside the parallel region, be sure that shared data is not modified. Do the
+    // modifications in the single-thread regions.
+    #pragma omp parallel num_threads(p.numThreads) default(shared)
+    {
+        randomUint.initialize(); // seed the RNG, each thread has a private instance
+
+        while (runMode == RunMode::RUN && generation < p.maxGenerations && !userIO->isStopped())
+        { // generation loop
+            #pragma omp master
+            {
+                murderCount = 0; // for reporting purposes
+                survivalCriteriaManager.startNewGeneration(p.challenge);
+                userIO->startNewGeneration(generation, p.stepsPerGeneration);
+            }
+            #pragma omp barrier
+
+            for (unsigned simStep = 0; simStep < p.stepsPerGeneration && !userIO->isStopped() && runMode == RunMode::RUN; ++simStep)
+            {
+                // multithreaded loop: index 0 is reserved, start at 1
+                #pragma omp for schedule(auto)
+                for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex)
+                {
+                    if (peeps[indivIndex].alive)
+                    {
+                        simStepOneIndiv(peeps[indivIndex], simStep);
+                    }
+                }
+
+                // In single-thread mode: this executes deferred, queued deaths and movements,
+                // updates signal layers (pheromone), etc.
+                // UPDATED: rendering must be done in the master thread
+                #pragma omp master
+                {
+                    murderCount += peeps.deathQueueSize();
+                    survivalCriteriaManager.endOfStep(simStep, p, grid, peeps, signals);
+
+                    userIO->handleStep(simStep, generation);
+
+                    if (userIO->getLoadFileSelected())
+                    {
+                        runMode = RunMode::LOAD;
+                    }
+                }
+
+                #pragma omp barrier
+            }
+
+            #pragma omp master
+            {
+                if (userIO->getRestartAtEnd()) {
+                    runMode = RunMode::RESTART;
+                    paramManager.updateFromUi();
+                }
+                if (runMode == RunMode::RUN) {
+                    userIO->endOfGeneration(generation);
+
+                    // ToDo: make it work alongside with updateFromUi
+                    // paramManager.updateFromConfigFile(generation + 1);
+
+                    paramManager.updateFromUi();
+                    unsigned numberSurvivors = spawnNewGeneration(generation, murderCount, survivalCriteriaManager);
+                    if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0))
+                    {
+                        // displaySampleGenomes(p.displaySampleGenomes);
+                    }
+                    if (numberSurvivors == 0)
+                    {
+                        generation = 0; // start over
+                    }
+                    else
+                    {
+                        ++generation;
+                    }
+                }
+            }
+            #pragma omp barrier
+        }
+    }
+
+    if (runMode == RunMode::RUN) {
+        runMode = RunMode::STOP;
+    }
+    // displaySampleGenomes(3); // final report, for debugging
+
+    std::cout << "Simulator exit." << std::endl;
+}
 
 /********************************************************************************
 Start of simulator
@@ -99,12 +192,10 @@ The important simulator-wide variables are:
 The threads are:
     main thread - simulator
     simStepOneIndiv() - child threads created by the main simulator thread
-    imageWriter - saves image frames used to make a movie (possibly not threaded
-        due to unresolved bugs when threaded)
 ********************************************************************************/
 void simulator(int argc, char **argv)
 {
-    printSensorsActions(); // show the agents' capabilities
+    //printSensorsActions(); // show the agents' capabilities
 
     // Simulator parameters are available read-only through the global
     // variable p after paramManager is initialized.
@@ -116,76 +207,51 @@ void simulator(int argc, char **argv)
 
     randomUint.initialize(); // seed the RNG for main-thread use
 
-    // Allocate container space. Once allocated, these container elements
-    // will be reused in each new generation.
-    grid.init(p.sizeX, p.sizeY); // the land on which the peeps live
-    signals.init(p.signalLayers, p.sizeX, p.sizeY);  // where the pheromones waft
-    peeps.init(p.population); // the peeps themselves
-
-    // If imageWriter is to be run in its own thread, start it here:
-    //std::thread t(&ImageWriter::saveFrameThread, &imageWriter);
-
-    // Unit tests:
-    //unitTestConnectNeuralNetWiringFromGenome();
-    //unitTestGridVisitNeighborhood();
-
-    unsigned generation = 0;
-    initializeGeneration0(); // starting population
+    // UI must be initialized after parameters
+    userIO = new UserIO(true, false);
+    
     runMode = RunMode::RUN;
-    unsigned murderCount;
+    unsigned generation = 0;
 
-    // Inside the parallel region, be sure that shared data is not modified. Do the
-    // modifications in the single-thread regions.
-    #pragma omp parallel num_threads(p.numThreads) default(shared)
-    {
-        randomUint.initialize(); // seed the RNG, each thread has a private instance
+    while (runMode != RunMode::STOP) {
+        switch (runMode)
+        {
+        case RunMode::RUN:
+            userIO->log("Starting simulation...");
+            // Allocate container space. Once allocated, these container elements
+            // will be reused in each new generation.
+            grid.init(p.sizeX, p.sizeY);                    // the land on which the peeps live
+            signals.init(p.signalLayers, p.sizeX, p.sizeY); // where the pheromones waft
+            peeps.init(p.population);                       // the peeps themselves
 
-        while (runMode == RunMode::RUN && generation < p.maxGenerations) { // generation loop
-            #pragma omp single
-            murderCount = 0; // for reporting purposes
+            generation = 0;
+            
+            initializeGeneration0(); // starting population
+            simulate(generation);
+            break;
+        case RunMode::LOAD:
+            userIO->log("Loading simulation...");
+            grid.init(p.sizeX, p.sizeY);
+            signals.init(p.signalLayers, p.sizeX, p.sizeY);
 
-            for (unsigned simStep = 0; simStep < p.stepsPerGeneration; ++simStep) {
+            generation = 0;
 
-                // multithreaded loop: index 0 is reserved, start at 1
-                #pragma omp for schedule(auto)
-                for (unsigned indivIndex = 1; indivIndex <= p.population; ++indivIndex) {
-                    if (peeps[indivIndex].alive) {
-                        simStepOneIndiv(peeps[indivIndex], simStep);
-                    }
-                }
+            Save::load(userIO->getLoadFilename());
+            userIO->setFromParams();
+            initializeFromSave();
+            userIO->cleanLoadSelection();
 
-                // In single-thread mode: this executes deferred, queued deaths and movements,
-                // updates signal layers (pheromone), etc.
-                #pragma omp single
-                {
-                    murderCount += peeps.deathQueueSize();
-                    endOfSimStep(simStep, generation);
-                }
-            }
-
-            #pragma omp single
-            {
-                endOfGeneration(generation);
-                paramManager.updateFromConfigFile(generation + 1);
-                unsigned numberSurvivors = spawnNewGeneration(generation, murderCount);
-                if (numberSurvivors > 0 && (generation % p.genomeAnalysisStride == 0)) {
-                    displaySampleGenomes(p.displaySampleGenomes);
-                }
-                if (numberSurvivors == 0) {
-                    generation = 0;  // start over
-                } else {
-                    ++generation;
-                }
-            }
-        }
+            runMode = RunMode::RUN;
+            simulate(generation);
+            break;
+        case RunMode::RESTART:
+            runMode = RunMode::RUN;
+        default:
+            break;
+        }        
     }
-    displaySampleGenomes(3); // final report, for debugging
 
-    std::cout << "Simulator exit." << std::endl;
-
-    // If imageWriter is in its own thread, stop it and wait for it here:
-    //imageWriter.abort();
-    //t.join();
+    delete userIO;
 }
 
 } // end namespace BS

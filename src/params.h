@@ -14,7 +14,7 @@
 
 namespace BS {
 
-enum class RunMode { STOP, RUN, PAUSE, ABORT };
+enum class RunMode { STOP, RUN, PAUSE, ABORT, LOAD, RESTART };
 extern RunMode runMode;
 
 // A private copy of Params is initialized by ParamManager::init(), then modified by
@@ -56,6 +56,7 @@ struct Params {
     unsigned barrierType; // >= 0
     bool deterministic;
     unsigned RNGSeed; // >= 0
+    bool autoSave;
 
     // These must not change after initialization
     uint16_t sizeX; // 2..0x10000
@@ -68,6 +69,12 @@ struct Params {
 
     // These are updated automatically and not set via the parameter file
     unsigned parameterChangeGenerationNumber; // the most recent generation number that an automatic parameter change occured at
+
+    template <class Archive>
+    void serialize(Archive &ar)
+    {
+        ar(challenge, pointMutationRate, barrierType);
+    }
 };
 
 class ParamManager {
@@ -77,11 +84,19 @@ public:
     void registerConfigFile(const char *filename);
     void updateFromConfigFile(unsigned generationNumber);
     void checkParameters();
+
+    void setPopulation(unsigned population);
+    void changeFromUi(std::string name, std::string val);
+    void updateFromUi();
+
+    void updateFromSave(Params params_);
 private:
     Params privParams;
     std::string configFilename;
     time_t lastModTime; // when config file was last read
     void ingestParameter(std::string name, std::string val);
+
+    std::vector<std::pair<std::string, std::string>> paramsFromUI;
 };
 
 // Returns a copy of params with default values overridden by the values

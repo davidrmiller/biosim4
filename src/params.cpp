@@ -29,7 +29,7 @@ void ParamManager::setDefaults()
     privParams.genomeInitialLengthMin = 24;
     privParams.genomeInitialLengthMax = 24;
     privParams.genomeMaxLength = 300;
-    privParams.logDir = "./logs/";
+    privParams.logDir = "./Output/Logs/";
     privParams.imageDir = "./images/";
     privParams.population = 3000;
     privParams.stepsPerGeneration = 300;
@@ -63,7 +63,7 @@ void ParamManager::setDefaults()
     privParams.updateGraphLogStride = privParams.videoStride;
     privParams.deterministic = false;
     privParams.RNGSeed = 12345678;
-    privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
+    privParams.graphLogUpdateCommand = "";//"/usr/bin/gnuplot --persist ./tools/graphlog.gp";
     privParams.parameterChangeGenerationNumber = 0;
 }
 
@@ -117,7 +117,27 @@ bool getBoolVal(const std::string &s)
         return false;
 }
 
+void ParamManager::setPopulation(unsigned population)
+{
+    privParams.population = population;
+}
 
+/**
+ * Update the parameter values from the save file
+ * ToDo: check for more params to update
+ */
+void ParamManager::updateFromSave(Params params_)
+{
+    privParams.challenge = params_.challenge;
+    privParams.pointMutationRate = params_.pointMutationRate;
+}
+
+/**
+ * Convert parameter value into appropriate type and ingest a parameter into privParams
+ * 
+ * @param name - parameter name
+ * @param val - parameter value
+ */
 void ParamManager::ingestParameter(std::string name, std::string val)
 {
     std::transform(name.begin(), name.end(), name.begin(),
@@ -258,12 +278,35 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "rngseed" && isUint) {
             privParams.RNGSeed = uVal; break;
         }
+        else if (name == "autosave" && isBool) {
+            privParams.autoSave = bVal; break;
+        }
         else {
             std::cout << "Invalid param: " << name << " = " << val << std::endl;
         }
     } while (0);
 }
 
+/**
+ * Update the parameter values from the UI
+ * Should be called at the end of each generation
+ */
+void ParamManager::updateFromUi()
+{
+    for (long unsigned int i = 0; i < this->paramsFromUI.size(); ++i)
+    {
+        ingestParameter(this->paramsFromUI[i].first, this->paramsFromUI[i].second);
+    }
+    this->paramsFromUI.clear();
+}
+
+/**
+ * Store new param value that comes from UI at temporary storage
+ */
+void ParamManager::changeFromUi(std::string name, std::string val)
+{
+    this->paramsFromUI.push_back(std::make_pair(name, val));
+}
 
 void ParamManager::updateFromConfigFile(unsigned generationNumber)
 {

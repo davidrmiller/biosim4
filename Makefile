@@ -11,6 +11,7 @@ CXXFLAGS += \
   -std=c++17 \
   -fexceptions \
   -fopenmp \
+  -I./src/include \
   $(shell pkg-config --cflags opencv4)
 
 LDFLAGS += \
@@ -19,6 +20,10 @@ LDFLAGS += \
   -lopencv_videoio \
   -lgomp \
   -lpthread \
+  -lsfml-graphics \
+  -lsfml-window \
+  -lsfml-system \
+  -ltgui \
   -fopenmp
 
 ifeq ($(BUILD),debug)
@@ -32,10 +37,19 @@ else
   LDFLAGS += -O3 -s
 endif
 
-SOURCE :=  $(wildcard src/*.cpp src/*.h)
+SOURCE :=  $(wildcard src/*.cpp src/*.h src/userio/*.cpp src/userio/*.h \
+  src/userio/sfmlComponents/*.cpp src/userio/sfmlComponents/*.h \
+  src/utils/*.cpp src/utils/*.h \
+  src/ai/*.cpp src/ai/*.h \
+  src/survivalCriteria/*.cpp src/survivalCriteria/*.h \
+  src/userio/sfmlComponents/flowComponents/*.cpp src/userio/sfmlComponents/flowComponents/*.h \
+  src/userio/sfmlComponents/settingsComponents/*.cpp src/userio/sfmlComponents/settingsComponents/*.h \
+  )
 CXXSOURCE :=  $(filter %.cpp, $(SOURCE))
 HEADERS :=  $(filter %.h, $(SOURCE))
 OBJS := $(subst src/,$(OBJ_DIR)/, $(CXXSOURCE:.cpp=.o))
+INCLUDES = -I./src/include
+LIBS = -L/path/to/cereal/lib -lcereal
 
 
 all: debug release
@@ -44,10 +58,24 @@ all: debug release
 before_debug:
 	test -d bin/Debug || mkdir -p bin/Debug
 	test -d obj/Debug/src || mkdir -p obj/Debug/src
+	test -d obj/Debug/src/userio || mkdir -p obj/Debug/src/userio
+	test -d obj/Debug/src/userio/sfmlComponents || mkdir -p obj/Debug/src/userio/sfmlComponents
+	test -d obj/Debug/src/userio/sfmlComponents/flowComponents || mkdir -p obj/Debug/src/userio/sfmlComponents/flowComponents
+	test -d obj/Debug/src/userio/sfmlComponents/settingsComponents || mkdir -p obj/Debug/src/userio/sfmlComponents/settingsComponents
+	test -d obj/Debug/src/utils || mkdir -p obj/Debug/src/utils
+	test -d obj/Debug/src/ai || mkdir -p obj/Debug/src/ai
+	test -d obj/Debug/src/survivalCriteria || mkdir -p obj/Debug/src/survivalCriteria
 
 before_release:
 	test -d bin/Release || mkdir -p bin/Release
 	test -d obj/Release/src || mkdir -p obj/Release/src
+	test -d obj/Release/src/userio || mkdir -p obj/Release/src/userio
+	test -d obj/Release/src/userio/sfmlComponents || mkdir -p obj/Release/src/userio/sfmlComponents
+	test -d obj/Release/src/userio/sfmlComponents/flowComponents || mkdir -p obj/Release/src/userio/sfmlComponents/flowComponents
+	test -d obj/Release/src/userio/sfmlComponents/settingsComponents || mkdir -p obj/Release/src/userio/sfmlComponents/settingsComponents
+	test -d obj/Release/src/utils || mkdir -p obj/Release/src/utils
+	test -d obj/Release/src/ai || mkdir -p obj/Release/src/ai
+	test -d obj/Release/src/survivalCriteria || mkdir -p obj/Release/src/survivalCriteria
 
 .PHONY : release debug    
 debug: before_debug
@@ -77,7 +105,7 @@ clean_release:
 	$(RM) -f bin/Release/biosim4
 
 distclean: clean
-	$(RM) -f logs/* images/*
+	$(RM) -f Output/Images/* Output/Videos/* Output/Logs/* Output/Saves/* Output/Profiling/*
 
 .PHONY: all clean distclean
 

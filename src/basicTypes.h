@@ -52,7 +52,8 @@ Arithmetic
 #include <cstdint>
 #include <cmath>
 #include <algorithm>
-#include "random.h"
+#include "./utils/random.h"
+#include <cereal/access.hpp>
 
 namespace BS {
 
@@ -112,6 +113,25 @@ struct __attribute__((packed)) Coord {
 public:
     int16_t x;
     int16_t y;
+
+    friend class cereal::access;
+
+    template <class Archive>
+    void save(Archive &ar) const
+    {
+        ar(uint16_t(x), uint16_t(y));
+    }
+
+    template <class Archive>
+    void load(Archive &ar)
+    {
+        uint16_t x_a;
+        uint16_t y_a;
+        ar(x_a, y_a);
+
+        this->x = x_a;
+        this->y = y_a;
+    }
 };
 
 

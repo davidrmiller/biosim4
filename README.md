@@ -1,5 +1,32 @@
 # biosim4
 
+Fork of https://github.com/davidrmiller/biosim4
+
+### What has been done
+
+- heavy refactoring
+- a new output via SFML which renders individuals, challenge criterias and barriers in real-time with the ability to drag simulation (LMB), zoom in/out (scroll), select indiv (LMB)
+- UI to watch and control simulation with TGUI:
+  - pause/resume button, pause at start/end of generation
+  - slow or increase speed of simulation
+  - change some settings
+  - restart simulation
+  - save selected indiv's net to svg
+  - show indivs who would pass survival criteria if simulation end now
+- saving and loading simulations with "cereal" serialization library
+
+![screenshot](https://github.com/ilyabrilev/biosim4/blob/main/screenshot.png?raw=true)
+
+### Plans
+- expand UI functionality to controll simulation
+- implement recording of simulation, add ability to play it with time skipping, ability to go back (etc.)
+- hopefuly add more behaviour, events, resources to simulation
+
+### Requirements
+- sfml https://stackoverflow.com/questions/30696114/how-to-install-sfml-in-ubuntu
+- tgui 1.1 https://tgui.eu/tutorials/latest-stable/
+- cereal (it should work right of the box, but here is a link anyway https://uscilab.github.io/cereal/index.html)
+
 ## What is this?
 
 This pile of code was used to simulate biological creatures that evolve through natural selection.

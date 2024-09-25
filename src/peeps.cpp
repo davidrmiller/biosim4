@@ -8,6 +8,9 @@
 #include <utility>
 #include "simulator.h"
 
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
+
 namespace BS {
 
 
@@ -18,10 +21,15 @@ Peeps::Peeps()
 
 void Peeps::init(unsigned population)
 {
+    this->population = population;
     // Index 0 is reserved, so add one:
     individuals.resize(population + 1);
 }
 
+void Peeps::initFromSave()
+{
+    this->init(this->population);
+}
 
 // Safe to call during multithread mode.
 // Indiv will remain alive and in-world until end of sim step when
