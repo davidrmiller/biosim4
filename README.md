@@ -251,7 +251,7 @@ A `CMakeList.txt` file is provided to allow development, build, test, installati
 
 To build with cmake you need to install cmake. 
 
-If you're using docker, `cmake` is already installed. So, you can directly open its terminal to use it:
+If you're using docker, `cmake` is already installed in the image. So, you can directly open its terminal to use it:
 ```sh
 docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash
 ```
