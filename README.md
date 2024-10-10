@@ -238,7 +238,7 @@ To build a Docker environment in which you can compile the program:
 docker build -t biosim4 .
 ```
 
-You can then compile the program with an ephemeral container, remember that `pwd` stands for the fullpath of your `biosim4` project, something like `C:/full-path-in-windows/to-your/biosim4-folder/biosim4`:
+You can then compile the program with an ephemeral container. Note that `pwd` stands for the fullpath of your `biosim4` project, something like `C:/full-path-in-windows/to-your/biosim4-folder/biosim4` in Windows, or `/home/user/project-path/biosim4/` in Linux/MacOS:
 
 ```sh
 docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
