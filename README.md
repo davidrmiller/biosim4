@@ -239,7 +239,7 @@ To build a Docker environment in which you can compile the program:
 docker build -t biosim4 .
 ```
 
-You can then compile the program with an ephemeral container:
+You can then compile the program with an ephemeral container. Note that `pwd` stands for the fullpath of your `biosim4` project, something like `C:/full-path-in-windows/to-your/biosim4-folder/biosim4` in Windows, or `/home/user/project-path/biosim4/` in Linux/MacOS:
 
 ```sh
 docker run --rm -ti -v `pwd`:/app --name biosim biosim4 make
@@ -250,8 +250,14 @@ When you exit the container, the files compiled in your container files will per
 
 A `CMakeList.txt` file is provided to allow development, build, test, installation and packaging with the CMake tool chain and all IDE's that support CMake. 
 
-To build with cmake you need to install cmake. Once installed use the procedure below:
+To build with cmake you need to install cmake. 
 
+If you're using docker, `cmake` is already installed in the image. So, you can directly open its terminal to use it:
+```sh
+docker run --rm -ti -v `pwd`:/app --name biosim biosim4 bash
+```
+
+Once cmake is installed use the procedure below:
 ```sh
 mkdir build
 cd build
