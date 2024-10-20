@@ -1,9 +1,22 @@
 #!/usr/bin/python3
 
 import igraph
+import argparse
+
+inputfile = 'tools/net.txt'
+outputfile = 'tools/net.svg'
+
+parser=argparse.ArgumentParser()
+parser.add_argument("-o")
+parser.add_argument("-i")
+args=parser.parse_args()
+if args.o:
+    outputfile = args.o
+if args.i:
+    inputfile = args.i
 
 # load data into a graph
-g = igraph.Graph.Read_Ncol('net.txt', names=True, weights=True)
+g = igraph.Graph.Read_Ncol(inputfile, names=True, weights=True)
 
 for v in g.vs:
 	v['size'] = 35
@@ -31,7 +44,7 @@ for e in g.es:
 
 # plot graph
 
-print(len(g.vs))
+# print(len(g.vs))
 
 if len(g.vs) < 6:
     bbox = (300,300)
@@ -68,6 +81,6 @@ else:
     bbox = (8000,8000)
     layout = 'fruchterman_reingold'
 
-igraph.plot(g, "net.svg", edge_curved=True, bbox=bbox, margin=64, layout=layout)
+igraph.plot(g, outputfile, edge_curved=True, bbox=bbox, margin=64, layout=layout)
 
 
