@@ -65,6 +65,12 @@ void ParamManager::setDefaults()
     privParams.RNGSeed = 12345678;
     privParams.graphLogUpdateCommand = "/usr/bin/gnuplot --persist ./tools/graphlog.gp";
     privParams.parameterChangeGenerationNumber = 0;
+    privParams.startingEnergy = 0;
+    privParams.neuralNetNodeEnergyCost = 0;
+    privParams.neuralNetConnectionEnergyCost = 0;
+    privParams.moveActionEnergyCost = 0;
+    privParams.killActionEnergyCost = 0;
+    privParams.otherActionEnergyCost = 0;
 }
 
 
@@ -257,6 +263,24 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         }
         else if (name == "rngseed" && isUint) {
             privParams.RNGSeed = uVal; break;
+        }
+        else if (name == "startingenergy" && isUint) {
+            privParams.startingEnergy = uVal; break;
+        }
+        else if (name == "neuralnetnodeenergycost" && isUint) {
+            privParams.neuralNetNodeEnergyCost = uVal; break;
+        }
+        else if (name == "neuralnetconnectionenergycost" && isUint) {
+            privParams.neuralNetConnectionEnergyCost = uVal; break;
+        }
+        else if (name == "moveactionenergycost" && isUint) {
+            privParams.moveActionEnergyCost = uVal; break;
+        }
+        else if (name == "killactionenergycost" && isUint) {
+            privParams.killActionEnergyCost = uVal; break;
+        }
+        else if (name == "otheractionenergycost" && isUint) {
+            privParams.otherActionEnergyCost = uVal; break;
         }
         else {
             std::cout << "Invalid param: " << name << " = " << val << std::endl;
