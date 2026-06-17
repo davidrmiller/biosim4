@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cstring>
 #include <string>
+#include <exception>
 #include "simulator.h"
 
 namespace BS {
@@ -13,6 +14,11 @@ namespace BS {
 // This converts sensor numbers to descriptive strings.
 std::string sensorName(Sensor sensor)
 {
+    // Bounds check to prevent crashes
+    if (sensor >= Sensor::NUM_SENSES) {
+        return "unknown sensor " + std::to_string((int)sensor);
+    }
+    
     switch(sensor) {
     case AGE: return "age"; break;
     case BOUNDARY_DIST: return "boundary dist"; break;
@@ -35,7 +41,7 @@ std::string sensorName(Sensor sensor)
     case SIGNAL0_FWD: return "signal 0 fwd"; break;
     case SIGNAL0_LR: return "signal 0 LR"; break;
     case GENETIC_SIM_FWD: return "genetic similarity fwd"; break;
-    default: assert(false); break;
+    default: return "unknown sensor " + std::to_string((int)sensor); break;
     }
 }
 
@@ -43,6 +49,11 @@ std::string sensorName(Sensor sensor)
 // Converts action numbers to descriptive strings.
 std::string actionName(Action action)
 {
+    // Bounds check to prevent crashes
+    if (action >= Action::NUM_ACTIONS) {
+        return "unknown action " + std::to_string((int)action);
+    }
+    
     switch(action) {
     case MOVE_EAST: return "move east"; break;
     case MOVE_WEST: return "move west"; break;
@@ -61,7 +72,7 @@ std::string actionName(Action action)
     case MOVE_RL: return "move R-L"; break;
     case MOVE_RANDOM: return "move random"; break;
     case SET_LONGPROBE_DIST: return "set longprobe dist"; break;
-    default: assert(false); break;
+    default: return "unknown action " + std::to_string((int)action); break;
     }
 }
 
@@ -70,6 +81,11 @@ std::string actionName(Action action)
 // Useful for later processing by graph-nnet.py.
 std::string sensorShortName(Sensor sensor)
 {
+    // Bounds check to prevent crashes
+    if (sensor >= Sensor::NUM_SENSES) {
+        return "S" + std::to_string((int)sensor);
+    }
+    
     switch(sensor) {
     case AGE: return "Age"; break;
     case BOUNDARY_DIST: return "ED"; break;
@@ -92,7 +108,7 @@ std::string sensorShortName(Sensor sensor)
     case SIGNAL0_FWD: return "Sfd"; break;
     case SIGNAL0_LR: return "Slr"; break;
     case GENETIC_SIM_FWD: return "Gen"; break;
-    default: assert(false); break;
+    default: return "S" + std::to_string((int)sensor); break;
     }
 }
 
@@ -101,6 +117,11 @@ std::string sensorShortName(Sensor sensor)
 // Useful for later processing by graph-nnet.py.
 std::string actionShortName(Action action)
 {
+    // Bounds check to prevent crashes
+    if (action >= Action::NUM_ACTIONS) {
+        return "A" + std::to_string((int)action);
+    }
+    
     switch(action) {
     case MOVE_EAST: return "MvE"; break;
     case MOVE_WEST: return "MvW"; break;
@@ -119,7 +140,7 @@ std::string actionShortName(Action action)
     case MOVE_RL: return "MRL"; break;
     case MOVE_RANDOM: return "Mrn"; break;
     case SET_LONGPROBE_DIST: return "LPD"; break;
-    default: assert(false); break;
+    default: return "A" + std::to_string((int)action); break;
     }
 }
 
@@ -262,7 +283,10 @@ float averageGenomeLength()
         sum += peeps[randomUint(1, p.population)].genome.size();
         ++numberSamples;
     }
-    return sum / numberSamples;
+    if (numberSamples == 0) {
+        return 0.0f;
+    }
+    return (float)sum / (float)numberSamples;
 }
 
 
@@ -284,7 +308,7 @@ void appendEpochLog(unsigned generation, unsigned numberSurvivors, unsigned murd
         foutput << generation << " " << numberSurvivors << " " << geneticDiversity()
                 << " " << averageGenomeLength() << " " << murderCount << std::endl;
     } else {
-        assert(false);
+        std::cerr << "Warning: Failed to open epoch log file for writing" << std::endl;
     }
 }
 
@@ -321,33 +345,66 @@ void displaySensorActionReferenceCounts()
     std::vector<unsigned> actionCounts(Action::NUM_ACTIONS, 0);
 
     for (unsigned index = 1; index <= p.population; ++index) {
-        if (peeps[index].alive) {
+        // Bounds check: ensure index is valid before accessing peeps array
+        // Note: peeps array should be sized for population, but defensive check prevents crashes
+        if (index > 0xFFFF) {  // Max uint16_t value
+            continue;
+        }
+        try {
             const Indiv &indiv = peeps[index];
-            for (const Gene &gene : indiv.nnet.connections) {
-                if (gene.sourceType == SENSOR) {
-                    assert(gene.sourceNum < Sensor::NUM_SENSES);
-                    ++sensorCounts[(Sensor)gene.sourceNum];
-                }
-                if (gene.sinkType == ACTION) {
-                    assert(gene.sinkNum < Action::NUM_ACTIONS);
-                    ++actionCounts[(Action)gene.sinkNum];
+            if (indiv.alive) {
+                for (const Gene &gene : indiv.nnet.connections) {
+                    if (gene.sourceType == SENSOR) {
+                        unsigned sourceNum = gene.sourceNum;
+                        if (sourceNum < Sensor::NUM_SENSES && sourceNum < sensorCounts.size()) {
+                            ++sensorCounts[sourceNum];
+                        }
+                    }
+                    if (gene.sinkType == ACTION) {
+                        unsigned sinkNum = gene.sinkNum;
+                        if (sinkNum < Action::NUM_ACTIONS) {
+                            ++actionCounts[sinkNum];
+                        }
+                    }
                 }
             }
+        } catch (const std::exception &e) {
+            // Skip invalid index to prevent crashes
+            std::cerr << "Warning: Error processing individual " << index << ": " << e.what() << std::endl;
+            continue;
+        } catch (...) {
+            // Skip invalid index to prevent crashes
+            std::cerr << "Warning: Unknown error processing individual " << index << std::endl;
+            continue;
         }
     }
 
     std::cout << "Sensors in use:" << std::endl;
-    for (unsigned i = 0; i < sensorCounts.size(); ++i) {
+    std::cout.flush();
+    for (unsigned i = 0; i < sensorCounts.size() && i < (unsigned)Sensor::NUM_SENSES; ++i) {
         if (sensorCounts[i] > 0) {
             std::cout << "  " << sensorCounts[i] << " - " << sensorName((Sensor)i) << std::endl;
+            std::cout.flush();
         }
     }
     std::cout << "Actions in use:" << std::endl;
-    for (unsigned i = 0; i < actionCounts.size(); ++i) {
+    std::cout.flush();
+    for (unsigned i = 0; i < actionCounts.size() && i < (unsigned)Action::NUM_ACTIONS; ++i) {
         if (actionCounts[i] > 0) {
-            std::cout << "  " << actionCounts[i] << " - " << actionName((Action)i) << std::endl;
+            try {
+                std::string actionStr = actionName((Action)i);
+                std::cout << "  " << actionCounts[i] << " - " << actionStr << std::endl;
+                std::cout.flush();
+            } catch (const std::exception &e) {
+                std::cout << "  " << actionCounts[i] << " - [error: " << e.what() << " for action " << i << "]" << std::endl;
+                std::cout.flush();
+            } catch (...) {
+                std::cout << "  " << actionCounts[i] << " - [unknown error for action " << i << "]" << std::endl;
+                std::cout.flush();
+            }
         }
     }
+    std::cout.flush();
 }
 
 

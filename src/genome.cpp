@@ -2,10 +2,13 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <list>
 #include <iostream>
 #include <cassert>
 #include <string>
+#include <algorithm>
+#include <climits>
 #include "simulator.h"
 #include "random.h"
 
@@ -252,12 +255,71 @@ void Indiv::createWiringFromGenome()
         }
     }
 
+    // Deduplicate connections: merge duplicate source-sink pairs by summing weights
+    // This prevents genomes from growing indefinitely by adding redundant connections
+    deduplicateConnections(nnet.connections);
+
     // Create the indiv's neural node list
     nnet.neurons.clear();
     for (unsigned neuronNum = 0; neuronNum < nodeMap.size(); ++neuronNum) {
         nnet.neurons.push_back( {} );
         nnet.neurons.back().output = initialNeuronOutput();
         nnet.neurons.back().driven = (nodeMap[neuronNum].numInputsFromSensorsOrOtherNeurons != 0);
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+
+
+// Deduplicate connections by merging duplicate source-sink pairs
+// Key: (sourceType, sourceNum, sinkType, sinkNum) -> accumulated weight
+// Weights are summed and clamped to i16 range
+void deduplicateConnections(std::vector<Gene> &connections)
+{
+    // Map key: (sourceType, sourceNum, sinkType, sinkNum) -> accumulated weight
+    std::unordered_map<uint32_t, int32_t> connectionMap;
+    
+    // Create a unique key from connection fields
+    // Note: sourceType and sinkType are 1-bit (0 or 1), sourceNum and sinkNum are 7-bit (0-127)
+    auto makeKey = [](const Gene &conn) -> uint32_t {
+        return (static_cast<uint32_t>(conn.sourceType & 0x01) << 24) |
+               (static_cast<uint32_t>(conn.sourceNum & 0x7F) << 16) |
+               (static_cast<uint32_t>(conn.sinkType & 0x01) << 8) |
+               static_cast<uint32_t>(conn.sinkNum & 0x7F);
+    };
+    
+    // Sum weights for duplicate connections
+    for (const auto &conn : connections) {
+        uint32_t key = makeKey(conn);
+        connectionMap[key] += static_cast<int32_t>(conn.weight);
+    }
+    
+    // Rebuild connections list with deduplicated entries, clamping weights to i16 range
+    connections.clear();
+    for (const auto &pair : connectionMap) {
+        uint32_t key = pair.first;
+        int32_t weightSum = pair.second;
+        
+        // Extract fields from key with proper masking for bitfields
+        uint8_t sourceType = static_cast<uint8_t>((key >> 24) & 0x01);
+        uint8_t sourceNum = static_cast<uint8_t>((key >> 16) & 0x7F);
+        uint8_t sinkType = static_cast<uint8_t>((key >> 8) & 0x01);
+        uint8_t sinkNum = static_cast<uint8_t>(key & 0x7F);
+        
+        // Clamp weight to i16 range
+        int16_t clampedWeight = static_cast<int16_t>(
+            std::max(static_cast<int32_t>(INT16_MIN), 
+                     std::min(static_cast<int32_t>(INT16_MAX), weightSum)));
+        
+        Gene newConn;
+        newConn.sourceType = sourceType;
+        newConn.sourceNum = sourceNum;
+        newConn.sinkType = sinkType;
+        newConn.sinkNum = sinkNum;
+        newConn.weight = clampedWeight;
+        
+        connections.push_back(newConn);
     }
 }
 
@@ -321,14 +383,24 @@ void randomInsertDeletion(Genome &genome)
 {
     float probability = p.geneInsertionDeletionRate;
     if (randomUint() / (float)RANDOM_UINT_MAX < probability) {
-        if (randomUint() / (float)RANDOM_UINT_MAX < p.deletionRatio) {
+        float genomeLength = (float)genome.size();
+        float initialLength = (float)p.genomeInitialLengthMin;
+        
+        // Scale insertion probability down as genome grows beyond initial length
+        // At initial length: use normal deletionRatio
+        // At 2x initial length: insertion probability is halved
+        float lengthFactor = (genomeLength > initialLength) ? (initialLength / genomeLength) : 1.0f;
+        
+        // Adjusted deletion ratio: higher chance of deletion for longer genomes
+        float adjustedDeletionRatio = p.deletionRatio + (1.0f - lengthFactor) * (1.0f - p.deletionRatio);
+        
+        if (randomUint() / (float)RANDOM_UINT_MAX < adjustedDeletionRatio) {
             // deletion
             if (genome.size() > 1) {
                 genome.erase(genome.begin() + randomUint(0, genome.size() - 1));
             }
         } else if (genome.size() < p.genomeMaxLength) {
-            // insertion
-            //genome.insert(genome.begin() + randomUint(0, genome.size() - 1), makeRandomGene());
+            // insertion (probability already reduced via adjustedDeletionRatio)
             genome.push_back(makeRandomGene());
         }
     }

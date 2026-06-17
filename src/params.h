@@ -32,6 +32,7 @@ struct Params {
     double pointMutationRate; // 0.0..1.0
     double geneInsertionDeletionRate; // 0.0..1.0
     double deletionRatio; // 0.0..1.0
+    float fitnessLengthNormalization; // >= 0.0, normalizes fitness by genome length
     bool killEnable;
     bool sexualReproduction;
     bool chooseParentsByFitness;
@@ -43,6 +44,7 @@ struct Params {
     unsigned shortProbeBarrierDistance; // > 0
     float valenceSaturationMag;
     bool saveVideo;
+    bool savePngFrames; // if true, save individual PNG frame files
     unsigned videoStride; // > 0
     unsigned videoSaveFirstFrames; // >= 0, overrides videoStride
     unsigned displayScale;

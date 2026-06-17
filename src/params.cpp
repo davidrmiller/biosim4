@@ -41,6 +41,7 @@ void ParamManager::setDefaults()
     privParams.pointMutationRate = 0.001;
     privParams.geneInsertionDeletionRate = 0.0;
     privParams.deletionRatio = 0.5;
+    privParams.fitnessLengthNormalization = 0.03f;
     privParams.killEnable = false;
     privParams.sexualReproduction = true;
     privParams.chooseParentsByFitness = true;
@@ -52,6 +53,7 @@ void ParamManager::setDefaults()
     privParams.shortProbeBarrierDistance = 4;
     privParams.valenceSaturationMag = 0.5;
     privParams.saveVideo = true;
+    privParams.savePngFrames = false;
     privParams.videoStride = 25;
     privParams.videoSaveFirstFrames = 2;
     privParams.displayScale = 8;
@@ -186,6 +188,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "deletionratio" && isFloat && dVal >= 0.0 && dVal <= 1.0) {
             privParams.deletionRatio = dVal; break;
         }
+        else if (name == "fitnesslengthnormalization" && isFloat && dVal >= 0.0) {
+            privParams.fitnessLengthNormalization = (float)dVal; break;
+        }
         else if (name == "killenable" && isBool) {
             privParams.killEnable = bVal; break;
         }
@@ -219,6 +224,9 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "savevideo" && isBool) {
             privParams.saveVideo = bVal; break;
         }
+        else if (name == "savepngframes" && isBool) {
+            privParams.savePngFrames = bVal; break;
+        }
         else if (name == "videostride" && isUint && uVal > 0) {
             privParams.videoStride = uVal; break;
         }
@@ -234,7 +242,7 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "genomeanalysisstride" && isUint && uVal > 0) {
             privParams.genomeAnalysisStride = uVal; break;
         }
-        else if (name == "genomeanalysisstride" && val == "videoStride") {
+        else if (name == "genomeanalysisstride" && (val == "videoStride" || val == "videostride")) {
             privParams.genomeAnalysisStride = privParams.videoStride; break;
         }
         else if (name == "displaysamplegenomes" && isUint) {
@@ -249,7 +257,7 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "updategraphlogstride" && isUint && uVal > 0) {
             privParams.updateGraphLogStride = uVal; break;
         }
-        else if (name == "updategraphlogstride" && val == "videoStride") {
+        else if (name == "updategraphlogstride" && (val == "videoStride" || val == "videostride")) {
             privParams.updateGraphLogStride = privParams.videoStride; break;
         }
         else if (name == "deterministic" && isBool) {

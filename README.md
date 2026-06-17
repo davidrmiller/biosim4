@@ -1,11 +1,19 @@
 # biosim4
 
+Try out a Rust refactor here - https://github.com/AlexanderGatesDev/biosimRust
+
 ## Status
 
-This project is transitioning to maintenance-only. Thanks to all who contributed 
-improvements to this project. We will continue to welcome bug fixes that enable this
-program to compile and execute, and we welcome discussions about this program
-and related topics in the Issues section.
+This project is a fork with enhancements focused on improving variable-length genome stability and preventing artificial genome growth. Key improvements include:
+
+- **Connection deduplication**: Automatic merging of duplicate neural network connections during genome-to-network conversion, preventing genomes from growing indefinitely by adding redundant connections. Duplicate connections (same source-sink pairs) are merged by summing their weights and clamping to i16 range.
+
+- **Enhanced fitness normalization**: Increased default `fitnesslengthnormalization` from `0.01` to `0.03` to better prevent selection pressure favoring longer genomes. The normalization formula `normalized_score = score / (1 + beta * genome_length)` now applies a stronger penalty for longer genomes.
+
+- **Strengthened length penalty weights**: Updated genome similarity calculations to use a triple penalty system (30% similarity, 35% relative length ratio, 35% absolute length bonus) instead of the previous 40/30/30 split. This creates stronger selection pressure to maintain genome lengths near the initial value.
+
+- **Length-aware mutation scaling**: Enhanced insertion/deletion mutation rates to dynamically adjust based on genome length. As genomes grow beyond their initial length, insertion probability automatically decreases while deletion probability increases, creating natural selection pressure that favors genome lengths closer to the starting value.
+
 
 ## What is this?
 

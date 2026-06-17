@@ -87,6 +87,7 @@ extern Genome makeRandomGenome();
 extern void unitTestConnectNeuralNetWiringFromGenome();
 extern float genomeSimilarity(const Genome &g1, const Genome &g2); // 0.0..1.0
 extern float geneticDiversity();  // 0.0..1.0
+extern void deduplicateConnections(std::vector<Gene> &connections);
 
 } // end namespace BS
 

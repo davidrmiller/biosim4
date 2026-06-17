@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(BioSim4 VERSION 0.2.0)
+project(BioSim4 VERSION 1.0.0)
 
 include(CTest)
 enable_testing()

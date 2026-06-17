@@ -28,11 +28,15 @@ void saveOneFrameImmed(const ImageFrameData &data)
                         3,   // color channels
                         255);  // initial value
     uint8_t color[3];
+    
+    // Only create filename if PNG frame saving is enabled
     std::stringstream imageFilename;
-    imageFilename << p.imageDir << "frame-"
-                  << std::setfill('0') << std::setw(6) << data.generation
-                  << '-' << std::setfill('0') << std::setw(6) << data.simStep
-                  << ".png";
+    if (p.savePngFrames) {
+        imageFilename << p.imageDir << "frame-"
+                      << std::setfill('0') << std::setw(6) << data.generation
+                      << '-' << std::setfill('0') << std::setw(6) << data.simStep
+                      << ".png";
+    }
 
     // Draw barrier locations
 
@@ -73,8 +77,22 @@ void saveOneFrameImmed(const ImageFrameData &data)
                 1.0);  // alpha
     }
 
-    //image.save_png(imageFilename.str().c_str(), 3);
-    imageList.push_back(image);
+    // Save PNG frame only if enabled (disabled by default to avoid errors)
+    if (p.savePngFrames && !imageFilename.str().empty()) {
+        try {
+            image.save_png(imageFilename.str().c_str(), 3);
+        } catch (const std::exception& e) {
+            std::cerr << "Failed to save frame " << imageFilename.str() << ": " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "Failed to save frame " << imageFilename.str() << std::endl;
+        }
+    }
+    // Always add to imageList for video generation (even if PNG saving is disabled)
+    // CImg<uint8_t> should already be in correct format for OpenCV (CV_8U)
+    // but ensure dimensions are valid
+    if (image.width() > 0 && image.height() > 0 && image.spectrum() == 3) {
+        imageList.push_back(image);
+    }
 
     //CImgDisplay local(image, "biosim3");
 }
@@ -204,12 +222,38 @@ void ImageWriter::saveGenerationVideo(unsigned generation)
         videoFilename << p.imageDir.c_str() << "/gen-"
                       << std::setfill('0') << std::setw(6) << generation
                       << ".avi";
-        cv::setNumThreads(2);
-        imageList.save_video(videoFilename.str().c_str(),
-                             25,
-                             "H264");
-        if (skippedFrames > 0) {
-            std::cout << "Video skipped " << skippedFrames << " frames" << std::endl;
+        try {
+            cv::setNumThreads(2);
+            // Verify images are valid before attempting to save
+            if (imageList.size() > 0) {
+                const auto &firstImage = imageList[0];
+                if (firstImage.width() > 0 && firstImage.height() > 0 && firstImage.spectrum() == 3) {
+                    // CImg's save_video uses OpenCV internally, which requires CV_8U format
+                    // The images are already CImg<uint8_t>, so they should be correct
+                    // However, there may be an issue with CImg's OpenCV conversion
+                    imageList.save_video(videoFilename.str().c_str(),
+                                         25,
+                                         "H264");
+                    if (skippedFrames > 0) {
+                        std::cout << "Video skipped " << skippedFrames << " frames" << std::endl;
+                    }
+                } else {
+                    std::cerr << "Warning: Invalid image format (w=" << firstImage.width() 
+                              << " h=" << firstImage.height() 
+                              << " channels=" << firstImage.spectrum() 
+                              << "), skipping video save for generation " << generation << std::endl;
+                }
+            }
+        } catch (const std::exception &e) {
+            std::cerr << "Error saving video " << videoFilename.str() 
+                      << ": " << e.what() << std::endl;
+            std::cerr << "This is likely an OpenCV/CImg compatibility issue." << std::endl;
+            std::cerr << "Tip: Set savevideo = false in biosim4.ini to disable video saving and continue simulation." << std::endl;
+            // Continue execution instead of crashing - simulation can proceed without videos
+        } catch (...) {
+            std::cerr << "Unknown error saving video " << videoFilename.str() << std::endl;
+            std::cerr << "Tip: Set savevideo = false in biosim4.ini to disable video saving and continue simulation." << std::endl;
+            // Continue execution instead of crashing
         }
     }
     startNewGeneration();

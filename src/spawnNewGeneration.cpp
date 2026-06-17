@@ -89,7 +89,11 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             // possibly do a move here instead of copy, although it's doubtful that
             // the optimization would be noticeable.
             if (passed.first && !peeps[index].nnet.connections.empty()) {
-                parents.push_back( { index, passed.second } );
+                // Normalize fitness by genome length to prevent selection pressure for longer genomes
+                // Formula: normalized_score = score / (1 + beta * genome_length)
+                float genomeLength = (float)peeps[index].genome.size();
+                float normalizedScore = passed.second / (1.0f + p.fitnessLengthNormalization * genomeLength);
+                parents.push_back( { index, normalizedScore } );
             }
         }
     } else {
@@ -105,7 +109,10 @@ unsigned spawnNewGeneration(unsigned generation, unsigned murderCount)
             // This the test for the spawning area:
             std::pair<bool, float> passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM);
             if (passed.first && !peeps[index].nnet.connections.empty()) {
-                parents.push_back( { index, passed.second } );
+                // Normalize fitness by genome length
+                float genomeLength = (float)peeps[index].genome.size();
+                float normalizedScore = passed.second / (1.0f + p.fitnessLengthNormalization * genomeLength);
+                parents.push_back( { index, normalizedScore } );
             } else {
                 // This is the test for the sacrificial area:
                 passed = passedSurvivalCriterion(peeps[index], CHALLENGE_ALTRUISM_SACRIFICE);

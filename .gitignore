@@ -1,3 +1,6 @@
 obj/
 tools/*.svg
 build/
+.DS_Store
+.vscode/
+.gitignore
