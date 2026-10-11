@@ -5,10 +5,10 @@
 #
 # Terms:
 #
-# experiment: specific setting for a config file consisting of multiple replicas
+# experiment: specific setting for a config file consisting of multiple replicates
 #
-# replica: a single evolution/testing with a specific config file setting,
-#   all replicas from the same experiment share the same config file settings except the replicaPath
+# replicate: a single evolution/testing with a specific config file setting,
+#   all replicates from the same experiment share the same config file settings except the replicatePath
 #
 # run: an evolution consists of a single run, a testing consists of multiple runs
 #
@@ -28,18 +28,18 @@ from itertools import product
 import shutil
 
 # global parameters which influence the folder structure and the config files
-outputDir = "outputScript"
+outputDir = "outputEvolutions1"
 numReplicates = 10
 
 # global parameters which influence the config files and data table
 # (the functionality of each parameter is described in "biosim4.ini")
-staticMicePositions = ["false"]
-staticCatPositions = ["false"]
+staticMicePositions = ["true", "false"]
+staticCatPositions = ["true", "false"]
 sizeX = ["128"]
 sizeY = ["128"]
 population = ["1000"]
 miceRatio = ["0.9"]
-dynamicPopulation = ["true"]
+dynamicPopulation = ["true", "false"]
 stepsPerGeneration = ["500"]
 maxGenerations = ["100000"] # set the strides to 1000
 genomeInitialLengthMin = ["24"]
@@ -49,7 +49,7 @@ maxNumberNeurons = ["5", "10"]
 killEnable = ["true"]
 sexualReproduction = ["true"]
 chooseParentsByFitness = ["true"]
-pointMutationRate = ["0.001"]
+pointMutationRate = ["0.001", "0.01"]
 responsivenessCurveKFactor = ["2"]
 populationSensorRadius = ["2.5"]
 longProbeDistance = ["16"]
