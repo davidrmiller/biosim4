@@ -126,9 +126,9 @@ def create_config_files():
     challengeMice, challengeCats, foodAreaType, barrierType, safeAreaType,
     spawnMiceInSafeAreas, deterministic, RNGSeed):
 
-        # Create multiple replicas for each experiment
+        # Create multiple replicates for each experiment
         while replicateIndex <= numReplicates:
-            # Create the needed folder structure for the replica
+            # Create the needed folder structure for the replicate
             create_folders(experimentIndex, replicateIndex)
 
             shutil.copyfile("biosim4.ini", "biosim4replicate.ini")
@@ -143,7 +143,7 @@ def create_config_files():
             # Load the modified configuration
             config = TestConfig("biosim4replicate.ini")
 
-            # Modify parameters for the replica
+            # Modify parameters for the replicate
             config.load()
             modify_ini(config, "staticMicePositions", a)
             modify_ini(config, "staticCatPositions", b)
@@ -180,7 +180,7 @@ def create_config_files():
             modify_ini(config, "deterministic", ah)
             modify_ini(config, "RNGSeed", ai)
 
-            # Modify output dir, experiment dir and replica dir
+            # Modify output dir, experiment dir and replicate dir
             modify_ini(config, "outputDir", outputDir)
             modify_ini(config, "experimentDir", "experiment{0}".format(str(experimentIndex).zfill(3)))
             modify_ini(config, "replicateDir", "replicate{0}".format(str(replicateIndex).zfill(3)))
@@ -193,7 +193,7 @@ def create_config_files():
                          "/experiment{0}".format(str(experimentIndex).zfill(3)) +
              "/replicate{0}".format(str(replicateIndex).zfill(3)))
 
-            # Create table entry for specific replica
+            # Create table entry for specific replicate
             create_dat_table_entry('"' + outputDir + '/experiment{0}'.format(str(experimentIndex).zfill(3)) +
                                    '/replicate{0}'.format(str(replicateIndex).zfill(3)) + '/biosim4replicate.ini"')
 
