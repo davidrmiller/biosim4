@@ -392,7 +392,7 @@ void ParamManager::ingestParameter(std::string name, std::string val)
         else if (name == "rngseed" && isUint) {
             privParams.RNGSeed = uVal; break;
         }
-        else if (name.front == "[" && name.back == "]") {
+        else if (name.front() == '[' && name.back() == ']') {
             std::cout << "Section header: " << val << std::endl;
         }
         else {
