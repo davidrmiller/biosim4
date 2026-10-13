@@ -19,49 +19,56 @@ def getData(logName):
     os.chdir(outputDir)
     boxplotDataList.clear()
     experimentDataList = []
+    experimentDirList = []
 
-    # get all experiment dirs in the output dir
+    # get all experiment dirs in the output dir, put them into a list and sort them
     for experimentDir in os.scandir():
         if experimentDir.is_dir():
-            tickLabels.append(experimentDir.name)
-            os.chdir(experimentDir.name)
-
-            # get the replicates in the experiment dir and gather the data
-            for replicateDir in os.scandir():
-                if replicateDir.is_dir():
-                    os.chdir(replicateDir.name)
-
-                    # find and open the logfile from the replicate and print the last line for now
-                    with open("logs/epoch-log.txt") as logFile:
-                        print(os.getcwd())
-                        # logSpecifierIndex shows at which position in the line the logValue is stored
-                        logSpecifierIndex = 0
-
-                        # add specific data point to array
-                        generationData = logFile.readlines()
-
-                        # split the first line into separate values
-                        separateValuesName = generationData[0].split(" ")
-
-                        # get the index of the logName
-                        logSpecifierIndex = separateValuesName.index(logName)
-
-                        # access the last line and get the value
-                        separateValuesLast = generationData[len(generationData) - 1].split(" ")
-                        value = separateValuesLast[logSpecifierIndex]
-
-                        # !This line adds data to the list
-                        experimentDataList.append(int(value))
-                        logFile.close()
+            experimentDirList.append(experimentDir.name)
+    experimentDirList.sort()
 
 
-                    os.chdir("..")
-            # At the end of the loop add experimentData to boxplotData
-            boxplotDataList.append(experimentDataList.copy())
-            # and empty the experimentDataList
-            experimentDataList.clear()
+    # iterate over the experiment dirs and put all data needed to visualize the box plots into boxplotDataList
+    for experimentDir in experimentDirList:
+        tickLabels.append(experimentDir)
+        os.chdir(experimentDir)
 
-            os.chdir("..")
+        # get the replicates in the experiment dir and gather the data
+        for replicateDir in os.scandir():
+            if replicateDir.is_dir():
+                os.chdir(replicateDir.name)
+
+                # find and open the logfile from the replicate and print the last line for now
+                with open("logs/epoch-log.txt") as logFile:
+                    print(os.getcwd())
+                    # logSpecifierIndex shows at which position in the line the logValue is stored
+                    logSpecifierIndex = 0
+
+                    # add specific data point to array
+                    generationData = logFile.readlines()
+
+                    # split the first line into separate values
+                    separateValuesName = generationData[0].split(" ")
+
+                    # get the index of the logName
+                    logSpecifierIndex = separateValuesName.index(logName)
+
+                    # access the last line and get the value
+                    separateValuesLast = generationData[len(generationData) - 1].split(" ")
+                    value = separateValuesLast[logSpecifierIndex]
+
+                    # Append data value to the experimentDataList
+                    experimentDataList.append(int(value))
+                    logFile.close()
+
+
+                os.chdir("..")
+        # At the end of the loop add experimentData to boxplotData
+        boxplotDataList.append(experimentDataList.copy())
+        # and empty the experimentDataList
+        experimentDataList.clear()
+
+        os.chdir("..")
     os.chdir("..")
 
 
