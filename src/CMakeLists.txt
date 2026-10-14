@@ -8,6 +8,7 @@ FILE(GLOB MyCppheaders ./*.h)
 #list(REMOVE_ITEM MyCppSources "./unitTestGridVisitNeighborhood.cpp")
 
 find_package(OpenCV REQUIRED)
+find_package(PNG REQUIRED)
 
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
@@ -19,7 +20,7 @@ SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS
 set( CMAKE_VERBOSE_MAKEFILE on )
 
 add_executable(biosim4 ${MyCppSources} ${MyCppheaders})
-target_link_libraries( biosim4 PUBLIC ${OpenCV_LIBS} )
+target_link_libraries( biosim4 PUBLIC ${OpenCV_LIBS} PNG::PNG )
 
 
 install(TARGETS biosim4 DESTINATION bin)
