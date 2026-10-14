@@ -390,13 +390,13 @@ September 11th, 2026
     >>  Actually run a large evolution with ~10 different parameter settings (experiments), each with 10 runs for evolution []
 
 October 2nd, 2026
-    >>  Experiment folders with replicate sub-folders
-    >>  Still an issue with the video generation on the cluster, will try to fix
+    >>  Experiment folders with replicate sub-folders [DONE]
+    >>  Still an issue with the video generation on the cluster, will try to fix [DONE]
         >>  If not possible, will look into getting the necessary data for the images and make a seperate script to generate them locally
-    >>  Pad the experiemnt and replicate folders with three zeros (e.g., 001, 002, 003, etc.)
-    >>  Try to fix the colouring of the images made on the server
+    >>  Pad the experiemnt and replicate folders with three zeros (e.g., 001, 002, 003, etc.) [DONE]
+    >>  Try to fix the colouring of the images made on the server [DONE]
         >>  You could change the colour of the safe areas or fix the settings of the photo generator on the server
-    >>  We want to run some evolution experiments, testing the following parameters:    
+    >>  We want to run some evolution experiments, testing the following parameters:
         >>  Static Mice Positions: True, False [2]
         >>  Static Cat Positions: True, False [2]
         >>  Population Size: 1000 [1]
@@ -406,13 +406,20 @@ October 2nd, 2026
         >>  Mutation Rate: 0.001, 0.01 [2]
         >>  See your setupEvolution.py locally for other parameter settings
         >>  Total Combinations = 2 x 2 x 2 x 2 x 2 = 32 x 10 = 320 runs
-    >>  Look into making a boxplot from the already run experiments
+    >>  Look into making a boxplot from the already run experiments [DONE]
         >>  Look at number of mice and cats survived for now
         >>  Each box uses one number from the last epoch of each replicate
     >>  Read the following paper (closest related work to this project):
         >>  Olson, Hintze, Dyer, Knoester & Adami (2013), "Predator confusion is sufficient to evolve swarming behaviour", Journal of the Royal Society Interface 10(85): 20130305
         >>  https://doi.org/10.1098/rsif.2013.0305 (free preprint: https://arxiv.org/abs/1209.3330)
 
+October 14th, 2026
+    >>  Profile the code as it is => amount of ram (peak) needed per run
+    >>  Look into the niceness parameter and other slurm params
+    >>  Combine the 10 replicates into a single run
+    >>  Email this info to me
+    >>  Do the task from overleaf
+    >>  Add some papers to a research rabbit and read another related paper
 
 Future Experiments To Try
     >>  A long evolution with more frequent collection of genomes to produce a more granular heatmap
