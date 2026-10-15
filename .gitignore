@@ -3,3 +3,5 @@ tools/*.svg
 build/
 output*/
 .idea/
+.venv/
+.claude/
