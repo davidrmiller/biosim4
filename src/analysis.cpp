@@ -631,7 +631,7 @@ void displaySampleGenomes(unsigned count, unsigned generation, std::vector<uint1
         // Display the best cats
         for (index = 0; index < catsIndexes.size(); ++index) {
             assert(peeps[catsIndexes.at(index)].species == "cat");
-            peeps[miceIndexes.at(index)].printIGraphEdgeList(catsIndexes.at(index), generation, peeps[catsIndexes.at(index)].species);
+            peeps[catsIndexes.at(index)].printIGraphEdgeList(catsIndexes.at(index), generation, peeps[catsIndexes.at(index)].species); // was indexing peeps with miceIndexes: the file held a mouse's net
         }
     }
     displaySensorActionReferenceCounts();
