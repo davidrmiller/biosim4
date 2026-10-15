@@ -604,7 +604,7 @@ void displaySampleGenomes(unsigned count, unsigned generation, std::vector<uint1
     std::string genomeCatsFilename = p.outputPath + p.genomeDir + "/genome-cats-" + std::to_string(generation) + ".txt";
     std::ofstream fcat;
     fcat.open(genomeCatsFilename);
-    for (index = p.population * p.miceRatio + 1; index < p.population; ++index) {
+    for (index = p.population * p.miceRatio + 1; index <= p.population; ++index) { // <= : the last cat was skipped
         assert(peeps[index].species == "cat");
         if (fcat.is_open()) {
             // Print the genomes of a cat into the txt.
